@@ -63,7 +63,7 @@ public class JwtAuthenticationProvider {
             return null;
         }
         for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("token")){
+            if(cookie.getName().equals("access-token")){
                 return cookie.getValue();
             }
         }

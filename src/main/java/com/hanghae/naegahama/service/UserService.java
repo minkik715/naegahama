@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -48,7 +49,7 @@ public class UserService {
         throw new PasswordCheckFailException("비밀번호가 일치하지 않습니다.");
     }
 
-    public ResponseEntity<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) throws EmailNotFoundException {
+    public ResponseEntity<?> login(LoginRequestDto loginRequestDto) throws EmailNotFoundException {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
@@ -56,14 +57,11 @@ public class UserService {
                 () -> new EmailNotFoundException("해당 이메일은 존재하지 않습니다.")
         );
         loginPassword(password, user);
-        sendToken(response, user);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return ResponseEntity.ok().body(sendToken(user));
     }
 
-    private void sendToken(HttpServletResponse response, User user) {
-        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        Cookie cookie =new Cookie("token", token);
-        response.addCookie(cookie);
+    private String sendToken(User user) {
+        return jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
     }
 
     private void loginPassword(String password, User user) {
@@ -71,5 +69,13 @@ public class UserService {
             return;
         }
         throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
+    }
+
+    public ResponseEntity<?> emailCheck(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        if(byEmail.isPresent()){
+          return ResponseEntity.ok().body(new BasicResponseDto("false"));
+        }
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }
