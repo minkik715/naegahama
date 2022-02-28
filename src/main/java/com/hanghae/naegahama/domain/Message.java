@@ -1,8 +1,11 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Message extends Timestamped{
 
     @Id

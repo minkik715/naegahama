@@ -1,9 +1,13 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 public class Answer extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,13 +25,19 @@ public class Answer extends Timestamped {
     @ManyToOne
     private Post post;
 
-    @OneToMany(mappedBy = "answer")
-    private List<Comment> commentList;
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
 
     @OneToMany(mappedBy = "answer")
-    private List<Like> likeList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
-    private List<File> fileList;
+    private List<Like> likeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "answer")
+    private List<File> fileList = new ArrayList<>();
+
+
 
 }

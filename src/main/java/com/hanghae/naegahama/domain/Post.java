@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,5 +33,5 @@ public class Post extends Timestamped{
     private User user;
 
     @OneToMany(mappedBy = "post")
-    private List<Answer> answerList;
+    private List<Answer> answerList = new ArrayList<>();
 }

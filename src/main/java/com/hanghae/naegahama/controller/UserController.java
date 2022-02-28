@@ -10,6 +10,7 @@ import com.hanghae.naegahama.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,13 +25,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto){
-        return(login(userService.signUp(signUpRequestDto)));
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto, HttpServletResponse response){
+        return(login(userService.signUp(signUpRequestDto), response));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
-        return userService.login(loginRequestDto);
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto,HttpServletResponse httpServletResponse){
+        return userService.login(loginRequestDto,httpServletResponse);
     }
 
     @PostMapping("/idcheck")
@@ -42,4 +43,5 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody Map<String, Object> param){
         return userService.login(param.get("kakaoToken").toString());
     }
+
 }

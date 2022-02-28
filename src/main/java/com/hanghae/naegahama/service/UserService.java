@@ -3,7 +3,6 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.login.KakaoLoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
@@ -53,7 +52,7 @@ public class UserService {
         throw new PasswordCheckFailException("비밀번호가 일치하지 않습니다.");
     }
 
-    public ResponseEntity<?> login(LoginRequestDto loginRequestDto) throws EmailNotFoundException {
+    public ResponseEntity<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) throws EmailNotFoundException {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
@@ -61,6 +60,9 @@ public class UserService {
                 () -> new EmailNotFoundException("해당 이메일은 존재하지 않습니다.")
         );
         loginPassword(password, user);
+        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
+        Cookie cookie = new Cookie("access-token",token);
+        response.addCookie(cookie);
         return ResponseEntity.ok().body(sendToken(user));
     }
 
@@ -68,6 +70,8 @@ public class UserService {
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
         User user = new User(userInfo);
         userRepository.save(user);
+
+
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
