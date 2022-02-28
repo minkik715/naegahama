@@ -1,2 +1,11 @@
-package com.hanghae.naegahama.dto.login;public class LoginRequestDto {
+package com.hanghae.naegahama.dto.login;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class LoginRequestDto {
+    private String email;
+    private String password;
 }
