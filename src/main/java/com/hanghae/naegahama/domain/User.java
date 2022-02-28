@@ -44,6 +44,9 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<UserEnterRoom> userEnterRoomList;
 
+    @OneToMany(mappedBy = "user")
+    private List<Answer> answerList;
+
     public User(SignUpRequestDto signUpRequestDto,String password) {
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();

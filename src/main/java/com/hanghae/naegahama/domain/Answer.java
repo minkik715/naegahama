@@ -3,10 +3,12 @@ package com.hanghae.naegahama.domain;
 
 
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
 @Entity
 public class Answer extends Timestamped {
     @Id
@@ -37,6 +39,11 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<File> fileList;
 
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+
 //    public User(SignUpRequestDto signUpRequestDto, String password) {
 //        this.email = signUpRequestDto.getEmail();
 //        this.nickName = signUpRequestDto.getNickname();
@@ -44,11 +51,13 @@ public class Answer extends Timestamped {
 //        this.hippoImage = "";
 //    }
 
-    public Answer(AnswerPostRequestDto answerPostRequestDto, Long postId)
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, List<File> fileList, User user)
     {
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
-
+        this.post = post;
+        this.user = user;
+        this.fileList = fileList;
     }
 
 
