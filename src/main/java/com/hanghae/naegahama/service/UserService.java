@@ -3,11 +3,14 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.login.KakaoLoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
+import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
+import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final KakaoOAuth2 kakaoOAuth2;
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -58,6 +62,13 @@ public class UserService {
         );
         loginPassword(password, user);
         return ResponseEntity.ok().body(sendToken(user));
+    }
+
+    public ResponseEntity<?> login(String kakaoAccessToken) throws EmailNotFoundException {
+        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
+        User user = new User(userInfo);
+        userRepository.save(user);
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
     private String sendToken(User user) {
