@@ -23,15 +23,15 @@ public class AnswerController
     private final AnswerService answerService;
 
     @PostMapping("/{postId}")
-    public void answerWrite
+    public ResponseEntity<?> answerWrite
             (@RequestPart (value = "post") AnswerPostRequestDto answerPostRequestDto,
              @RequestPart(value = "file", required = false) List<MultipartFile> multipartFile,
              @PathVariable Long postId,
              @AuthenticationPrincipal UserDetailsImpl userDetails)throws IOException
 
     {
-//        return answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
-        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
+        return answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
+//        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
     @GetMapping("/{postId}")
@@ -47,4 +47,11 @@ public class AnswerController
     {
         return answerService.fileTest(multipartFile);
     }
+
+//    @PutMapping("/{answerId}")
+//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+//    {
+//
+//    }
+
 }

@@ -1,14 +1,14 @@
 package com.hanghae.naegahama.domain;
 
-
-
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 @Entity
 public class Answer extends Timestamped {
     @Id
@@ -42,14 +42,6 @@ public class Answer extends Timestamped {
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
-
-
-//    public User(SignUpRequestDto signUpRequestDto, String password) {
-//        this.email = signUpRequestDto.getEmail();
-//        this.nickName = signUpRequestDto.getNickname();
-//        this.password = password;
-//        this.hippoImage = "";
-//    }
 
     public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, List<File> fileList, User user)
     {

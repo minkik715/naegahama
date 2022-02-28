@@ -35,7 +35,7 @@ public class AnswerService
 
     private final S3Uploader s3Uploader;
 
-    public void answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
+    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
             throws IOException
     {
 //        String Url = s3Uploader.upload(multipartFile, "static");
@@ -50,13 +50,13 @@ public class AnswerService
             fileList.add(fileUrl);
         }
 
-//        Post post = postRepository.findPostById(postId);
+        Post post = postRepository.findPostById(postId);
 
-//        Answer answer = new Answer(answerPostRequestDto,post,fileList,user);
+        Answer answer = new Answer(answerPostRequestDto,post,fileList,user);
 
-//        answerRepository.save(answer);
+        answerRepository.save(answer);
 
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
     }
 
@@ -69,18 +69,14 @@ public class AnswerService
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
     {
         List<String> urlList = new ArrayList<>();
-        int count = 0;
 
         for ( MultipartFile file : multipartFile)
         {
-            count++;
+
             String url = s3Uploader.upload(file, "static");
             urlList.add(url);
             log.info(url);
         }
-
-        System.out.println(count);
-//         String url = s3Uploader.upload(multipartFile, "static");
 
          return urlList;
     }
@@ -89,8 +85,6 @@ public class AnswerService
     {
         List<Answer> answerList = answerRepository.findAllByPostId(postId);
         List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
-
-
 
         for ( Answer answer : answerList)
         {
@@ -102,7 +96,6 @@ public class AnswerService
         }
 
         return answerGetResponseDtoList;
-
 
     }
 }
