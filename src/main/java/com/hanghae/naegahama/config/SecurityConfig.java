@@ -24,23 +24,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // h2, swagger 사용에 대한 허용 (CSRF, FrameOptions 무시)
-        // 보안예외처리(정적리소스, HTML)
-        web
-                .ignoring()
-                .antMatchers("/swagger-ui.html", "/webjars/**", "/swagger/**")
-                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**");
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .headers().frameOptions().disable();    // H2 console ip에서 연결을 거부했습니다" 해결코드
-
-//        http.httpBasic().disable()
-//                .cors().configurationSource(corsConfigurationSource());
+                .headers().frameOptions().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안함.
                 .and()

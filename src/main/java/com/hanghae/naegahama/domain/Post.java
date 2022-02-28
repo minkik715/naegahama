@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 
 @Entity
@@ -13,11 +14,11 @@ public class Post extends Timestamped{
     @Column(name = "post_id", nullable = false)
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
     @Length(max = 10000)
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
@@ -25,4 +26,11 @@ public class Post extends Timestamped{
 
     @Column(nullable = false)
     private Integer level;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
+    @OneToMany(mappedBy = "post")
+    private List<Answer> commentList;
 }

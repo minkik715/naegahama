@@ -22,10 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // Request의 Header에서 token값을 가져온다.
-        String token = jwtAuthenticationProvider.resolveToken(request);
-        //System.out.println("token = " + token);
-        log.info("~~~token : " +token);
-        // 토큰이 유효한지 체크한다
+        String token = jwtAuthenticationProvider.tokenResolver(request);
         if (token != null && jwtAuthenticationProvider.validateToken(token)){
             // getAuthentication 으로 인증상태(정보)를 가져와서
             Authentication authentication = jwtAuthenticationProvider.getAuthentication(token);

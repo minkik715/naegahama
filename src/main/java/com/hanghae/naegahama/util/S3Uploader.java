@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -73,4 +74,4 @@ public class S3Uploader {
 
         return Optional.empty();
     }
-}
+}*/

@@ -1,11 +1,9 @@
 package com.hanghae.naegahama.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class File {
+public class File extends Timestamped{
 
     @Id
     @Column(name = "file_id")
@@ -13,4 +11,8 @@ public class File {
 
     @Column(nullable = false)
     private String url;
+
+    @JoinColumn(name = "answer_id")
+    @ManyToOne
+    private Answer answer;
 }

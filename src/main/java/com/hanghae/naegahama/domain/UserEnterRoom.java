@@ -3,17 +3,11 @@ package com.hanghae.naegahama.domain;
 import javax.persistence.*;
 
 @Entity
-public class Message extends Timestamped{
+public class UserEnterRoom {
 
     @Id
-    @Column(name = "message_id")
+    @Column(name = "user_enter_room_id")
     private Long id;
-
-    @Column(nullable = false)
-    private String message;
-
-    @Column(nullable = false)
-    private MessageType messageType;
 
     @JoinColumn(name = "user_id")
     @ManyToOne

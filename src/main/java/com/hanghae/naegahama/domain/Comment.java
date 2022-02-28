@@ -1,10 +1,8 @@
 package com.hanghae.naegahama.domain;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
 public class Comment extends Timestamped{
 
     @Id
@@ -17,5 +15,13 @@ public class Comment extends Timestamped{
 
     @Column
     private Long parentCommentId;
+
+    @JoinColumn(name = "answer_id")
+    @ManyToOne
+    private Answer answer;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
 
 }
