@@ -20,7 +20,7 @@ public class User extends Timestamped{
     @Column( nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName;
 
     @Column(name = "password")
