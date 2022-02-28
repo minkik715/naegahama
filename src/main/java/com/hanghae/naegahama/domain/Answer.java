@@ -1,5 +1,9 @@
 package com.hanghae.naegahama.domain;
 
+
+
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,6 +16,9 @@ public class Answer extends Timestamped {
 
     @Column(nullable = false)
     private String title;
+
+    @Column
+    private String star;
 
     @Lob
     @Column(nullable = false)
@@ -29,5 +36,20 @@ public class Answer extends Timestamped {
 
     @OneToMany(mappedBy = "answer")
     private List<File> fileList;
+
+//    public User(SignUpRequestDto signUpRequestDto, String password) {
+//        this.email = signUpRequestDto.getEmail();
+//        this.nickName = signUpRequestDto.getNickname();
+//        this.password = password;
+//        this.hippoImage = "";
+//    }
+
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Long postId)
+    {
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+
+    }
+
 
 }

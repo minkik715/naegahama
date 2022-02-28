@@ -1,4 +1,4 @@
-/*
+
 package com.hanghae.naegahama.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -24,7 +24,7 @@ public class S3Uploader {
     private final String imageDirName = "image";
 
     @Value("${cloud.aws.s3.bucket}")
-    public String bucket;  // S3 버킷 이름
+    public String naegahama;  // S3 버킷 이름
 
     public String upload(MultipartFile multipartFile, String convertedFileName) throws IOException {
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
@@ -44,13 +44,13 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        amazonS3Client.putObject(new PutObjectRequest(naegahama, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3Client.getUrl(naegahama, fileName).toString();
     }
 
     // S3로 파일 삭제
     public void deleteFile(String deleteFile) {
-        amazonS3Client.deleteObject(bucket, deleteFile);
+        amazonS3Client.deleteObject(naegahama, deleteFile);
     }
 
     // 로컬에 저장된 이미지 지우기
@@ -74,4 +74,4 @@ public class S3Uploader {
 
         return Optional.empty();
     }
-}*/
+}
