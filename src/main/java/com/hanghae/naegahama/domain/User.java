@@ -2,6 +2,7 @@ package com.hanghae.naegahama.domain;
 
 
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
+import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,7 @@ public class User extends Timestamped{
     @Column( nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName;
 
     @Column(name = "password")
@@ -48,6 +49,11 @@ public class User extends Timestamped{
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
+        this.hippoImage = "";
+    }
+    public User(KakaoUserInfo kakaoUserInfo) {
+        this.email = kakaoUserInfo.getEmail();
+        this.nickName = kakaoUserInfo.getNickname();
         this.hippoImage = "";
     }
 }

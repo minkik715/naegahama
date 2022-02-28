@@ -32,5 +32,5 @@ public class Post extends Timestamped{
     private User user;
 
     @OneToMany(mappedBy = "post")
-    private List<Answer> commentList;
+    private List<Answer> answerList;
 }
