@@ -3,6 +3,7 @@ package com.hanghae.naegahama.controller;
 
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.service.AnswerService;

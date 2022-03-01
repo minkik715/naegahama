@@ -152,10 +152,10 @@ public class PostService {
         );
         User user = post.getUser();
         Long deleteId = user.getId();
-        if (userDetails.getUser().getId()==deleteId) {
+        if (userDetails.getUser().getId()== deleteId)
+        {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
-
 
         List<Comment> comments = commentRepository.findAllByAnswer(null);
         for (Comment comment : comments) {

@@ -1,4 +1,6 @@
 package com.hanghae.naegahama.service;
 
-public class RoomService {
+public class RoomService
+{
+
 }

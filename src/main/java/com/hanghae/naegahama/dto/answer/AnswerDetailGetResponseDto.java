@@ -1,11 +1,16 @@
 package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.Like;
+import com.hanghae.naegahama.domain.AnswerLike;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
 public class AnswerDetailGetResponseDto
 {
     private Long requestWriterId;
@@ -26,7 +31,7 @@ public class AnswerDetailGetResponseDto
 
     private String answerWriter;
 
-    private List<Like> likeUserId;
+    private List<AnswerLike> likeUserId;
 
     public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount)
     {

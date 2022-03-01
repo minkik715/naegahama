@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.User;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

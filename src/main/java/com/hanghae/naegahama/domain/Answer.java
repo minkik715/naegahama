@@ -42,7 +42,7 @@ public class Answer extends Timestamped {
 
 
     @OneToMany(mappedBy = "answer")
-    private List<AnswerLike> answerList = new ArrayList<>();
+    private List<AnswerLike> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
     private List<Comment> commentList = new ArrayList<>();

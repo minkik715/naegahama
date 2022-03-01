@@ -6,6 +6,7 @@ import com.hanghae.naegahama.domain.File;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.repository.*;
@@ -138,6 +139,7 @@ public class AnswerService
 
     public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
+
         answerRepository.deleteById(answerId);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
@@ -149,7 +151,7 @@ public class AnswerService
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        Long likeCount = likeRepository.countByAnswer(answer);
+        Long likeCount = answerLikeRepository.countByAnswer(answer);
         Long commentCount = commentRepository.countByAnswer(answer);
 
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount);
