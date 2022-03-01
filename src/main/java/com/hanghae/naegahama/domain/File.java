@@ -1,11 +1,13 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor
 public class File extends Timestamped{
 
     @Id

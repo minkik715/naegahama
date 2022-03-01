@@ -41,7 +41,7 @@ public class User extends Timestamped{
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Like> likeList = new ArrayList<>();
+    private List<PostLike> postLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Message> messageList = new ArrayList<>();

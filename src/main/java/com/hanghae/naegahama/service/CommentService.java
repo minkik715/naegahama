@@ -1,4 +1,4 @@
-/*
+
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.Answer;
@@ -97,4 +97,4 @@ public class CommentService {
         return ResponseEntity.ok().body(kidsCommentListResponseDtoList);
     }
 }
-*/
+

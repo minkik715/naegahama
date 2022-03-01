@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.repository;
 
-import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -11,5 +11,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByCreatedAtDesc();
     Post findPostById(Long id);
 
-
+    List<Post> findAllByUserOrderByCreatedAtDesc( User user);
 }

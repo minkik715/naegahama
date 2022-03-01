@@ -8,13 +8,14 @@ import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import lombok.NoArgsConstructor;
 
 
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
-@Entity
 public class Answer extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,11 +40,13 @@ public class Answer extends Timestamped {
     @ManyToOne
     private User user;
 
+
+    @OneToMany(mappedBy = "answer")
+    private List<AnswerLike> answerList = new ArrayList<>();
+
     @OneToMany(mappedBy = "answer")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "answer")
-    private List<Like> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
     private List<File> fileList = new ArrayList<>();

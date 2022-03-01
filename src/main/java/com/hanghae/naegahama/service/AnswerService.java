@@ -31,7 +31,7 @@ public class AnswerService
     private final AnswerRepository answerRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
+    private final AnswerLikeRepository answerLikeRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -89,7 +89,7 @@ public class AnswerService
         for ( Answer answer : answerList)
         {
             Long commentCount = commentRepository.countByAnswer(answer);
-            Long likeCount = likeRepository.countByAnswer(answer);
+            Long likeCount = answerLikeRepository.countByAnswer(answer);
 
             AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer,commentCount,likeCount);
             answerGetResponseDtoList.add(answerGetResponseDto);

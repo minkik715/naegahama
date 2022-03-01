@@ -51,7 +51,8 @@ public class Post extends Timestamped{
         this.level = postRequestDto.getLevel();
     }
 
-    public void updatePost(PostRequestDto postRequestDto) {
+    public void updatePost(PostRequestDto postRequestDto, User user) {
+        this.user = user;
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
