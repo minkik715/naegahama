@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "PostLike")
+@Table(name = "AnswerLike")
 @Entity
 @Getter
 @NoArgsConstructor

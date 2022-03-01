@@ -115,4 +115,47 @@ public class AnswerService
         return answerGetResponseDtoList;
 
     }
+
+
+    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile) throws IOException
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        List<File> fileList = new ArrayList<>();
+
+        for ( MultipartFile file : multipartFile)
+        {
+            String url = s3Uploader.upload(file, "static");
+            File fileUrl = new File(url);
+            fileList.add(fileUrl);
+        }
+
+        answer.Update(answerPostRequestDto,fileList);
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
+    {
+        answerRepository.deleteById(answerId);
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+
+    public AnswerDetailGetResponseDto answerDetail(Long answerId, UserDetailsImpl userDetails)
+    {
+        Answer answer =  answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        Long likeCount = likeRepository.countByAnswer(answer);
+        Long commentCount = commentRepository.countByAnswer(answer);
+
+        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount);
+
+        return answerDetailGetResponseDto;
+
+
+    }
 }

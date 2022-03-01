@@ -50,11 +50,28 @@ public class AnswerController
         return answerService.fileTest(multipartFile);
     }
 
-//    @PutMapping("/{answerId}")
-//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
-//    {
-//
-//    }
+
+    @PatchMapping("/{answerId}")
+    public ResponseEntity<?> answerUpdate (
+            @PathVariable Long answerId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart (value = "post") AnswerPostRequestDto answerPostRequestDto,
+            @RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
+    {
+        return answerService.answerUpdate(answerId, userDetails, answerPostRequestDto, multipartFile);
+    }
+
+    @DeleteMapping("/{answerId}")
+    public ResponseEntity<?> answerDelete ( @PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return answerService.answerDelete(answerId, userDetails);
+    }
+
+    @GetMapping("/detail/{answerId}")
+    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails )
+    {
+        return answerService.answerDetail(answerId,userDetails);
+    }
 
 }
 
