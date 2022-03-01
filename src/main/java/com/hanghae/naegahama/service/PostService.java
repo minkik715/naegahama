@@ -13,6 +13,7 @@ import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@EnableAutoConfiguration
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -82,8 +84,8 @@ public class PostService {
 
     //삭제
     @Transactional
-    public Post deletePost(Long id, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(id).orElseThrow(
+    public Post deletePost(Long postId, UserDetailsImpl userDetails) {
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         User user = post.getUser();
@@ -92,14 +94,13 @@ public class PostService {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
-
-        List<Comment> comments = commentRepository.findAllByAnswer(null);
+        List<Comment> comments = commentRepository.findAllByAnswerId(answer);
         for (Comment comment : comments) {
             commentRepository.deleteById(comment.getId());
         }
         postLikeRepository.deleteByPost(post);
-        postRepository.deleteById(id);
-        return post;
+        postRepository.deleteById(postId);
+        return postId;
     }
 
 
