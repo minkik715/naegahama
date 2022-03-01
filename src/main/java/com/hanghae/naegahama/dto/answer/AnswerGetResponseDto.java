@@ -2,9 +2,14 @@ package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
+@NoArgsConstructor
+@Getter
 public class AnswerGetResponseDto
 {
     private Long answerId;
@@ -27,6 +32,5 @@ public class AnswerGetResponseDto
         this.modifiedAt = answer.getModifiedAt();
         this.commentCount = commentCount;
         this.likeCount = likeCount;
-
     }
 }

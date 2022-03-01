@@ -35,6 +35,7 @@ public class AnswerController
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
+    @ResponseBody
     @GetMapping("/{postId}")
     public List<AnswerGetResponseDto> answerList(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {

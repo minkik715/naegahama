@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Answer extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id", nullable = false)
     private Long id;
 
