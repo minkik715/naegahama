@@ -33,28 +33,40 @@ public class AnswerService
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
 
+    private final FileRepository fileRepository;
+
     private final S3Uploader s3Uploader;
 
+    @Transactional
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
             throws IOException
     {
 //        String Url = s3Uploader.upload(multipartFile, "static");
-        List<File> fileList = new ArrayList<>();
-
+        //유저를 받고
         User user = userDetails.getUser();
 
+        //answer와 연결된 post를 찾고
+        Post post = postRepository.findPostById(postId);
+
+        //filelist가 빈 Answer를 미리 하나 만들어두고
+        Answer answer = new Answer(answerPostRequestDto,post,user);
+
+        //저장된 Answer을 꺼내와서
+        Answer saveAnwser = answerRepository.save(answer);
+        log.info("saveAnswer Id = {}", saveAnwser.getId());
+        //들어온 파일들을 하나씩 처리하는데
         for ( MultipartFile file : multipartFile)
         {
             String url = s3Uploader.upload(file, "static");
+            //S3에서 받아온 URL을 통해서 file을 만들고
             File fileUrl = new File(url);
-            fileList.add(fileUrl);
+
+            //파일에 아까 저장한 Answer를 Set한 후에
+            fileUrl.setAnswer(saveAnwser);
+            //저장된 파일을 Answer에 넣어준다
+            File saveFile = fileRepository.save(fileUrl);
+            saveAnwser.getFileList().add(saveFile);
         }
-
-        Post post = postRepository.findPostById(postId);
-
-        Answer answer = new Answer(answerPostRequestDto,post,fileList,user);
-
-        answerRepository.save(answer);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 

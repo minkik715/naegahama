@@ -52,12 +52,11 @@ public class Answer extends Timestamped {
     private List<File> fileList = new ArrayList<>();
 
 
-    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, List<File> fileList, User user) {
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user) {
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
         this.post = post;
         this.user = user;
-        this.fileList = fileList;
     }
 
 

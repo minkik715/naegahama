@@ -39,6 +39,7 @@ public class UserService {
         User user = new User(signUpRequestDto,encodePassword(password));
         userRepository.save(user);
         return new LoginRequestDto(signUpRequestDto.getEmail(),password);
+
     }
 
     private String encodePassword(String password) {

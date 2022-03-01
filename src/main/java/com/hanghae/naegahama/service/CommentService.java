@@ -42,7 +42,6 @@ public class CommentService {
         }else{
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
         }
-        commentRepository.save(comment);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
