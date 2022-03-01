@@ -47,8 +47,6 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<Comment> commentList = new ArrayList<>();
 
-    
-
     @OneToMany(mappedBy = "answer")
     private List<File> fileList = new ArrayList<>();
 

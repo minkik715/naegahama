@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AnswerLikeRepository extends JpaRepository<AnswerLike, Long> {
     Long countByAnswer(Answer answer);
 
+    void deleteByAnswer(Answer answer);
+
 }

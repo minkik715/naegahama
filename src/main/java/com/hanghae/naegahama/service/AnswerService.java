@@ -38,7 +38,6 @@ public class AnswerService
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
-
     private final FileRepository fileRepository;
 
     private final S3Uploader s3Uploader;
@@ -139,6 +138,12 @@ public class AnswerService
 
     public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        answerLikeRepository.deleteByAnswer(answer);
+        fileRepository.deleteByAnswer(answer);
+        commentRepository.deleteByAnswer(answer);
 
         answerRepository.deleteById(answerId);
 
