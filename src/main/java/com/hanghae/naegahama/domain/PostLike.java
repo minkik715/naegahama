@@ -5,21 +5,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Table(name = "AnwerLike")
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment extends Timestamped{
-
+public class PostLike extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "comment_id", nullable = false)
+    @Column(name = "like_id", nullable = false)
     private Long id;
-
-    @Column(nullable = false)
-    private String content;
-
-    @Column
-    private Long parentCommentId;
 
     @JoinColumn(name = "answer_id")
     @ManyToOne

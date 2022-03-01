@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Getter
@@ -40,22 +39,24 @@ public class Post extends Timestamped{
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
 
     @Builder
-    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
+    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails, List<Answer> answerList1) {
         this.user = userDetails.getUser();
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        this.content = postRequestDto.getCategory();
+        this.category = postRequestDto.getCategory();
         this.level = Integer.valueOf(postRequestDto.getLevel());
+        this.answerList = answerList1;
     }
 
     public void updatePost(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        this.content = postRequestDto.getCategory();
+        this.category = postRequestDto.getCategory();
         this.level = Integer.valueOf(postRequestDto.getLevel());
+        this.answerList = postRequestDto.getAnswerList();
     }
 }

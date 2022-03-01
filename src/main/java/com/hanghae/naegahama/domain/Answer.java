@@ -1,9 +1,14 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Answer extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +30,7 @@ public class Answer extends Timestamped {
     private List<Comment> commentList;
 
     @OneToMany(mappedBy = "answer")
-    private List<Like> likeList;
+    private List<PostLike> postLikeList;
 
     @OneToMany(mappedBy = "answer")
     private List<File> fileList;

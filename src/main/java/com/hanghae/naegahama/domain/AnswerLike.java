@@ -1,10 +1,16 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
-@Table(name = "likes")
+@Table(name = "PostLike")
 @Entity
-public class Like extends Timestamped{
+@Getter
+@NoArgsConstructor
+public class AnswerLike {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "like_id", nullable = false)
@@ -17,5 +23,4 @@ public class Like extends Timestamped{
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
-
 }
