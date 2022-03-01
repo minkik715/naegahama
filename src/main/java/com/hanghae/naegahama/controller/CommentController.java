@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
@@ -44,3 +45,4 @@ public class CommentController {
     }
 }
 
+*/

@@ -1,7 +1,10 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
+@Getter
 @Entity
 public class UserEnterRoom {
 
@@ -16,4 +19,11 @@ public class UserEnterRoom {
     @JoinColumn(name = "room_id")
     @ManyToOne
     private Room room;
+
+    public void setRoomUserStatus(RoomUserStatus roomUserStatus) {
+        this.roomUserStatus = roomUserStatus;
+    }
+
+    @Column(nullable = false)
+    private RoomUserStatus roomUserStatus;
 }

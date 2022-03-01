@@ -2,6 +2,7 @@ package com.hanghae.naegahama.controller;
 
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.login.KakaoLoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.signup.EmailDuplCheckDto;
@@ -44,9 +45,9 @@ public class UserController {
         return userService.login(param.get("kakaoToken").toString());
     }
 
-  /*  @PostMapping()
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> param, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.login(param.get("kakaoToken").toString());
-    }*/
+    @GetMapping
+    public ResponseEntity<?> login(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok().body(new BasicResponseDto(userDetails.getUser().getNickName()));
+    }
 
 }
