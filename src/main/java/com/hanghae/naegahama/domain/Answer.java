@@ -47,6 +47,7 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<Comment> commentList = new ArrayList<>();
 
+    
 
     @OneToMany(mappedBy = "answer")
     private List<File> fileList = new ArrayList<>();
@@ -57,6 +58,14 @@ public class Answer extends Timestamped {
         this.content = answerPostRequestDto.getContent();
         this.post = post;
         this.user = user;
+    }
+
+
+    public void Update(AnswerPostRequestDto answerPostRequestDto,List<File>  fileList)
+    {
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.fileList = fileList;
     }
 
 

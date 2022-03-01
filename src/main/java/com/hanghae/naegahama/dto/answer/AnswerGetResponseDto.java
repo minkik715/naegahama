@@ -20,7 +20,7 @@ public class AnswerGetResponseDto
 
     private LocalDateTime modifiedAt;
 
-    private Long likeCount;
+    private Long answerLikeCount;
 
     private Long commentCount;
 
@@ -31,6 +31,6 @@ public class AnswerGetResponseDto
         this.title = answer.getTitle();
         this.modifiedAt = answer.getModifiedAt();
         this.commentCount = commentCount;
-        this.likeCount = likeCount;
+        this.answerLikeCount = likeCount;
     }
 }
