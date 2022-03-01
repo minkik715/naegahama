@@ -1,7 +1,10 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
 public class File extends Timestamped{
 
@@ -15,4 +18,9 @@ public class File extends Timestamped{
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;
+
+    public File(String url)
+    {
+        this.url = url;
+    }
 }

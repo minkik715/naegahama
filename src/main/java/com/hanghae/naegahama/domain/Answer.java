@@ -1,13 +1,20 @@
 package com.hanghae.naegahama.domain;
 
+
 import lombok.Getter;
+
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+
+import lombok.NoArgsConstructor;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
+@NoArgsConstructor
+@Entity
 public class Answer extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,6 +23,9 @@ public class Answer extends Timestamped {
 
     @Column(nullable = false)
     private String title;
+
+    @Column
+    private String star;
 
     @Lob
     @Column(nullable = false)
@@ -38,6 +48,15 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<File> fileList = new ArrayList<>();
 
+
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, List<File> fileList, User user)
+    {
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.post = post;
+        this.user = user;
+        this.fileList = fileList;
+    }
 
 
 }
