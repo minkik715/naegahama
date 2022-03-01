@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
@@ -98,3 +99,4 @@ public class AnswerService
 
     }
 }
+*/

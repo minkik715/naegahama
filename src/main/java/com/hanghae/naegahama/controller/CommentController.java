@@ -34,8 +34,13 @@ public class CommentController {
     }
 
     @GetMapping("/{answerId}")
-    public ResponseEntity<?> getCommentList(@PathVariable Long answerId){
-        return commentService.getCommentList(answerId);
+    public ResponseEntity<?> getParentCommentList(@PathVariable Long answerId){
+        return commentService.getParentCommentList(answerId);
+    }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<?> getKidsCommentList(@PathVariable Long commentId){
+        return commentService.getKidsCommentList(commentId);
     }
 }
 

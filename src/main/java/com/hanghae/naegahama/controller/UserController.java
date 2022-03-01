@@ -44,9 +44,9 @@ public class UserController {
         return userService.login(param.get("kakaoToken").toString());
     }
 
-    @PostMapping()
+  /*  @PostMapping()
     public ResponseEntity<?> login(@RequestBody Map<String, Object> param, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.login(param.get("kakaoToken").toString());
-    }
+    }*/
 
 }
