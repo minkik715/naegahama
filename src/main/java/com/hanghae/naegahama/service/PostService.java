@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
