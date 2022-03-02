@@ -1,15 +1,21 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.domain.Answer;
+import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
+import com.hanghae.naegahama.dto.post.PostMyPageDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
 import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
+import com.hanghae.naegahama.repository.AnswerRepository;
+import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -32,6 +39,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final KakaoOAuth2 kakaoOAuth2;
+
+    //
+    private final PostRepository postRepository;
+    private final AnswerRepository answerRepository;
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -94,5 +105,31 @@ public class UserService {
           return ResponseEntity.ok().body(new BasicResponseDto("false"));
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    public List<PostMyPageDto> myWrite(UserDetailsImpl userDetails)
+    {
+        List<PostMyPageDto> myPageDtoList = new ArrayList<>();
+
+        User user = userDetails.getUser();
+
+        List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
+        List<Answer> answerList = answerRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+        for ( Post post : postList)
+        {
+            PostMyPageDto postMyPageDto = new PostMyPageDto(post);
+            myPageDtoList.add(postMyPageDto);
+        }
+
+        for ( Answer answer : answerList)
+        {
+            PostMyPageDto postMyPageDto = new PostMyPageDto(answer);
+            myPageDtoList.add(postMyPageDto);
+        }
+
+
+
+        return myPageDtoList;
     }
 }

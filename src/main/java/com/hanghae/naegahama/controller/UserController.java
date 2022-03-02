@@ -5,6 +5,7 @@ import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.login.KakaoLoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
+import com.hanghae.naegahama.dto.post.PostMyPageDto;
 import com.hanghae.naegahama.dto.signup.EmailDuplCheckDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -50,7 +52,10 @@ public class UserController {
         return ResponseEntity.ok().body(new BasicResponseDto(userDetails.getUser().getNickName()));
     }
 
-//    @GetMapping("/mypost")
-//    public
+    @GetMapping("/mypost")
+    public List<PostMyPageDto> myWrite(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myWrite(userDetails);
+    }
 
 }
