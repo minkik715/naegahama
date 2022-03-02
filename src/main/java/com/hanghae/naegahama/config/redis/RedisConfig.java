@@ -27,7 +27,7 @@ public class RedisConfig {
     // 단일 Topic 사용을 위한 Bean 설정
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
+        return new ChannelTopic("Room");
     }
 
     // redis에 발행(publish)된 메시지 처리를 위한 리스너 설정

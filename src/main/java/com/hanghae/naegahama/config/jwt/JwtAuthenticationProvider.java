@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.Enumeration;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtAuthenticationProvider {
 
     private String secretKey = "1234";
@@ -51,21 +53,17 @@ public class JwtAuthenticationProvider {
 
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
+
         UserDetails userDetails = userDetailsImplService.checkUserByUserId(this.getuserId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // Request의 Header에서 token 값을 가져온다. 헤더에 "Authorization" : "TOKEN값" 형식으로 있다.
     public String tokenResolver(HttpServletRequest request) {
-
-        Cookie[] cookies = request.getCookies();
-        if(cookies ==null){
-            return null;
-        }
-        for (Cookie cookie : cookies) {
-            if(cookie.getName().equals("access-token")){
-                return cookie.getValue();
-            }
+        String token = request.getHeader("token");
+        log.info("token = {}", token);
+        if(token != null){
+            return token;
         }
         return null;
     }

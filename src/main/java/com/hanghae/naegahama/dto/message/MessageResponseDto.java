@@ -12,8 +12,11 @@ public class MessageResponseDto {
     private String message;
     private String createdAt;
 
+    private String messageType;
+
     public MessageResponseDto(Message message) {
         this.roomId = String.valueOf(message.getRoom().getId());
+        this.messageType = message.getMessageType().toString();
         this.userId = message.getUser().getId();
         this.sender = message.getUser().getNickName();
         this.message = message.getMessage();
