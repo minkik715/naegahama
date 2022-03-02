@@ -113,7 +113,7 @@ public class UserService {
 
         User user = userDetails.getUser();
 
-        List<Post> postList = postRepository.findAllByUserOrderByCreatedAt(user);
+        List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
         List<Answer> answerList = answerRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         for ( Post post : postList)
