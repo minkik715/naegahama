@@ -1,21 +1,39 @@
 package com.hanghae.naegahama.domain;
 
+
+import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.dto.category.CategoryResponseDto;
+import com.hanghae.naegahama.dto.post.PostRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
-public class Post extends Timestamped{
+public class Post extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
     private String title;
+
+    public Post(String title, String content, String category, String level, User user) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.level = level;
+        this.user = user;
+    }
 
     @Length(max = 10000)
     @Column(nullable = false)
@@ -25,7 +43,7 @@ public class Post extends Timestamped{
     private String category;
 
     @Column(nullable = false)
-    private Integer level;
+    private String level;
 
     @JoinColumn(name = "user_id")
     @ManyToOne
@@ -33,4 +51,25 @@ public class Post extends Timestamped{
 
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
+
+    public Post(PostRequestDto postRequestDto, User user) {
+        this.user = user;
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+        this.category = postRequestDto.getCategory();
+        this.level = postRequestDto.getLevel();
+    }
+
+    public void UpdatePost(PostRequestDto postRequestDto, User user) {
+        this.user = user;
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+        this.category = postRequestDto.getCategory();
+        this.level = postRequestDto.getLevel();
+
+    }
+
+//    public Category(CategoryResponseDto categoryResponseDto) {
+//        this.category = categoryResponseDto.getCategory();
+//    }
 }

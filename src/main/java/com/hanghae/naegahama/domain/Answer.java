@@ -1,17 +1,33 @@
 package com.hanghae.naegahama.domain;
 
+
+import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
+import lombok.Getter;
+
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+
+import lombok.NoArgsConstructor;
+
+
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Answer extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
     private String title;
+
+    @Column
+    private Long star;
 
     @Lob
     @Column(nullable = false)
@@ -21,13 +37,40 @@ public class Answer extends Timestamped {
     @ManyToOne
     private Post post;
 
-    @OneToMany(mappedBy = "answer")
-    private List<Comment> commentList;
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+
 
     @OneToMany(mappedBy = "answer")
-    private List<Like> likeList;
+    private List<AnswerLike> likeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
-    private List<File> fileList;
+    private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "answer")
+    private List<File> fileList = new ArrayList<>();
+
+
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user) {
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.post = post;
+        this.user = user;
+    }
+
+
+    public void Update(AnswerPostRequestDto answerPostRequestDto,List<File>  fileList)
+    {
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.fileList = fileList;
+    }
+
+    public void Star(StarPostRequestDto starPostRequestDto)
+    {
+        this.star = starPostRequestDto.getStar();
+    }
+
 
 }

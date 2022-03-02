@@ -1,8 +1,13 @@
 package com.hanghae.naegahama.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Comment extends Timestamped{
 
     @Id
@@ -24,4 +29,22 @@ public class Comment extends Timestamped{
     @ManyToOne
     private User user;
 
+    public Comment(String commentContent, Answer findAnswer, User user) {
+        this.content = commentContent;
+        this.answer = findAnswer;
+        this.user = user;
+        findAnswer.getCommentList().add(this);
+    }
+
+    public Comment(String commentContent,Long parentCommentId, Answer findAnswer, User user) {
+        this.content = commentContent;
+        this.parentCommentId = parentCommentId;
+        this.answer = findAnswer;
+        this.user = user;
+        findAnswer.getCommentList().add(this);
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

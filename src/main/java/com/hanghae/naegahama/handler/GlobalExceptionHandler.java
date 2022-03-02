@@ -12,8 +12,18 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException e){
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(PasswordCheckFailException.class)
     public ResponseEntity<ErrorResponse> passwordCheckFailException(PasswordCheckFailException e){
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<ErrorResponse> RoomNotFoundException(RoomNotFoundException e){
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
@@ -79,6 +89,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalCommentDeleteUserException.class)
     public ResponseEntity<ErrorResponse> handleIllegalCommentDeleteUserException(IllegalCommentDeleteUserException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AnswerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> AnswerNotFoundException(AnswerNotFoundException e) {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

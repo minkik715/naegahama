@@ -17,5 +17,4 @@ public class NaegahamaApplication {
                 .properties(APPLICATION_LOCATIONS)
                 .run(args);
     }
-
 }
