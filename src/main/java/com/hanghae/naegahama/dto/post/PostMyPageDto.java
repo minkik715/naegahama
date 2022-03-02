@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class PostMyPageDto {
+public class PostMyPageDto implements Comparable<PostMyPageDto>
+{
     private Long requestId;
     private Long answerId;
     private String title;
@@ -34,4 +35,21 @@ public class PostMyPageDto {
         this.content = answer.getContent();
         this.createdAt = answer.getCreatedAt();
     }
+
+    @Override
+    public int compareTo(PostMyPageDto postMyPageDto)
+    {
+
+        if (this.createdAt.isBefore(postMyPageDto.getCreatedAt() ))
+        {
+            return -1;
+        }
+        else if (this.createdAt.isAfter(postMyPageDto.getCreatedAt() ))
+        {
+            return 1;
+        }
+        return 0;
+
+    }
+
 }

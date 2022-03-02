@@ -128,8 +128,8 @@ public class UserService {
             myPageDtoList.add(postMyPageDto);
         }
 
-
-
+        Collections.sort(myPageDtoList);
+        
         return myPageDtoList;
     }
 }
