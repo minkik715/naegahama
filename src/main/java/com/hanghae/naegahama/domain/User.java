@@ -63,4 +63,9 @@ public class User extends Timestamped{
         this.nickName = kakaoUserInfo.getNickname();
         this.hippoImage = "";
     }
+
+    public void addPoint(Long answerStar)
+    {
+        this.point += answerStar*100;
+    }
 }

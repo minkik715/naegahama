@@ -6,6 +6,7 @@ import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.Getter;
@@ -167,7 +168,26 @@ public class AnswerService
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList);
 
         return answerDetailGetResponseDto;
-
-
     }
+
+
+    public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        if( answer.getStar() != null )
+        {
+            throw new IllegalArgumentException("이미 평가한 답글입니다.");
+        }
+
+        answer.Star(starPostRequestDto);
+
+        User answerWriter = answer.getUser();
+        answerWriter.addPoint(starPostRequestDto.getStar());
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+
 }

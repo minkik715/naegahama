@@ -87,7 +87,8 @@ public class UserService {
         throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
     }
 
-    public ResponseEntity<?> emailCheck(String email) {
+    public ResponseEntity<?> emailCheck(String email)
+    {
         Optional<User> byEmail = userRepository.findByEmail(email);
         if(byEmail.isPresent()){
           return ResponseEntity.ok().body(new BasicResponseDto("false"));

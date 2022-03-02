@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.domain;
 
 
+import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
 
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
@@ -26,7 +27,7 @@ public class Answer extends Timestamped {
     private String title;
 
     @Column
-    private String star;
+    private Long star;
 
     @Lob
     @Column(nullable = false)
@@ -64,6 +65,11 @@ public class Answer extends Timestamped {
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
         this.fileList = fileList;
+    }
+
+    public void Star(StarPostRequestDto starPostRequestDto)
+    {
+        this.star = starPostRequestDto.getStar();
     }
 
 

@@ -23,7 +23,7 @@ public class AnswerDetailGetResponseDto
 
     private LocalDateTime modifiedAt;
 
-    private String star;
+    private Long star;
 
     private Long answerLikeCount;
 
