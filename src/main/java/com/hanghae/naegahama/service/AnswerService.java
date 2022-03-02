@@ -1,10 +1,7 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.File;
-import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
@@ -159,7 +156,15 @@ public class AnswerService
         Long likeCount = answerLikeRepository.countByAnswer(answer);
         Long commentCount = commentRepository.countByAnswer(answer);
 
-        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount);
+        List<AnswerLike> likeList = answer.getLikeList();
+        List<Long> likeUserList = new ArrayList<>();
+
+        for ( AnswerLike likeUser : likeList)
+        {
+            likeUserList.add(likeUser.getUser().getId());
+        }
+
+        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList);
 
         return answerDetailGetResponseDto;
 

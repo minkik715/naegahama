@@ -144,26 +144,26 @@ public class PostService {
         return response;
     }
 
-    @ResponseBody
-    public List<CategoryResponseDto> getCategory(String category) {
-        Post Category = Post.geCategory(category);
-        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(category);
-        List<ResponseDto> response = new ArrayList<>();
-
-        for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            ResponseDto ResponseDto = new ResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    post.getModifiedAt(),
-                    answerCount,
-                    post.getUser().getId(),
-                    post.getUser().getNickName()
-            );
-            response.add(ResponseDto);
-        }
-        return response;
-    }
-    }
+//    @ResponseBody
+//    public List<CategoryResponseDto> getCategory(String category) {
+//        Post Category = Post.geCategory(category);
+//        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(category);
+//        List<ResponseDto> response = new ArrayList<>();
+//
+//        for (Post post : posts) {
+//            Integer answerCount = answerRepository.countByPost(post);
+//            ResponseDto ResponseDto = new ResponseDto(
+//                    post.getId(),
+//                    post.getTitle(),
+//                    post.getContent(),
+//                    post.getModifiedAt(),
+//                    answerCount,
+//                    post.getUser().getId(),
+//                    post.getUser().getNickName()
+//            );
+//            response.add(ResponseDto);
+//        }
+//        return response;
+//    }
+//    }
 }

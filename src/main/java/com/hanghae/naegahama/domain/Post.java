@@ -61,7 +61,7 @@ public class Post extends Timestamped {
 
     }
 
-    public Category(CategoryResponseDto categoryResponseDto) {
-        this.category = categoryResponseDto.getCategory();
-    }
+//    public Category(CategoryResponseDto categoryResponseDto) {
+//        this.category = categoryResponseDto.getCategory();
+//    }
 }

@@ -31,9 +31,9 @@ public class AnswerDetailGetResponseDto
 
     private String answerWriter;
 
-    private List<AnswerLike> likeUserId;
+    private List<Long> likeUserId;
 
-    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount)
+    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList)
     {
         this.requestWriterId = answer.getPost().getUser().getId();
         this.answerWriterId = answer.getId();
@@ -44,7 +44,7 @@ public class AnswerDetailGetResponseDto
         this.answerLikeCount = likeCount;
         this.commentCount= commentCount;
         this.answerWriter= answer.getUser().getNickName();
-        this.likeUserId = answer.getLikeList();
+        this.likeUserId = likeUserList;
 
     }
 }
