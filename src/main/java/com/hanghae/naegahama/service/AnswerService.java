@@ -98,7 +98,7 @@ public class AnswerService
 
     public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        List<Answer> answerList = answerRepository.findAllByPostId(postId);
+        List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
         List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
 
         for ( Answer answer : answerList)

@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
-    List<Answer> findAllByPostId(Long id);
+    List<Answer> findAllByPostIdOrderByCreatedAt(Long id);
     Integer countByPost(Post post);
 }

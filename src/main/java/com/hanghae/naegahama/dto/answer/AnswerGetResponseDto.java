@@ -1,24 +1,16 @@
 package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
-<<<<<<< HEAD
 import com.hanghae.naegahama.domain.User;
-=======
 
->>>>>>> 96ff869d080672871c5a525200cc1f5bdce89af2
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-<<<<<<< HEAD
 @Getter
 @NoArgsConstructor
-=======
 
-@NoArgsConstructor
-@Getter
->>>>>>> 96ff869d080672871c5a525200cc1f5bdce89af2
 public class AnswerGetResponseDto
 {
     private Long answerId;

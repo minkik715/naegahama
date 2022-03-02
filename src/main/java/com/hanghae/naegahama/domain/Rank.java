@@ -1,11 +1,13 @@
 package com.hanghae.naegahama.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Rank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +21,8 @@ public class Rank {
     @OneToOne
     private User user;
 
+    public Rank(User user, int rank) {
+        this.user = user;
+        this.rank =rank;
+    }
 }

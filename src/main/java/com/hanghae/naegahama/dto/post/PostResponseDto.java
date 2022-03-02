@@ -15,15 +15,16 @@ public class PostResponseDto {
     private String title;
     private String content;
     private LocalDateTime modifiedAt;
-    private Integer answerCount ;
+    private Integer answerCount;
+    private Long postLikeCount;
 
-
-
-    public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt , Integer answerCount) {
+    public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
+                           Integer answerCount, Long postLikeCount) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.modifiedAt = modifiedAt;
         this.answerCount = answerCount;
+        this.postLikeCount = postLikeCount;
     }
 }
