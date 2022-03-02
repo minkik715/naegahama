@@ -1,4 +1,5 @@
 package com.hanghae.naegahama.service;
+
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.Post;
@@ -33,8 +34,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     @Transactional
-    public Post createPost(PostRequestDto postRequestDto, User user)
-    {
+    public Post createPost(PostRequestDto postRequestDto, User user) {
 
         if (postRequestDto.getTitle() == null) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
@@ -62,12 +62,14 @@ public class PostService {
 
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
+            Long postLikeCount = postLikeRepository.countByPost(post);
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getModifiedAt(),
-                    answerCount
+                    answerCount,
+                    postLikeCount
             );
             response.add(postResponseDto);
         }
@@ -108,7 +110,7 @@ public class PostService {
         );
         User user = post.getUser();
         Long deleteId = user.getId();
-        if (userDetails.getUser().getId()==deleteId) {
+        if (userDetails.getUser().getId() == deleteId) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
@@ -122,14 +124,14 @@ public class PostService {
         return post;
     }
 
-
-    @ResponseBody
-    public List<ResponseDto> getPost1(Long postId, UserDetailsImpl userDetails) {
-        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(userDetails.getUser());
+    //게시글 상세조회.
+    public List<ResponseDto> getPost1(Long postId) {
+        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
         List<ResponseDto> response = new ArrayList<>();
 
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
+            Long postLikeCount = postLikeRepository.countByPost(post);
             ResponseDto ResponseDto = new ResponseDto(
                     post.getId(),
                     post.getTitle(),
@@ -137,7 +139,8 @@ public class PostService {
                     post.getModifiedAt(),
                     answerCount,
                     post.getUser().getId(),
-                    post.getUser().getNickName()
+                    post.getUser().getNickName(),
+                    postLikeCount
             );
             response.add(ResponseDto);
         }
@@ -146,24 +149,23 @@ public class PostService {
 
     @ResponseBody
     public List<CategoryResponseDto> getCategory(String category) {
-        Post Category = Post.geCategory(category);
-        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(category);
-        List<ResponseDto> response = new ArrayList<>();
+
+        List<Post> posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+        List<CategoryResponseDto> response = new ArrayList<>();
 
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
-            ResponseDto ResponseDto = new ResponseDto(
+            Long postLikeCount = postLikeRepository.countByPost(post);
+            CategoryResponseDto categoryResponseDto = new CategoryResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getModifiedAt(),
                     answerCount,
-                    post.getUser().getId(),
-                    post.getUser().getNickName()
+                    postLikeCount
             );
-            response.add(ResponseDto);
+            response.add(categoryResponseDto);
         }
         return response;
-    }
     }
 }

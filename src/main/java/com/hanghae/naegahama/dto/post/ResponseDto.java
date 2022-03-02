@@ -16,9 +16,10 @@ public class ResponseDto {
     private Integer answerCount;
     private  Long user_id;
     private  String nickname;
+    private Long postLikeCount;
 
-    public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt ,
-                       Integer answerCount, Long user_id,String nickname) {
+    public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
+                       Integer answerCount, Long user_id,String nickname, Long postLikeCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -26,5 +27,6 @@ public class ResponseDto {
         this.answerCount = answerCount;
         this.user_id = user_id;
         this.nickname = nickname;
+        this.postLikeCount = postLikeCount;
     }
 }

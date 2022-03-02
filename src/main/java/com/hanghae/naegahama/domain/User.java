@@ -34,6 +34,9 @@ public class User extends Timestamped{
     @Column
     private int point;
 
+//    @OneToOne(mappedBy = "user")
+//    private Survey Survey;
+
  /*   @OneToMany(mappedBy = "user")
     private List<Post> postList = new ArrayList<>();*/
 
