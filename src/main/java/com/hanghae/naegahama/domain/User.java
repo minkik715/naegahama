@@ -34,10 +34,13 @@ public class User extends Timestamped{
     @Column
     private int point;
 
+//    @OneToOne(mappedBy = "user")
+//    private Survey Survey;
+
  /*   @OneToMany(mappedBy = "user")
     private List<Post> postList = new ArrayList<>();*/
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -49,10 +52,18 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
 
+
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
-    public User(SignUpRequestDto signUpRequestDto,String password) {
+    public User(String email, String nickName, String password, int point) {
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+        this.point = point;
+    }
+
+    public User(SignUpRequestDto signUpRequestDto, String password) {
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;

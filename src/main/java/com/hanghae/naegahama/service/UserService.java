@@ -113,7 +113,7 @@ public class UserService {
 
         User user = userDetails.getUser();
 
-        List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
+        List<Post> postList = postRepository.findAllByUserOrderByCreatedAt(user);
         List<Answer> answerList = answerRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         for ( Post post : postList)
@@ -129,7 +129,7 @@ public class UserService {
         }
 
         Collections.sort(myPageDtoList);
-        
+
         return myPageDtoList;
     }
 }

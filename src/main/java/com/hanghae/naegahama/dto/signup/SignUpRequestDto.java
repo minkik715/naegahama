@@ -1,8 +1,10 @@
 package com.hanghae.naegahama.dto.signup;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @NoArgsConstructor @AllArgsConstructor
 public class SignUpRequestDto {
     private String email;
     private String nickname;

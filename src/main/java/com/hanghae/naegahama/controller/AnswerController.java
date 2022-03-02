@@ -53,6 +53,11 @@ public class AnswerController
     }
 
 
+//    @PutMapping("/{answerId}")
+//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+//    {
+//
+//    }
     @PatchMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (
             @PathVariable Long answerId,
