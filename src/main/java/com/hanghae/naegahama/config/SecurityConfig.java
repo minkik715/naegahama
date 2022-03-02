@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 기본 로그인 방식 안쓸거임.
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/chatting/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/user/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 //.antMatchers(HttpMethod.OPTIONS, "/test/**").permitAll()
@@ -51,8 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedOrigin("https://raddaslul.s3.ap-northeast-2.amazonaws.com/");
-        configuration.addAllowedOrigin("http://woo-jin.shop.s3-website.ap-northeast-2.amazonaws.com/");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");

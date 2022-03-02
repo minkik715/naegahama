@@ -13,5 +13,4 @@ public class PostRequestDto {
     private String content;
     private String category;
     private String level;
-    private List<Answer> answerList;
 }

@@ -1,6 +1,8 @@
 package com.hanghae.naegahama.domain;
 
+
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Post extends Timestamped{
+public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "post_id", nullable = false)
@@ -33,7 +35,7 @@ public class Post extends Timestamped{
     private String category;
 
     @Column(nullable = false)
-    private Integer level;
+    private String level;
 
     @JoinColumn(name = "user_id")
     @ManyToOne
@@ -42,21 +44,24 @@ public class Post extends Timestamped{
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
 
-    @Builder
-    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails, List<Answer> answerList1) {
-        this.user = userDetails.getUser();
+    public Post(PostRequestDto postRequestDto, User user) {
+        this.user = user;
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
-        this.level = Integer.valueOf(postRequestDto.getLevel());
-        this.answerList = answerList1;
+        this.level = postRequestDto.getLevel();
     }
 
-    public void updatePost(PostRequestDto postRequestDto) {
+    public void UpdatePost(PostRequestDto postRequestDto, User user) {
+        this.user = user;
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
-        this.level = Integer.valueOf(postRequestDto.getLevel());
-        this.answerList = postRequestDto.getAnswerList();
+        this.level = postRequestDto.getLevel();
+
+    }
+
+    public Category(CategoryResponseDto categoryResponseDto) {
+        this.category = categoryResponseDto.getCategory();
     }
 }

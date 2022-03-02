@@ -8,6 +8,8 @@ import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
+import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
+import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final KakaoOAuth2 kakaoOAuth2;
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -56,14 +60,23 @@ public class UserService {
                 () -> new EmailNotFoundException("해당 이메일은 존재하지 않습니다.")
         );
         loginPassword(password, user);
-        sendToken(response, user);
+        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
+        Cookie cookie = new Cookie("access-token",token);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().body(sendToken(user));
+    }
+
+    public ResponseEntity<?> login(String kakaoAccessToken) throws EmailNotFoundException {
+        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
+        User user = new User(userInfo);
+        userRepository.save(user);
+
+
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    private void sendToken(HttpServletResponse response, User user) {
-        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        Cookie cookie =new Cookie("token", token);
-        response.addCookie(cookie);
+    private String sendToken(User user) {
+        return jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
     }
 
     private void loginPassword(String password, User user) {
@@ -71,5 +84,13 @@ public class UserService {
             return;
         }
         throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
+    }
+
+    public ResponseEntity<?> emailCheck(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        if(byEmail.isPresent()){
+          return ResponseEntity.ok().body(new BasicResponseDto("false"));
+        }
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }

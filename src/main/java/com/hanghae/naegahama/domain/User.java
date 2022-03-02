@@ -2,10 +2,12 @@ package com.hanghae.naegahama.domain;
 
 
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
+import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,25 +31,36 @@ public class User extends Timestamped{
     @Column(name = "hippoImage")
     private String hippoImage;
 
-    @OneToMany(mappedBy = "user")
-    private List<Post> postList;
+    @Column
+    private int point;
+
+ /*   @OneToMany(mappedBy = "user")
+    private List<Post> postList = new ArrayList<>();*/
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<PostLike> postLikeList;
+    private List<PostLike> postLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageList;
+    private List<Message> messageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserEnterRoom> userEnterRoomList;
+    private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Answer> answerList = new ArrayList<>();
 
     public User(SignUpRequestDto signUpRequestDto,String password) {
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
+        this.hippoImage = "";
+    }
+    public User(KakaoUserInfo kakaoUserInfo) {
+        this.email = kakaoUserInfo.getEmail();
+        this.nickName = kakaoUserInfo.getNickname();
         this.hippoImage = "";
     }
 }

@@ -18,8 +18,8 @@ public class PostResponseDto {
     private Integer answerCount ;
 
 
-    public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt ,
-                           Integer answerCount) {
+
+    public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt , Integer answerCount) {
         this.id = id;
         this.title = title;
         this.content = content;

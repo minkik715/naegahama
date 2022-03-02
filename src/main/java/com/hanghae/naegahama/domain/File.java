@@ -20,4 +20,9 @@ public class File extends Timestamped{
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;
+
+    public File(String url)
+    {
+        this.url = url;
+    }
 }

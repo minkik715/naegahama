@@ -29,4 +29,24 @@ public class Comment extends Timestamped{
     @ManyToOne
     private User user;
 
+    public Comment(String commentContent, Answer findAnswer, User user) {
+        this.content = commentContent;
+        this.answer = findAnswer;
+        this.user = user;
+        user.getCommentList().add(this);
+        answer.getCommentList().add(this);
+    }
+
+    public Comment(String commentContent,Long parentCommentId, Answer findAnswer, User user) {
+        this.content = commentContent;
+        this.parentCommentId = parentCommentId;
+        this.answer = findAnswer;
+        this.user = user;
+        user.getCommentList().add(this);
+        answer.getCommentList().add(this);
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
