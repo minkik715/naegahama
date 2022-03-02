@@ -3,11 +3,14 @@ package com.hanghae.naegahama.controller;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -43,25 +46,14 @@ public class PostController {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-//    //게시글 삭제
-//    @DeleteMapping("/api/post/{postId}")
-//    public ResponseEntity<?> deletePost(@PathVariable Long postId,
-//                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        postService.deletePost(postId, userDetails);
-//
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
+    //게시글 삭제
+    @DeleteMapping("/api/post/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(postId, userDetails);
 
-//    // 게시글 상세조회
-//    @GetMapping("/api/post/{postId}")
-//    public List<PostResponseDto> getPost1(@PathVariable Long postId,
-//                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        postService.getPost1(postId, userDetails);
-//
-//        return (List<PostResponseDto>) ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
-       // return ResponseEntity.ok().body(new BasicResponseDto("true"));
-
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
 
     // 게시글 상세조회
     @GetMapping("/api/post/{postId}")
@@ -71,4 +63,12 @@ public class PostController {
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+//    //카테고리
+//    @GetMapping("/api/post/{category}")
+//    public ResponseEntity<?> getCategory(@PathVariable String category) {
+//
+//        postService.getCategory(category);
+//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+//    }
 }

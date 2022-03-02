@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.domain;
 
+import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +25,10 @@ public class AnswerLike {
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
+
+    @Builder
+    public AnswerLike(AnswerLikeRequestDto requestDto) {
+        this.user = requestDto.getUser();
+        this.answer = requestDto.getAnswer();
+    }
 }

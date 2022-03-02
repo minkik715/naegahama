@@ -18,36 +18,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Slf4j
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto, HttpServletResponse response){
         return(login(userService.signUp(signUpRequestDto), response));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto,HttpServletResponse httpServletResponse){
         return userService.login(loginRequestDto,httpServletResponse);
     }
 
-    @PostMapping("/idcheck")
+    @PostMapping("/user/idcheck")
     public ResponseEntity<?> emailCheck(@RequestBody EmailDuplCheckDto emailDuplCheckDto){
         return userService.emailCheck(emailDuplCheckDto.getEmail());
     }
 
-    @PostMapping("/kakaoLogin")
+    @PostMapping("/user/kakaoLogin")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> param){
         return userService.login(param.get("kakaoToken").toString());
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<?> login(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.ok().body(new BasicResponseDto(userDetails.getUser().getNickName()));
     }
+
+//    @GetMapping("/mypost")
+//    public
 
 }

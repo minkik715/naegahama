@@ -1,15 +1,16 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.File;
-import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
+import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.util.S3Uploader;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +36,6 @@ public class AnswerService
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
-
     private final FileRepository fileRepository;
 
     private final S3Uploader s3Uploader;
@@ -109,6 +112,81 @@ public class AnswerService
 
         return answerGetResponseDtoList;
 
+    }
+
+
+    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile) throws IOException
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        List<File> fileList = new ArrayList<>();
+
+        for ( MultipartFile file : multipartFile)
+        {
+            String url = s3Uploader.upload(file, "static");
+            File fileUrl = new File(url);
+            fileList.add(fileUrl);
+        }
+
+        answer.Update(answerPostRequestDto,fileList);
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        answerLikeRepository.deleteByAnswer(answer);
+        fileRepository.deleteByAnswer(answer);
+        commentRepository.deleteByAnswer(answer);
+
+        answerRepository.deleteById(answerId);
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+
+    public AnswerDetailGetResponseDto answerDetail(Long answerId, UserDetailsImpl userDetails)
+    {
+        Answer answer =  answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        Long likeCount = answerLikeRepository.countByAnswer(answer);
+        Long commentCount = commentRepository.countByAnswer(answer);
+
+        List<AnswerLike> likeList = answer.getLikeList();
+        List<Long> likeUserList = new ArrayList<>();
+
+        for ( AnswerLike likeUser : likeList)
+        {
+            likeUserList.add(likeUser.getUser().getId());
+        }
+
+        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList);
+
+        return answerDetailGetResponseDto;
+    }
+
+
+    public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        if( answer.getStar() != null )
+        {
+            throw new IllegalArgumentException("이미 평가한 답글입니다.");
+        }
+
+        answer.Star(starPostRequestDto);
+
+        User answerWriter = answer.getUser();
+        answerWriter.addPoint(starPostRequestDto.getStar());
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 
