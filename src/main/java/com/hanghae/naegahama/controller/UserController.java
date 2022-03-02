@@ -3,9 +3,9 @@ package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.login.KakaoLoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.post.PostMyPageDto;
+import com.hanghae.naegahama.dto.post.MyAnswerDto;
+import com.hanghae.naegahama.dto.post.MyPostDto;
 import com.hanghae.naegahama.dto.signup.EmailDuplCheckDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.service.UserService;
@@ -53,9 +53,16 @@ public class UserController {
     }
 
     @GetMapping("/mypost")
-    public List<PostMyPageDto> myWrite(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    public List<MyPostDto> myPost(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return userService.myWrite(userDetails);
+        return userService.myPost(userDetails);
     }
+
+    @GetMapping("/myanswer")
+    public List<MyAnswerDto> myAnswer(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myAnswer(userDetails);
+    }
+
 
 }

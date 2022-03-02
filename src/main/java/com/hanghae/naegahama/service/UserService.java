@@ -7,16 +7,15 @@ import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.post.PostMyPageDto;
+import com.hanghae.naegahama.dto.post.MyAnswerDto;
+import com.hanghae.naegahama.dto.post.MyPostDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
 import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
-import com.hanghae.naegahama.repository.AnswerRepository;
-import com.hanghae.naegahama.repository.PostRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -43,6 +41,8 @@ public class UserService {
     //
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final AnswerLikeRepository answerLikeRepository;
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -107,29 +107,36 @@ public class UserService {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    public List<PostMyPageDto> myWrite(UserDetailsImpl userDetails)
+    public List<MyPostDto> myPost(UserDetailsImpl userDetails)
     {
-        List<PostMyPageDto> myPageDtoList = new ArrayList<>();
+        List<MyPostDto> myPageDtoList = new ArrayList<>();
 
         User user = userDetails.getUser();
 
-        List<Post> postList = postRepository.findAllByUserOrderByCreatedAtDesc(user);
-        List<Answer> answerList = answerRepository.findAllByUserOrderByCreatedAtDesc(user);
+        List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
 
         for ( Post post : postList)
         {
-            PostMyPageDto postMyPageDto = new PostMyPageDto(post);
+            Long likeCount = postLikeRepository.countByPost(post);
+            MyPostDto postMyPageDto = new MyPostDto(post,likeCount);
             myPageDtoList.add(postMyPageDto);
         }
-
-        for ( Answer answer : answerList)
-        {
-            PostMyPageDto postMyPageDto = new PostMyPageDto(answer);
-            myPageDtoList.add(postMyPageDto);
-        }
-
-        Collections.sort(myPageDtoList);
 
         return myPageDtoList;
+    }
+
+    public List<MyAnswerDto> myAnswer(UserDetailsImpl userDetails)
+    {
+        List<MyAnswerDto> myAnswerDtoList = new ArrayList<>();
+        User user = userDetails.getUser();
+
+        List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
+        for ( Answer answer : answerList)
+        {
+            Long likeCount = answerLikeRepository.countByAnswer(answer);
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, likeCount);
+            myAnswerDtoList.add(myAnswerDto);
+        }
+        return myAnswerDtoList;
     }
 }

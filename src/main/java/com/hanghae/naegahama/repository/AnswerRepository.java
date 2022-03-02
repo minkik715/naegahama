@@ -12,5 +12,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     List<Answer> findAllByPostIdOrderByCreatedAt(Long id);
     Integer countByPost(Post post);
-    List<Answer> findAllByUserOrderByCreatedAtDesc ( User user);
+    List<Answer> findAllByUserOrderByModifiedAtDesc ( User user);
 }
