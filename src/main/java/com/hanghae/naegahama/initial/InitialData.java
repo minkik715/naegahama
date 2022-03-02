@@ -1,7 +1,9 @@
 package com.hanghae.naegahama.initial;
 
+import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class InitialData implements ApplicationRunner {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final AnswerRepository answerRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -58,6 +61,14 @@ public class InitialData implements ApplicationRunner {
         PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1)));
         PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1)));
         postRepository.saveAll(PostList);
+
+        List<Answer> answerList = new ArrayList<>();
+        answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
+        answerList.add(new Answer("한강 갔습니다.","평점 말고 코딩 대신 해주면 안되나요?",PostList.get(0),userList.get(0)));
+        answerList.add(new Answer("라면 후기","내공 냠냠",PostList.get(0),userList.get(2)));
+        answerRepository.saveAll(answerList);
+
+
 
 
 
