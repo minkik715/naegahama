@@ -40,11 +40,11 @@ public class PostMyPageDto implements Comparable<PostMyPageDto>
     public int compareTo(PostMyPageDto postMyPageDto)
     {
 
-        if (this.createdAt.isBefore(postMyPageDto.getCreatedAt() ))
+        if (this.createdAt.isAfter(postMyPageDto.getCreatedAt() ))
         {
             return -1;
         }
-        else if (this.createdAt.isAfter(postMyPageDto.getCreatedAt() ))
+        else if (this.createdAt.isBefore(postMyPageDto.getCreatedAt() ))
         {
             return 1;
         }
