@@ -33,6 +33,7 @@ public class PostService {
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
 
+    //요청글 작성
     @Transactional
     public Post createPost(PostRequestDto postRequestDto, User user) {
 
@@ -54,30 +55,7 @@ public class PostService {
     }
 
 
-    //전체글 조회
-    public List<PostResponseDto> getPost() {
-
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> response = new ArrayList<>();
-
-        for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            PostResponseDto postResponseDto = new PostResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    post.getModifiedAt(),
-                    answerCount,
-                    postLikeCount
-            );
-            response.add(postResponseDto);
-        }
-        return response;
-    }
-
-
-    //수정
+    //요청글 수정
     @Transactional
     public Post updatePost(
             Long id,
@@ -102,7 +80,7 @@ public class PostService {
         return post;
     }
 
-    //삭제
+    //요청글 삭제
     @Transactional
     public Post deletePost(Long id, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
@@ -124,7 +102,31 @@ public class PostService {
         return post;
     }
 
-    //게시글 상세조회.
+    //요청글 전체 조회
+    @ResponseBody
+    public List<PostResponseDto> getPost() {
+
+        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<PostResponseDto> response = new ArrayList<>();
+
+        for (Post post : posts) {
+            Integer answerCount = answerRepository.countByPost(post);
+            Long postLikeCount = postLikeRepository.countByPost(post);
+            PostResponseDto postResponseDto = new PostResponseDto(
+                    post.getId(),
+                    post.getTitle(),
+                    post.getContent(),
+                    post.getModifiedAt(),
+                    answerCount,
+                    postLikeCount
+            );
+            response.add(postResponseDto);
+        }
+        return response;
+    }
+
+    //요청글 상세조회.
+    @ResponseBody
     public List<ResponseDto> getPost1(Long postId) {
         List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
         List<ResponseDto> response = new ArrayList<>();
@@ -147,6 +149,7 @@ public class PostService {
         return response;
     }
 
+    //카테고리
     @ResponseBody
     public List<CategoryResponseDto> getCategory(String category) {
 

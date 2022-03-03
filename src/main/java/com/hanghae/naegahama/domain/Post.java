@@ -1,8 +1,5 @@
 package com.hanghae.naegahama.domain;
 
-
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

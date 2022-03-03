@@ -29,16 +29,15 @@ public class User extends Timestamped{
     private String password;
 
     @Column(name = "hippoImage")
-    private String hippoImage;
+    private Integer hippoLevel;                      // 레벨 3달성 추첨이벤트, 슈퍼하마(풀업적) 달성시 이벤트.
 
     @Column
     private int point;
 
-//    @OneToOne(mappedBy = "user")
-//    private Survey Survey;
 
- /*   @OneToMany(mappedBy = "user")
-    private List<Post> postList = new ArrayList<>();*/
+
+    @Column(nullable = false)
+    private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
@@ -59,11 +58,18 @@ public class User extends Timestamped{
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
-        this.hippoImage = "";
+        this.hippoLevel = 1;
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
-        this.hippoImage = "";
+        this.hippoLevel = 1;
+    }
+    public void setHippoLevel(Integer hippoLevel) {
+        this.hippoLevel = hippoLevel;
+    }
+
+    public void setHippoName(String hippoName) {
+        this.hippoName = hippoName;
     }
 }
