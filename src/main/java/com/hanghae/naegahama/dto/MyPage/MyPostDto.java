@@ -1,6 +1,5 @@
-package com.hanghae.naegahama.dto.post;
+package com.hanghae.naegahama.dto.MyPage;
 
-import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,20 +8,20 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class MyAnswerDto
+public class MyPostDto
 {
-    private Long answerId;
+    private Long requestId;
     private String title;
 //    private String content;
     private LocalDateTime modifiedAt;
     private Long likeCount;
 //    private Integer answerCount ;
 
-    public MyAnswerDto(Answer answer, Long likeCount)
+    public MyPostDto(Post post, Long likeCount)
     {
-        this.answerId = answer.getId();
-        this.title = answer.getTitle();
-        this.modifiedAt = answer.getModifiedAt();
+        this.requestId = post.getId();
+        this.title = post.getTitle();
+        this.modifiedAt = post.getModifiedAt();
         this.likeCount = likeCount;
     }
 

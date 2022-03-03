@@ -3,9 +3,11 @@ package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
+import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.post.MyAnswerDto;
-import com.hanghae.naegahama.dto.post.MyPostDto;
+import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
+import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.signup.EmailDuplCheckDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.service.UserService;
@@ -64,5 +66,16 @@ public class UserController {
         return userService.myAnswer(userDetails);
     }
 
+    @GetMapping("/achievement")
+    public MyAchievementDto myAchievement(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myAchievement(userDetails);
+    }
+
+    @GetMapping("/mybanner")
+    public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myBanner(userDetails);
+    }
 
 }
