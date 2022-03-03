@@ -55,14 +55,13 @@ public class User extends Timestamped{
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
 
-
-
-
     public User(String email, String nickName, String password, int point) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.point = point;
+        this.hippoLevel = 1;
+
     }
 
     public User(SignUpRequestDto signUpRequestDto, String password) {
@@ -71,11 +70,13 @@ public class User extends Timestamped{
         this.password = password;
         this.hippoLevel = 1;
 
+
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
         this.hippoLevel = 1;
+
     }
     public void setHippoLevel(Integer hippoLevel) {
         this.hippoLevel = hippoLevel;
@@ -88,5 +89,10 @@ public class User extends Timestamped{
     public void addPoint(Long answerStar)
     {
         this.point += answerStar*100;
+    }
+
+    public void setAchievement(Achievement achievement)
+    {
+        this.achievement = achievement;
     }
 }

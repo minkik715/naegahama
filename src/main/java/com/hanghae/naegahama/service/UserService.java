@@ -2,6 +2,7 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
@@ -46,6 +47,7 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final CommentRepository commentRepository;
+    private final AchievementRepository achievementRepository;
     
 
 
@@ -54,6 +56,12 @@ public class UserService {
         checkPassword(signUpRequestDto, password);
         User user = new User(signUpRequestDto,encodePassword(password));
         userRepository.save(user);
+
+        // 회원 가입시 업적 리포지토리 저장
+        Achievement achievement = new Achievement(user);
+        achievementRepository.save(achievement);
+        user.setAchievement(achievement);
+
         return new LoginRequestDto(signUpRequestDto.getEmail(),password);
 
     }
@@ -88,6 +96,9 @@ public class UserService {
         User user = new User(userInfo);
         userRepository.save(user);
 
+        Achievement achievement = new Achievement(user);
+        achievementRepository.save(achievement);
+        user.setAchievement(achievement);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -145,10 +156,23 @@ public class UserService {
         return myAnswerDtoList;
     }
 
+
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails)
     {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
-        User user = userDetails.getUser();
+        Achievement achievement = userDetails.getUser().getAchievement();
+
+        System.out.println(achievement.getAchievement1());
+
+        myAchievementDto.getAchievement()[0] = achievement.getAchievement1();
+        myAchievementDto.getAchievement()[1] = achievement.getAchievement2();
+        myAchievementDto.getAchievement()[2] = achievement.getAchievement3();
+        myAchievementDto.getAchievement()[3] = achievement.getAchievement4();
+        myAchievementDto.getAchievement()[4] = achievement.getAchievement5();
+        myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
+        myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
+        myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
+        myAchievementDto.getAchievement()[8] = achievement.getAchievement9();
 
         return myAchievementDto;
     }

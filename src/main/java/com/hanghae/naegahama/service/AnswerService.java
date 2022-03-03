@@ -182,9 +182,11 @@ public class AnswerService
         }
 
         answer.Star(starPostRequestDto);
-
         User answerWriter = answer.getUser();
+
         answerWriter.addPoint(starPostRequestDto.getStar());
+
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
