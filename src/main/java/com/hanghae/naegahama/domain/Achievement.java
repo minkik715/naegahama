@@ -47,7 +47,6 @@ public class Achievement extends Timestamped
     @Column
     private Long achievement10;
 
-//    @JoinColumn(name = "user_id")
-    @OneToOne ( mappedBy = "achievement")
+    @OneToOne ( mappedBy = "achievement") // user entity의 achievement 변수에 종속 당하겠다.
     User user;
 }

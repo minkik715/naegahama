@@ -56,13 +56,11 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
 
-    @OneToOne(mappedBy = "user")
-//    @JoinColumn ( name = "hippoinfo_id")
-    private Hippoinfo hippoInfo;
+
 
 
     public User(String email, String nickName, String password, int point) {

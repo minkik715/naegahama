@@ -169,10 +169,10 @@ public class UserService {
         return myAchievementDto;
     }
 
-    public MyBannerDto myBanner(UserDetailsImpl userDetails)
-    {
-        User user = userDetails.getUser();
-
-        return new MyBannerDto(user);
-    }
+//    public MyBannerDto myBanner(UserDetailsImpl userDetails)
+//    {
+//        User user = userDetails.getUser();
+//
+//        return new MyBannerDto(user);
+//    }
 }

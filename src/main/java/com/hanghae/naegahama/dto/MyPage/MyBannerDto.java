@@ -19,12 +19,12 @@ public class MyBannerDto
 
     private Long hippolv;
 
-    public MyBannerDto(User user)
-    {
-        this.nickname = user.getNickName();
-        this.email = user.getEmail();
-        this.hippoName = user.getHippoInfo().getHippoName();
-        this.point = user.getPoint();
-        this.hippolv = user.getHippoInfo().getHippolv();
-    }
+//    public MyBannerDto(User user)
+//    {
+//        this.nickname = user.getNickName();
+//        this.email = user.getEmail();
+//        this.hippoName = user.
+//        this.point = user.getPoint();
+//        this.hippolv = user
+//    }
 }
