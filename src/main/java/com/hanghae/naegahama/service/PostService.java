@@ -82,6 +82,26 @@ public class PostService {
         return post;
     }
 
+//    //요청글 삭제
+//    @Transactional
+//    public Post deletePost(Long id, UserDetailsImpl userDetails) {
+//        Post post = postRepository.findById(id).orElseThrow(
+//                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+//        );
+//        User user = post.getUser();
+//        Long deleteId = user.getId();
+//        if (userDetails.getUser().getId() != deleteId) {
+//            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+//        }
+//
+//        List<Comment> comments = commentRepository.findAllByAnswer(null);
+//        for (Comment comment : comments) {
+//            commentRepository.deleteById(comment.getId());
+//        }
+//        postLikeRepository.deleteByPost(post);
+//        postRepository.deleteById(id);
+//        return post;
+//    }
 
     //요청글 전체 조회
     @ResponseBody

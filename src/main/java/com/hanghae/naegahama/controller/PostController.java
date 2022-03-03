@@ -35,6 +35,17 @@ public class PostController {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
+
+//    //요청글 삭제
+//    @DeleteMapping("/api/post/{postId}")
+//    public ResponseEntity<?> deletePost(@PathVariable Long postId,
+//                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        postService.deletePost(postId, userDetails);
+//
+//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+//    }
+
+
     // 요청글 전체조회
     @GetMapping("/api/post")
     public ResponseEntity<?> getPost() {
@@ -47,14 +58,6 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPost1(postId));
     }
 
-
-//    //카테고리
-//    @GetMapping("/api/post/{category}")
-//    public ResponseEntity<?> getCategory(@PathVariable String category) {
-//
-//        postService.getCategory(category);
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
     //카테고리
     @GetMapping("/api/post/category/{category}")
     public ResponseEntity<?> getCategory(@PathVariable String category) {
