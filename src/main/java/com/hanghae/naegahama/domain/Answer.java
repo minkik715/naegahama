@@ -67,12 +67,20 @@ public class Answer extends Timestamped {
     }
 
 
-    public void Update(AnswerPostRequestDto answerPostRequestDto,List<AnswerFile>  fileList)
-    {
+    public void Update(AnswerPostRequestDto answerPostRequestDto,List<AnswerFile>  fileList){
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
         this.fileList = fileList;
     }
+
+    public Answer(String title, String content, Post post, User user) {
+        this.title = title;
+        this.content = content;
+        this.post = post;
+        this.user = user;
+    }
+
+
 
     public Answer(String title, Integer star, String content, Post post, User user, List<AnswerFile> fileList) {
         this.title = title;

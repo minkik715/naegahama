@@ -52,4 +52,7 @@ public class AnswerDetailGetResponseDto {
         this.category = category;
 
     }
+
+    
+
 }

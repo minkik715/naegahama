@@ -2,6 +2,12 @@ package com.hanghae.naegahama.initial;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.domain.Answer;
+import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.repository.AnswerRepository;
+import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -18,10 +24,9 @@ public class InitialData implements ApplicationRunner {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final AnswerRepository answerRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostFileRepository postFileRepository;
-    private final AnswerRepository answerRepository;
-
     private final AnswerFileRepository answerFileRepository;
 
     @Override
@@ -72,6 +77,13 @@ public class InitialData implements ApplicationRunner {
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", PostList.get(0))));
 
         List<Answer> answerList = new ArrayList<>();
+        answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
+        answerList.add(new Answer("한강 갔습니다.","평점 말고 코딩 대신 해주면 안되나요?",PostList.get(0),userList.get(0)));
+        answerList.add(new Answer("라면 후기","내공 냠냠",PostList.get(0),userList.get(2)));
+        answerRepository.saveAll(answerList);
+
+
+
 
         answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 3,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
         answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 4,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
