@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @EnableAutoConfiguration
 @RequiredArgsConstructor
@@ -104,7 +103,6 @@ public class PostService {
         return post;
     }
 
-<<<<<<< HEAD
     //요청글 전체 조회
     @ResponseBody
     public List<PostResponseDto> getPost() {
@@ -129,13 +127,7 @@ public class PostService {
     }
 
     //요청글 상세조회.
-    @ResponseBody
-    public List<ResponseDto> getPost1(Long postId) {
-        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
-        List<ResponseDto> response = new ArrayList<>();
-=======
     public ResponseDto getPost1(Long postId) {
->>>>>>> 49af9d9ba6293337da0c2a6b5c70869a8ec51fb6
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
@@ -156,11 +148,8 @@ public class PostService {
         return ResponseDto;
     }
 
-<<<<<<< HEAD
     //카테고리
     @ResponseBody
-=======
->>>>>>> 49af9d9ba6293337da0c2a6b5c70869a8ec51fb6
     public List<CategoryResponseDto> getCategory(String category) {
         List<Post> posts;
         if(category.equals("all")){

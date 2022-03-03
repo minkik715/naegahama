@@ -1,7 +1,5 @@
 package com.hanghae.naegahama.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
@@ -29,20 +27,13 @@ public class User extends Timestamped{
     @Column(name = "password")
     private String password;
 
-<<<<<<< HEAD
-    @Column(name = "hippoImage")
+    @Column
     private Integer hippoLevel;                      // 레벨 3달성 추첨이벤트, 슈퍼하마(풀업적) 달성시 이벤트.
-=======
-//    @Column(name = "hippoImage")
-//    private String hippoImage;
->>>>>>> 49af9d9ba6293337da0c2a6b5c70869a8ec51fb6
 
     @Column
     private int point;
 
-
-
-    @Column(nullable = false)
+    @Column
     private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
@@ -78,16 +69,12 @@ public class User extends Timestamped{
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
-<<<<<<< HEAD
         this.hippoLevel = 1;
-=======
-//        this.hippoImage = "";
->>>>>>> 49af9d9ba6293337da0c2a6b5c70869a8ec51fb6
+
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
-<<<<<<< HEAD
         this.hippoLevel = 1;
     }
     public void setHippoLevel(Integer hippoLevel) {
@@ -96,13 +83,10 @@ public class User extends Timestamped{
 
     public void setHippoName(String hippoName) {
         this.hippoName = hippoName;
-=======
-//        this.hippoImage = "";
     }
 
     public void addPoint(Long answerStar)
     {
         this.point += answerStar*100;
->>>>>>> 49af9d9ba6293337da0c2a6b5c70869a8ec51fb6
     }
 }
