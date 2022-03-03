@@ -35,10 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/chatting/**").permitAll()
-                .antMatchers("/api/**").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/user/**").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-                //.antMatchers(HttpMethod.OPTIONS, "/test/**").permitAll()
+                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/api/post/**").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())    // 추가

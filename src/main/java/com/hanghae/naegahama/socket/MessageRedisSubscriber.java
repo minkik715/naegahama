@@ -2,6 +2,7 @@ package com.hanghae.naegahama.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.naegahama.domain.Message;
+import com.hanghae.naegahama.dto.message.MessageResponseDto;
 import org.springframework.data.redis.core.RedisTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class MessageRedisSubscriber {
     public void sendMessage(String publishMessage) {
         try {
             // ChatMessage 객채로 맵핑
-            Message chatMessage = objectMapper.readValue(publishMessage, Message.class);
+            MessageResponseDto messageResponseDto = objectMapper.readValue(publishMessage, MessageResponseDto.class);
             // 채팅방을 구독한 클라이언트에게 메시지 발송
-            messagingTemplate.convertAndSend("/sub/api/chat/rooms/" + chatMessage.getRoom().getId(), chatMessage);
+            messagingTemplate.convertAndSend("/sub/api/chat/rooms/" + messageResponseDto.getRoomId(), messageResponseDto);
         } catch (Exception e) {
             log.error("Exception {}", e);
         }

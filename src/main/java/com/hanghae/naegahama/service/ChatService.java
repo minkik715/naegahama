@@ -79,7 +79,7 @@ public class ChatService {
 
         }
         MessageResponseDto messageResponseDto = new MessageResponseDto(message);
-        redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+        redisTemplate.convertAndSend(channelTopic.getTopic(), messageResponseDto);
     }
 
     private String getTime() {
