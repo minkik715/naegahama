@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.domain;
 
-
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Long id;
 
@@ -28,18 +27,16 @@ public class User extends Timestamped{
     @Column(name = "password")
     private String password;
 
-    @Column(name = "hippoImage")
+    @Column
     private Integer hippoLevel;                      // 레벨 3달성 추첨이벤트, 슈퍼하마(풀업적) 달성시 이벤트.
 
     @Column
     private int point;
 
-
-
-    @Column(nullable = false)
+    @Column
     private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -54,11 +51,26 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
-    public User(SignUpRequestDto signUpRequestDto,String password) {
+    @OneToOne
+    @JoinColumn ( name = "achievement_id")
+    private Achievement achievement;
+
+
+
+
+    public User(String email, String nickName, String password, int point) {
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+        this.point = point;
+    }
+
+    public User(SignUpRequestDto signUpRequestDto, String password) {
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
         this.hippoLevel = 1;
+
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
@@ -71,5 +83,10 @@ public class User extends Timestamped{
 
     public void setHippoName(String hippoName) {
         this.hippoName = hippoName;
+    }
+
+    public void addPoint(Long answerStar)
+    {
+        this.point += answerStar*100;
     }
 }

@@ -8,6 +8,7 @@ import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.ResponseDto;
+import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.PostLikeRepository;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
@@ -88,10 +90,9 @@ public class PostService {
         );
         User user = post.getUser();
         Long deleteId = user.getId();
-        if (userDetails.getUser().getId() == deleteId) {
+        if (userDetails.getUser().getId() != deleteId) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
-
 
         List<Comment> comments = commentRepository.findAllByAnswer(null);
         for (Comment comment : comments) {
@@ -126,36 +127,40 @@ public class PostService {
     }
 
     //요청글 상세조회.
-    @ResponseBody
-    public List<ResponseDto> getPost1(Long postId) {
-        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
-        List<ResponseDto> response = new ArrayList<>();
+    public ResponseDto getPost1(Long postId) {
 
-        for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            ResponseDto ResponseDto = new ResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    post.getModifiedAt(),
-                    answerCount,
-                    post.getUser().getId(),
-                    post.getUser().getNickName(),
-                    postLikeCount
-            );
-            response.add(ResponseDto);
-        }
-        return response;
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
+        );
+
+        Integer answerCount = answerRepository.countByPost(post);
+        Long postLikeCount = postLikeRepository.countByPost(post);
+        ResponseDto ResponseDto = new ResponseDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getModifiedAt(),
+                answerCount,
+                post.getUser().getId(),
+                post.getUser().getNickName(),
+                postLikeCount);
+
+        return ResponseDto;
     }
 
     //카테고리
     @ResponseBody
     public List<CategoryResponseDto> getCategory(String category) {
-
-        List<Post> posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+        List<Post> posts;
+        if(category.equals("all")){
+            posts= postRepository.findAllByOrderByCreatedAtDesc();
+        }else {
+            posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+        }
         List<CategoryResponseDto> response = new ArrayList<>();
-
+        if(posts == null){
+            throw new PostNotFoundException("글이 존재하지 않습니다");
+        }
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);

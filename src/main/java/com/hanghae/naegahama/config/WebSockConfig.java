@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.config;
 
+import com.hanghae.naegahama.handler.ChattingHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -12,14 +14,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
-    //private final StompHandler stompHandler;
-
-    //@Autowired
-    //public WebSocketConfig (StompHandler stompHandler) {
-   //     this.stompHandler = stompHandler;
-    //}
+    private final ChattingHandler chattingHandler;
 
     //맨처음 설정값이라고 보면 편함
     @Override
@@ -38,11 +36,9 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
                 .withSockJS(); // sock.js를 통하여 낮은 버전의 브라우저에서도 websocket 이 동작할수 있게 한다
     }
 
-    // StompHandler 인터셉터 설정
-    // StompHandler 가 Websocket 앞단에서 token 및 메시지 TYPE 등을 체크할 수 있도록 다음과 같이 인터셉터로 설정한다
-    /*@Override
+    @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(stompHandler);
-    }*/
+        registration.interceptors(chattingHandler);
+    }
 
 }

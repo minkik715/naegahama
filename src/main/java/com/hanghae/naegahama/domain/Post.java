@@ -17,12 +17,20 @@ import java.util.List;
 @Entity
 public class Post extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
     private String title;
+
+    public Post(String title, String content, String category, String level, User user) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.level = level;
+        this.user = user;
+    }
 
     @Length(max = 10000)
     @Column(nullable = false)

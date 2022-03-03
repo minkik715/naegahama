@@ -1,4 +1,3 @@
-/*
 package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
@@ -34,7 +33,7 @@ public class CommentController {
         return commentService.deleteComment(commentId);
     }
 
-    @GetMapping("/{answerId}")
+    @GetMapping("/answer/{answerId}")
     public ResponseEntity<?> getParentCommentList(@PathVariable Long answerId){
         return commentService.getParentCommentList(answerId);
     }
@@ -45,4 +44,3 @@ public class CommentController {
     }
 }
 
-*/

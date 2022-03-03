@@ -30,6 +30,7 @@ public class CommentService {
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
 
+    @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
         Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
                 () -> new AnswerNotFoundException("해당 답글이 존재하지 않습니다.")
@@ -39,8 +40,10 @@ public class CommentService {
         Comment comment = null;
         if(parentCommentId == null) {
             comment = new Comment(commentContent, findAnswer, user);
+            user.getCommentList().add(comment);
         }else{
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
+            user.getCommentList().add(comment);
         }
         commentRepository.save(comment);
 

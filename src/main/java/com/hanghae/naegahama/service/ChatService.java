@@ -4,6 +4,7 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.message.MessageRequestDto;
+import com.hanghae.naegahama.dto.message.MessageResponseDto;
 import com.hanghae.naegahama.handler.ex.RoomNotFoundException;
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.MessageRepository;
@@ -11,6 +12,7 @@ import com.hanghae.naegahama.repository.RoomRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 import java.util.TimeZone;
 
 @Service
@@ -65,7 +66,20 @@ public class ChatService {
 
             }
 
+        }else if(message.getMessageType().equals(MessageType.QUIT)){
+            for (UserEnterRoom userEnterRoom : message.getUser().getUserEnterRoomList()) {
+                if(userEnterRoom.getUser().getId().equals(message.getUser().getId())){
+                    if(userEnterRoom.getRoomUserStatus() == RoomUserStatus.CHAT){
+                        message.setMessage(message.getUser().getNickName()+"님이 퇴장하셨습니다.");
+                        userEnterRoom.setRoomUserStatus(RoomUserStatus.QUIT);
+                    }
+                }
+
+            }
+
         }
+        MessageResponseDto messageResponseDto = new MessageResponseDto(message);
+        redisTemplate.convertAndSend(channelTopic.getTopic(), messageResponseDto);
     }
 
     private String getTime() {
@@ -76,5 +90,19 @@ public class ChatService {
         String dateResult = sdf.format(date);
         return dateResult;
     }
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf('/');
+        if (lastIndex != -1)
+            return destination.substring(lastIndex + 1);
+        else
+            return "";
+    }
+
+  /*  public Page<ChatMessage> getChatMessageByRoomId(String roomId, Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
+        pageable = PageRequest.of(page, 150);
+        return chatMessageRepository.findByRoomId(roomId, pageable);
+    }*/
+
 }
 
