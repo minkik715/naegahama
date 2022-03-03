@@ -5,13 +5,18 @@ import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
+import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -41,4 +46,5 @@ public class PostLikeService {
         }
         return new PostLikeResponseDto(postId, postLikeRepository.countByPost(post));
     }
+
 }

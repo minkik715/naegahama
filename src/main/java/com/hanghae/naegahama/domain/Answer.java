@@ -27,7 +27,7 @@ public class Answer extends Timestamped {
     private String title;
 
     @Column
-    private Long star;
+    private Integer star;
 
     @Lob
     @Column(nullable = false)
@@ -41,6 +41,13 @@ public class Answer extends Timestamped {
     @ManyToOne
     private User user;
 
+    public Answer(String title, int star, String content, Post post, User user) {
+        this.title = title;
+        this.star = star;
+        this.content = content;
+        this.post = post;
+        this.user = user;
+    }
 
     @OneToMany(mappedBy = "answer")
     private List<AnswerLike> likeList = new ArrayList<>();
@@ -49,7 +56,7 @@ public class Answer extends Timestamped {
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
-    private List<File> fileList = new ArrayList<>();
+    private List<AnswerFile> fileList = new ArrayList<>();
 
 
     public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user) {
@@ -60,10 +67,19 @@ public class Answer extends Timestamped {
     }
 
 
-    public void Update(AnswerPostRequestDto answerPostRequestDto,List<File>  fileList)
+    public void Update(AnswerPostRequestDto answerPostRequestDto,List<AnswerFile>  fileList)
     {
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
+        this.fileList = fileList;
+    }
+
+    public Answer(String title, Integer star, String content, Post post, User user, List<AnswerFile> fileList) {
+        this.title = title;
+        this.star = star;
+        this.content = content;
+        this.post = post;
+        this.user = user;
         this.fileList = fileList;
     }
 

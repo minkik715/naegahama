@@ -32,12 +32,8 @@ public class RoomController {
         return roomService.getRooms(userDetails.getUser());
     }
 
-    //룸 만들기
+    //유저와 룸 연관관계 맺기
     @PostMapping("/room")
-    @ResponseBody
-    public ResponseEntity<?> createRoom(@RequestBody CreateRoomDto createRoomDto){
-        return roomService.createRoom(createRoomDto.getRoomName());
-    }
 
 
 

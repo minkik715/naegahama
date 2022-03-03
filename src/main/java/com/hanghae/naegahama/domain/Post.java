@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,6 +28,14 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String title;
 
+    public Post(String title, String content, String category, String level, User user, List<PostFile> fileList) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.level = level;
+        this.user = user;
+        this.fileList = fileList;
+    }
     public Post(String title, String content, String category, String level, User user) {
         this.title = title;
         this.content = content;
@@ -51,6 +60,9 @@ public class Post extends Timestamped {
 
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostFile> fileList = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, User user) {
         this.user = user;

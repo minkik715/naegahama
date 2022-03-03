@@ -25,7 +25,9 @@ public class AnswerGetResponseDto
 
     private Long commentCount;
 
-    public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount)
+    private int imageCount;
+
+    public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
     {
         this.answerId = answer.getId();
         this.answerWriter = answer.getUser().getNickName();
@@ -33,5 +35,6 @@ public class AnswerGetResponseDto
         this.modifiedAt = answer.getModifiedAt();
         this.commentCount = commentCount;
         this.answerLikeCount = likeCount;
+        this.imageCount = imageCount;
     }
 }

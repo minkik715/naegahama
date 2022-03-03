@@ -9,8 +9,6 @@ import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.util.S3Uploader;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +34,7 @@ public class AnswerService
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
-    private final FileRepository fileRepository;
+    private final AnswerFileRepository answerFileRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -62,12 +60,12 @@ public class AnswerService
         {
             String url = s3Uploader.upload(file, "static");
             //S3에서 받아온 URL을 통해서 file을 만들고
-            File fileUrl = new File(url);
+            AnswerFile fileUrl = new AnswerFile(url);
 
             //파일에 아까 저장한 Answer를 Set한 후에
             fileUrl.setAnswer(saveAnwser);
             //저장된 파일을 Answer에 넣어준다
-            File saveFile = fileRepository.save(fileUrl);
+            AnswerFile saveFile = answerFileRepository.save(fileUrl);
             saveAnwser.getFileList().add(saveFile);
         }
 
@@ -96,6 +94,7 @@ public class AnswerService
          return urlList;
     }
 
+    // 요청 글에 달린 answerList
     public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
@@ -105,8 +104,8 @@ public class AnswerService
         {
             Long commentCount = commentRepository.countByAnswer(answer);
             Long likeCount = answerLikeRepository.countByAnswer(answer);
-
-            AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer,commentCount,likeCount);
+            int imageCount = answer.getFileList().size();
+            AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer,commentCount,likeCount,imageCount);
             answerGetResponseDtoList.add(answerGetResponseDto);
         }
 
@@ -115,17 +114,18 @@ public class AnswerService
     }
 
 
+    //삭제
     public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile) throws IOException
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        List<File> fileList = new ArrayList<>();
+        List<AnswerFile> fileList = new ArrayList<>();
 
         for ( MultipartFile file : multipartFile)
         {
             String url = s3Uploader.upload(file, "static");
-            File fileUrl = new File(url);
+            AnswerFile fileUrl = new AnswerFile(url);
             fileList.add(fileUrl);
         }
 
@@ -140,7 +140,7 @@ public class AnswerService
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
         answerLikeRepository.deleteByAnswer(answer);
-        fileRepository.deleteByAnswer(answer);
+        answerFileRepository.deleteByAnswer(answer);
         commentRepository.deleteByAnswer(answer);
 
         answerRepository.deleteById(answerId);
@@ -160,12 +160,17 @@ public class AnswerService
         List<AnswerLike> likeList = answer.getLikeList();
         List<Long> likeUserList = new ArrayList<>();
 
+        List<AnswerFile> findAnswerFileList = answerFileRepository.findAllByAnswerOrderByCreatedAt(answer);
+        List<String> fileList = new ArrayList<>();
+        for (AnswerFile answerFile : findAnswerFileList) {
+            fileList.add(answerFile.getUrl());
+        }
         for ( AnswerLike likeUser : likeList)
         {
             likeUserList.add(likeUser.getUser().getId());
         }
 
-        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList);
+        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList, answer.getPost().getCategory());
 
         return answerDetailGetResponseDto;
     }

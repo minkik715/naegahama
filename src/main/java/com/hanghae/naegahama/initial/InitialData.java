@@ -1,15 +1,14 @@
 package com.hanghae.naegahama.initial;
 
-import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.repository.PostRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,13 @@ public class InitialData implements ApplicationRunner {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostFileRepository postFileRepository;
+    private final AnswerRepository answerRepository;
+
+    private final AnswerFileRepository answerFileRepository;
+
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
         List<User> userList = new ArrayList<>();
         userList.add(new User("aaa@gmail.com", "aaa", passwordEncoder.encode("123456"), 1000));
@@ -31,6 +36,7 @@ public class InitialData implements ApplicationRunner {
         userList.add(new User("fff@gmail.com", "fff", passwordEncoder.encode("123456"), 6000));
         userList.add(new User("ggg@gmail.com", "ggg", passwordEncoder.encode("123456"), 7000));
         userRepository.saveAll(userList);
+
 
         List<Post> PostList = new ArrayList<>();
         PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0)));
@@ -58,8 +64,27 @@ public class InitialData implements ApplicationRunner {
         PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1)));
         PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1)));
         postRepository.saveAll(PostList);
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7353f438-b3ad-41c7-84fd-109a6f299f1412345.jpg", PostList.get(0))));
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/247cf91e-ce0e-41af-b873-5cd12637193c12345.jpg", PostList.get(0))));
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/47fa85c8-f441-4ccc-a40f-5fa417acded2bandicam+2022-02-24+17-32-15-816.mp4", PostList.get(0))));
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", PostList.get(0))));
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", PostList.get(0))));
+        PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", PostList.get(0))));
 
+        List<Answer> answerList = new ArrayList<>();
 
+        answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 3,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
+        answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 4,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
+        answerList.add(answerRepository.save(new Answer("제가 진라면 잘먹습니다", 5,"라면중에는 진라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(5))));
+        answerList.add(answerRepository.save(new Answer("제가 안성탕면 잘먹습니다", 0,"라면중에는 안성탕면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(6))));
+        answerList.add(answerRepository.save(new Answer("제가 팔도비빔면 잘먹습니다", 0, "라면중에는 팓로비빔면이 쵝오죠 제가 대신 먹어드릴게요", PostList.get(0), userList.get(2))));
+
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7353f438-b3ad-41c7-84fd-109a6f299f1412345.jpg", answerList.get(0))));
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/247cf91e-ce0e-41af-b873-5cd12637193c12345.jpg", answerList.get(0))));
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/47fa85c8-f441-4ccc-a40f-5fa417acded2bandicam+2022-02-24+17-32-15-816.mp4", answerList.get(0))));
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", answerList.get(0))));
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", answerList.get(0))));
+        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", answerList.get(0))));
 
     }
 

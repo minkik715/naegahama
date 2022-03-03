@@ -4,6 +4,7 @@ import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
+import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
@@ -63,9 +64,8 @@ public class UserService {
         );
         loginPassword(password, user);
         String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        Cookie cookie = new Cookie("access-token",token);
-        response.addCookie(cookie);
-        return ResponseEntity.ok().body(sendToken(user));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token,user.getNickName(),user.getId());
+        return ResponseEntity.ok().body(loginResponseDto);
     }
 
     public ResponseEntity<?> login(String kakaoAccessToken) throws EmailNotFoundException {
@@ -77,9 +77,7 @@ public class UserService {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    private String sendToken(User user) {
-        return jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-    }
+
 
     private void loginPassword(String password, User user) {
         if(passwordEncoder.matches(password, user.getPassword())){

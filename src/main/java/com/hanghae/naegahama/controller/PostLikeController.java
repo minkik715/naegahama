@@ -16,9 +16,10 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("api/like/{postId}")
-    public ResponseEntity<?> PostLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @PostMapping("/api/like/{postId}")
+    public ResponseEntity<?> postLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         postLikeService.PostLike(postId, userDetails.getUser().getId());
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
 }

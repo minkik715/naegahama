@@ -44,13 +44,15 @@ public class S3Uploader {
         return amazonS3Client.getUrl(naegahama, fileName).toString();
     }
 
+    private String deleteS3(F)
+
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info("File delete success");
+            log.info("AnswerFile delete success");
             return;
         }
-        log.info("File delete fail");
+        log.info("AnswerFile delete fail");
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException
@@ -63,8 +65,6 @@ public class S3Uploader {
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
-
     }
 }

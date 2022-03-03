@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class File extends Timestamped{
+public class AnswerFile extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,11 @@ public class File extends Timestamped{
     @Column(nullable = false)
     private String url;
 
+    public AnswerFile(String url, Answer answer) {
+        this.url = url;
+        this.answer = answer;
+    }
+
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;
@@ -28,7 +33,7 @@ public class File extends Timestamped{
         this.answer = answer;
     }
 
-    public File(String url)
+    public AnswerFile(String url)
     {
         this.url = url;
     }

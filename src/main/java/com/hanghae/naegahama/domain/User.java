@@ -75,7 +75,7 @@ public class User extends Timestamped{
         this.hippoImage = "";
     }
 
-    public void addPoint(Long answerStar)
+    public void addPoint(Integer answerStar)
     {
         this.point += answerStar*100;
     }

@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,11 +21,11 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/api/post")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> createPost(@RequestPart(name = "post") PostRequestDto postRequestDto,
+                                        @RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-        postService.createPost(postRequestDto, userDetails.getUser());
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return postService.createPost(multipartFileList,postRequestDto,userDetails.getUser());
     }
 
     // 게시글 수정
@@ -35,14 +39,6 @@ public class PostController {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    //게시글 삭제
-    @DeleteMapping("/api/post/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(postId, userDetails);
-
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-    }
 
     // 게시글 전체조회
     @GetMapping("/api/post")

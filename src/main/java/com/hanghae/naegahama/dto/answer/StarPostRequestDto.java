@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class StarPostRequestDto
 {
-    private Long star;
+    private Integer star;
 
 }
 

@@ -1,28 +1,26 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.domain.Comment;
-import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.ResponseDto;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
-import com.hanghae.naegahama.repository.AnswerRepository;
-import com.hanghae.naegahama.repository.CommentRepository;
-import com.hanghae.naegahama.repository.PostLikeRepository;
-import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @EnableAutoConfiguration
 @RequiredArgsConstructor
@@ -35,9 +33,13 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+    private final RoomService roomService;
+    private final S3Uploader s3Uploader;
+
+    private final PostFileRepository postFileRepository;
 
     @Transactional
-    public Post createPost(PostRequestDto postRequestDto, User user) {
+    public ResponseEntity<BasicResponseDto> createPost(List<MultipartFile> multipartFileList, PostRequestDto postRequestDto, User user) throws IOException {
 
         if (postRequestDto.getTitle() == null) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
@@ -50,10 +52,27 @@ public class PostService {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
 
-        log.info("level ={}", postRequestDto.getLevel());
+
         Post post = new Post(postRequestDto, user);
-        log.info("level ={}", post.getLevel());
-        return postRepository.save(post);
+
+        //저장된 Answer을 꺼내와서
+        Post savePost = postRepository.save(post);
+        //들어온 파일들을 하나씩 처리하는데
+        for (MultipartFile file : multipartFileList) {
+            String url = s3Uploader.upload(file, "static");
+            //S3에서 받아온 URL을 통해서 file을 만들고
+            PostFile fileUrl = new PostFile(url);
+
+            //파일에 아까 저장한 Answer를 Set한 후에
+            fileUrl.setAnswer(savePost);
+            //저장된 파일을 Answer에 넣어준다
+            PostFile saveFile = postFileRepository.save(fileUrl);
+            savePost.getFileList().add(saveFile);
+        }
+        roomService.createRoom(savePost.getTitle());
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+
     }
 
 
@@ -105,26 +124,6 @@ public class PostService {
         return post;
     }
 
-    //삭제
-    @Transactional
-    public Post deletePost(Long id, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
-        );
-        User user = post.getUser();
-        Long deleteId = user.getId();
-        if (userDetails.getUser().getId() != deleteId) {
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
-        }
-
-        List<Comment> comments = commentRepository.findAllByAnswer(null);
-        for (Comment comment : comments) {
-            commentRepository.deleteById(comment.getId());
-        }
-        postLikeRepository.deleteByPost(post);
-        postRepository.deleteById(id);
-        return post;
-    }
 
     public ResponseDto getPost1(Long postId) {
 
@@ -132,8 +131,22 @@ public class PostService {
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
         );
 
+        List<PostLike> likeLIst = postLikeRepository.findAllByPost(post);
+
+        List<Long> userIdList = new ArrayList<>();
+        for (PostLike postLike : likeLIst) {
+            userIdList.add(postLike.getId());
+        }
+
+
         Integer answerCount = answerRepository.countByPost(post);
         Long postLikeCount = postLikeRepository.countByPost(post);
+        List<PostFile> findPostFileList = postFileRepository.findAllByPostOrderByCreatedAt(post);
+        List<String> fileList = new ArrayList<>();
+        for (PostFile postFile : findPostFileList) {
+            fileList.add(postFile.getUrl());
+        }
+
         ResponseDto ResponseDto = new ResponseDto(
                 post.getId(),
                 post.getTitle(),
@@ -142,20 +155,23 @@ public class PostService {
                 answerCount,
                 post.getUser().getId(),
                 post.getUser().getNickName(),
-                postLikeCount);
+                postLikeCount,
+                userIdList,
+                fileList,
+                post.getLevel());
 
         return ResponseDto;
     }
 
     public List<CategoryResponseDto> getCategory(String category) {
         List<Post> posts;
-        if(category.equals("all")){
-            posts= postRepository.findAllByOrderByCreatedAtDesc();
-        }else {
+        if (category.equals("all")) {
+            posts = postRepository.findAllByOrderByCreatedAtDesc();
+        } else {
             posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
         }
         List<CategoryResponseDto> response = new ArrayList<>();
-        if(posts == null){
+        if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
