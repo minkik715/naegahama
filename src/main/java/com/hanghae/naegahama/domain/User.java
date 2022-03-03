@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
@@ -28,8 +29,8 @@ public class User extends Timestamped{
     @Column(name = "password")
     private String password;
 
-    @Column(name = "hippoImage")
-    private String hippoImage;
+//    @Column(name = "hippoImage")
+//    private String hippoImage;
 
     @Column
     private int point;
@@ -52,9 +53,15 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn ( name = "achievement_id")
+    private Achievement achievement;
+
+
+
 
     public User(String email, String nickName, String password, int point) {
         this.email = email;
@@ -67,12 +74,12 @@ public class User extends Timestamped{
         this.email = signUpRequestDto.getEmail();
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
-        this.hippoImage = "";
+//        this.hippoImage = "";
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
-        this.hippoImage = "";
+//        this.hippoImage = "";
     }
 
     public void addPoint(Long answerStar)

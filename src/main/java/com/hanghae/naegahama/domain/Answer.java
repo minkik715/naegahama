@@ -60,6 +60,14 @@ public class Answer extends Timestamped {
     }
 
 
+    public Answer(String title, String content, Post post, User user) {
+        this.title = title;
+        this.content = content;
+        this.post = post;
+        this.user = user;
+    }
+
+
     public void Update(AnswerPostRequestDto answerPostRequestDto,List<File>  fileList)
     {
         this.title = answerPostRequestDto.getTitle();

@@ -1,19 +1,25 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.domain.Answer;
+import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
+import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
+import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
+import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
 import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,6 +39,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final KakaoOAuth2 kakaoOAuth2;
+
+    //
+    private final PostRepository postRepository;
+    private final AnswerRepository answerRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final AnswerLikeRepository answerLikeRepository;
+    private final CommentRepository commentRepository;
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -96,4 +109,70 @@ public class UserService {
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+    public List<MyPostDto> myPost(UserDetailsImpl userDetails)
+    {
+        List<MyPostDto> myPageDtoList = new ArrayList<>();
+
+        User user = userDetails.getUser();
+
+        List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
+
+        for ( Post post : postList)
+        {
+            Long likeCount = postLikeRepository.countByPost(post);
+            MyPostDto postMyPageDto = new MyPostDto(post,likeCount);
+            myPageDtoList.add(postMyPageDto);
+        }
+
+        return myPageDtoList;
+    }
+
+    public List<MyAnswerDto> myAnswer(UserDetailsImpl userDetails)
+    {
+        List<MyAnswerDto> myAnswerDtoList = new ArrayList<>();
+        User user = userDetails.getUser();
+
+        List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
+        for ( Answer answer : answerList)
+        {
+            Long likeCount = answerLikeRepository.countByAnswer(answer);
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, likeCount);
+            myAnswerDtoList.add(myAnswerDto);
+        }
+        return myAnswerDtoList;
+    }
+
+    public MyAchievementDto myAchievement(UserDetailsImpl userDetails)
+    {
+        MyAchievementDto myAchievementDto = new MyAchievementDto();
+
+        User user = userDetails.getUser();
+
+//        // 더노력HAMA - 최초로 1점 만족도 받았을때 메달 획득
+//        Answer answer = answerRepository.findByUserAndStar(user,1L).orElse(null);
+//        // 로그인한 계정에 Star 값이 1 인 답변글이 없다면 0, 있다면 1을 넣어줌.
+//        user.getAchievement().setAchievement1( answer == null ? 0L : 1L);
+//
+//        //  축하HAMA - 최초로 5점 만족도받았을때
+//        Answer answer2 = answerRepository.findByUserAndStar(user,5L).orElse(null);
+//        user.getAchievement().setAchievement2( answer == null ? 0L : 1L);
+//
+////        // 서치HAMA - 최초로 검색했을 때 - 미구현
+////        achievementList[2] = 0L;
+//
+//        //리액션HAMA - 최초 댓글
+//        Long commentCount = commentRepository.countByUser(user);
+//        achievementList[3] = commentCount < 1 ? 0L : 1L;
+
+
+        return myAchievementDto;
+    }
+
+//    public MyBannerDto myBanner(UserDetailsImpl userDetails)
+//    {
+//        User user = userDetails.getUser();
+//
+//        return new MyBannerDto(user);
+//    }
 }
