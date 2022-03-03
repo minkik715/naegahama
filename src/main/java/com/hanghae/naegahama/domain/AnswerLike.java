@@ -1,14 +1,13 @@
 package com.hanghae.naegahama.domain;
 
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
-import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "AnswerLike")
+@Table(name = "answer_like")
 @Entity
 @Getter
 @NoArgsConstructor

@@ -1,7 +1,10 @@
 package com.hanghae.naegahama.dto.comment;
 
 import com.hanghae.naegahama.domain.Comment;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter @NoArgsConstructor
 public class KidsCommentListResponseDto {
 
     private Long commentId;

@@ -56,6 +56,14 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getPost1(postId));
     }
 
+
+//    //카테고리
+//    @GetMapping("/api/post/{category}")
+//    public ResponseEntity<?> getCategory(@PathVariable String category) {
+//
+//        postService.getCategory(category);
+//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+//    }
     //카테고리
     @GetMapping("/api/post/category/{category}")
     public ResponseEntity<?> getCategory(@PathVariable String category) {

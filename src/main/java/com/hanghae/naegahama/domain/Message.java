@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hanghae.naegahama.dto.message.MessageRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

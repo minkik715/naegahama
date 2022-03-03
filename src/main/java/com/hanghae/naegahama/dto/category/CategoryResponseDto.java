@@ -1,12 +1,13 @@
 package com.hanghae.naegahama.dto.category;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class CategoryResponseDto {
     private Long id;
     private String title;

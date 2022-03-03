@@ -33,8 +33,7 @@ public class Comment extends Timestamped{
         this.content = commentContent;
         this.answer = findAnswer;
         this.user = user;
-        user.getCommentList().add(this);
-        answer.getCommentList().add(this);
+        findAnswer.getCommentList().add(this);
     }
 
     public Comment(String commentContent,Long parentCommentId, Answer findAnswer, User user) {
@@ -42,8 +41,7 @@ public class Comment extends Timestamped{
         this.parentCommentId = parentCommentId;
         this.answer = findAnswer;
         this.user = user;
-        user.getCommentList().add(this);
-        answer.getCommentList().add(this);
+        findAnswer.getCommentList().add(this);
     }
 
     public void setContent(String content) {
