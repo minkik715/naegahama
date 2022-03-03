@@ -72,10 +72,10 @@ public class UserController {
         return userService.myAchievement(userDetails);
     }
 
-//    @GetMapping("/mybanner")
-//    public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
-//    {
-//        return userService.myBanner(userDetails);
-//    }
+    @GetMapping("/mybanner")
+    public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myBanner(userDetails);
+    }
 
 }

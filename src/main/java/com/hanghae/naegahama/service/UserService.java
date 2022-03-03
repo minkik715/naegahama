@@ -46,6 +46,8 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final CommentRepository commentRepository;
+    
+
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
@@ -146,33 +148,17 @@ public class UserService {
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails)
     {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
-
         User user = userDetails.getUser();
-
-//        // 더노력HAMA - 최초로 1점 만족도 받았을때 메달 획득
-//        Answer answer = answerRepository.findByUserAndStar(user,1L).orElse(null);
-//        // 로그인한 계정에 Star 값이 1 인 답변글이 없다면 0, 있다면 1을 넣어줌.
-//        user.getAchievement().setAchievement1( answer == null ? 0L : 1L);
-//
-//        //  축하HAMA - 최초로 5점 만족도받았을때
-//        Answer answer2 = answerRepository.findByUserAndStar(user,5L).orElse(null);
-//        user.getAchievement().setAchievement2( answer == null ? 0L : 1L);
-//
-////        // 서치HAMA - 최초로 검색했을 때 - 미구현
-////        achievementList[2] = 0L;
-//
-//        //리액션HAMA - 최초 댓글
-//        Long commentCount = commentRepository.countByUser(user);
-//        achievementList[3] = commentCount < 1 ? 0L : 1L;
-
 
         return myAchievementDto;
     }
 
-//    public MyBannerDto myBanner(UserDetailsImpl userDetails)
-//    {
-//        User user = userDetails.getUser();
-//
-//        return new MyBannerDto(user);
-//    }
+    public MyBannerDto myBanner(UserDetailsImpl userDetails)
+    {
+        User user = userDetails.getUser();
+
+        return new MyBannerDto(user);
+    }
+
+
 }

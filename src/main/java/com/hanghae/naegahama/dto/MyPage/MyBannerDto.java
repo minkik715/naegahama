@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.dto.MyPage;
 
-import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,14 +16,14 @@ public class MyBannerDto
 
     private int point;
 
-    private Long hippolv;
+    private int hippolv;
 
-//    public MyBannerDto(User user)
-//    {
-//        this.nickname = user.getNickName();
-//        this.email = user.getEmail();
-//        this.hippoName = user.
-//        this.point = user.getPoint();
-//        this.hippolv = user
-//    }
+    public MyBannerDto(User user)
+    {
+        this.nickname = user.getNickName();
+        this.email = user.getEmail();
+        this.hippoName = user.getHippoName();
+        this.point = user.getPoint();
+        this.hippolv = user.getHippoLevel();
+    }
 }
