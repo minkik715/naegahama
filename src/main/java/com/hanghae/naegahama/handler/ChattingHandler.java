@@ -26,13 +26,15 @@ public class ChattingHandler implements ChannelInterceptor {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final ChatService chatService;
-    private final RedisRepository repository;
+    private final RedisRepository redisRepository;
+
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        String jwtToken = accessor.getFirstNativeHeader("token");
         if (accessor.getCommand() == StompCommand.CONNECT) {
+            String jwtToken = accessor.getFirstNativeHeader("token");
             jwtAuthenticationProvider.validateToken(jwtToken);
             log.info("Connect = {}", jwtToken);
 
@@ -41,12 +43,15 @@ public class ChattingHandler implements ChannelInterceptor {
             if (simpleDestination == null) {
                 throw new RoomNotFoundException("존재하지 않는 방입니다.");
             }
+            log.info("simpleDestination = {}", simpleDestination );
             String roomId = chatService.getRoomId(simpleDestination);
 
             String simpSessionId = (String) message.getHeaders().get("simpSessionId");
             log.info("roomId ={}  simpSessionId = {}" , roomId, simpSessionId);
-            repository.mappingUserRoom(roomId, simpSessionId);
-            log.info("구독성공");
+            redisRepository.mappingUserRoom( simpSessionId,roomId);
+            String userEnterRoomId = redisRepository.getUserEnterRoomId(simpSessionId);
+            String jwtToken = accessor.getFirstNativeHeader("token");
+            log.info("구독성공 {}, {}", simpSessionId, userEnterRoomId);
             chatService.messageResolver(new MessageRequestDto(Long.parseLong(roomId), MessageType.ENTER, ""), jwtToken);
             log.info("SUBSCRIBE {}, {}", simpSessionId, roomId);
         }else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
@@ -54,10 +59,10 @@ public class ChattingHandler implements ChannelInterceptor {
             // 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 얻는다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             //나갈떄 redis 맵에서 roomId와 sessionId의 매핑을 끊어줘야 하기때문에 roomId찾고
-            String roomId = repository.getUserEnterRoomId(sessionId);
+            String roomId = redisRepository.getUserEnterRoomId(sessionId);
 
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
-            repository.removeUserEnterInfo(sessionId);
+            redisRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECT {}, {}", sessionId, roomId);
         }
         return message;

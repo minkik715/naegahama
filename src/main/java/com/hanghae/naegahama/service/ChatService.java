@@ -52,22 +52,6 @@ public class ChatService {
         messageRepository.save(message);
 
     }
-    public void messageResolver(MessageRequestDto messageRequestDto) {
-        Long userId = messageRequestDto.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("해당 유저는 존재하지 않습니다.")
-        );
-        Room room = roomRepository.findById(messageRequestDto.getRoomId()).orElseThrow(
-                () -> new RoomNotFoundException("해당 방은 존재하지 않습니다.")
-        );
-        String dateResult = getTime();
-        Message message = new Message(messageRequestDto,user,room,dateResult);
-
-
-        sendMessage(message);
-        messageRepository.save(message);
-
-    }
 
     public void sendMessage(Message message) {
         if(message.getMessageType().equals(MessageType.ENTER)){
@@ -96,6 +80,7 @@ public class ChatService {
         log.info("sendMessage여기 까지 잘왔어");
         log.info("sendMessage = {}", message.getMessage());
         MessageResponseDto messageResponseDto = new MessageResponseDto(message);
+        log.info("messageResponseDto = {}", messageResponseDto );
         redisTemplate.convertAndSend(channelTopic.getTopic(), messageResponseDto);
     }
 
@@ -114,6 +99,7 @@ public class ChatService {
         else
             return "";
     }
+
 
   /*  public Page<ChatMessage> getChatMessageByRoomId(String roomId, Pageable pageable) {
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);

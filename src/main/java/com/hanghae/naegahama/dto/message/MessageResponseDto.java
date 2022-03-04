@@ -2,9 +2,11 @@ package com.hanghae.naegahama.dto.message;
 
 import com.hanghae.naegahama.domain.Message;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
-@Getter
+@Getter @NoArgsConstructor @ToString
 public class MessageResponseDto {
     private String roomId;
     private Long userId;

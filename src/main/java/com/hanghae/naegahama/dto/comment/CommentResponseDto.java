@@ -14,6 +14,7 @@ public class CommentResponseDto {
     private String content;
     private String modifiedAt;
 
+
     public CommentResponseDto(Comment save,Long answerId) {
         this.commentWriter= save.getUser().getNickName();
         this.content = save.getContent();

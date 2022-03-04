@@ -45,7 +45,9 @@ public class RoomService {
     public ResponseEntity<?> getRooms(User user) {
         // 들어온 유저가 해당하는 모든 방들 다꺼내기
         List<UserEnterRoom> enterRooms = userEnterRoomRepository.findByUserOrderByIdDesc(user);
+        log.info(enterRooms.toString());
         List<RoomResponseDto> Rooms = new ArrayList<>();
+        log.info("여기까지 된다");
         for (UserEnterRoom enterRoom : enterRooms) {
             Rooms.add(new RoomResponseDto(enterRoom.getRoom(),user));
         }
@@ -54,10 +56,13 @@ public class RoomService {
 
 
 
-    public Page<Message> getChatMessageByRoomId(String roomId, Pageable pageable) {
+    public Page<Message> getChatMessageByRoomId(Long roomId, Pageable pageable) {
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new RoomNotFoundException("에라 모르겠다")
+        );
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() -1);
         pageable = PageRequest.of(page, 150);
-        return messageRepository.findByRoomId(roomId, pageable);
+        return messageRepository.findByRoom(room, pageable);
     }
 
     public RoomResponseDto getEachChatRoom(Long roomId, User user) {

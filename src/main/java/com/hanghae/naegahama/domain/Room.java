@@ -21,9 +21,6 @@ public class Room extends Timestamped{
     private Post post;
 
     @OneToMany(mappedBy = "room")
-    List<Message> messageList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "room")
     List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
 
     public Room(String name, Post post) {

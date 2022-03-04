@@ -1,7 +1,6 @@
-package com.hanghae.naegahama.config.redis;
+package com.hanghae.naegahama.config;
 
 import com.hanghae.naegahama.socket.MessageRedisSubscriber;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -12,9 +11,12 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+
+
 @Configuration
 public class RedisConfig {
 
+    // 어플리케이션에서 사용할 redisTemplate 설정
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -24,10 +26,12 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+
+
     // 단일 Topic 사용을 위한 Bean 설정
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic("Room");
+        return new ChannelTopic("chatroom");
     }
 
     // redis에 발행(publish)된 메시지 처리를 위한 리스너 설정
@@ -48,9 +52,5 @@ public class RedisConfig {
     public MessageListenerAdapter listenerAdapter(MessageRedisSubscriber messageRedisSubscriber) {
         return new MessageListenerAdapter(messageRedisSubscriber, "sendMessage");
     }
-  /*  @Bean
-    public MessageListenerAdapter listenerAdapter(RedisSubscriber RedisSubscriber) {
-        return new MessageListenerAdapter(subscriber, "sendMessage");
-    }*/
 
 }

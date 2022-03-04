@@ -43,9 +43,6 @@ public class User extends Timestamped{
     private List<PostLike> postLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Message> messageList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")

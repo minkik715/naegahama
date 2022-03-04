@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 public class Post extends Timestamped {
     @Id

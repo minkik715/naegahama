@@ -2,12 +2,14 @@ package com.hanghae.naegahama.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 public class UserEnterRoom {
 
     @Id

@@ -38,7 +38,7 @@ public class RoomController {
 
     //하나의 룸에 해당하는 메세지 끌고오기
     @GetMapping("/rooms/{roomId}/messages")
-    public Page<Message> getEachChatRoomMessages(@PathVariable String roomId, @PageableDefault Pageable pageable) {
+    public Page<Message> getEachChatRoomMessages(@PathVariable Long roomId, @PageableDefault Pageable pageable) {
         return roomService.getChatMessageByRoomId(roomId, pageable);
     }
 

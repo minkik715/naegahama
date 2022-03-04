@@ -37,9 +37,7 @@ public class Message extends Timestamped{
         this.message = messageRequestDto.getMessage();
         this.messageType = messageRequestDto.getType();
         this.user = user;
-        user.getMessageList().add(this);
         this.room = room;
-        room.getMessageList().add(this);
         this.time = time;
     }
 
