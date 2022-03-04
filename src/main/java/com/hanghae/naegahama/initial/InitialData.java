@@ -29,9 +29,12 @@ public class InitialData implements ApplicationRunner {
     private final PostFileRepository postFileRepository;
     private final AnswerFileRepository answerFileRepository;
 
+    private final CommentRepository commentRepository;
+
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
+        //유저만들기
         List<User> userList = new ArrayList<>();
         userList.add(new User("aaa@gmail.com", "aaa", passwordEncoder.encode("123456"), 1000));
         userList.add(new User("bbb@gmail.com", "bbb", passwordEncoder.encode("123456"), 2000));
@@ -43,6 +46,8 @@ public class InitialData implements ApplicationRunner {
         userRepository.saveAll(userList);
 
 
+
+        //요청글 만들기
         List<Post> PostList = new ArrayList<>();
         PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0)));
         PostList.add(new Post("치킨먹어주실분", "황금올리브로 야무지게 먹어주세요!", "cook","중", userList.get(0)));
@@ -76,15 +81,14 @@ public class InitialData implements ApplicationRunner {
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", PostList.get(0))));
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", PostList.get(0))));
 
+
+
+
         List<Answer> answerList = new ArrayList<>();
-        answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
+  /*      answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
         answerList.add(new Answer("한강 갔습니다.","평점 말고 코딩 대신 해주면 안되나요?",PostList.get(0),userList.get(0)));
         answerList.add(new Answer("라면 후기","내공 냠냠",PostList.get(0),userList.get(2)));
-        answerRepository.saveAll(answerList);
-
-
-
-
+        answerRepository.saveAll(answerList);*/
         answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 3,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
         answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 4,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
         answerList.add(answerRepository.save(new Answer("제가 진라면 잘먹습니다", 5,"라면중에는 진라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(5))));
@@ -97,6 +101,18 @@ public class InitialData implements ApplicationRunner {
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", answerList.get(0))));
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", answerList.get(0))));
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", answerList.get(0))));
+
+        List<Comment> commentList = new ArrayList<>();
+        commentList.add(commentRepository.save(new Comment("정말 맛있게 드셨네요!!!", null,answerList.get(0),userList.get(0) )));
+        commentList.add(commentRepository.save(new Comment("우와 저도 먹고 싶어요", null,answerList.get(0),userList.get(0) )));
+        commentList.add(commentRepository.save(new Comment("진짜 맛있겠다.", null,answerList.get(0),userList.get(0) )));
+        commentList.add(commentRepository.save(new Comment("제 요청도 한번 봐주세요", null,answerList.get(0),userList.get(0) )));
+        commentList.add(commentRepository.save(new Comment("대댓글1", 1L,answerList.get(0),userList.get(1) )));
+        commentList.add(commentRepository.save(new Comment("대댓글2", 2L,answerList.get(0),userList.get(2) )));
+        commentList.add(commentRepository.save(new Comment("대댓글3", 3L,answerList.get(0),userList.get(3) )));
+        commentList.add(commentRepository.save(new Comment("대댓글4", 1L,answerList.get(0),userList.get(3) )));
+        commentList.add(commentRepository.save(new Comment("대댓글5", 2L,answerList.get(0),userList.get(2) )));
+        commentList.add(commentRepository.save(new Comment("대댓글6", 3L,answerList.get(0),userList.get(1) )));
 
     }
 

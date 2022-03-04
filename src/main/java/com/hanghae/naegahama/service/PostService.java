@@ -168,7 +168,7 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
-        Long roomId = post.getRoom().getId();
+        Long roomId = 1L;
 
 
         ResponseDto ResponseDto = new ResponseDto(

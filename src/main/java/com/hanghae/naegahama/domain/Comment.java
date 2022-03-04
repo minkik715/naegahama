@@ -29,13 +29,16 @@ public class Comment extends Timestamped{
     @ManyToOne
     private User user;
 
+    //일반 댓글 생성
     public Comment(String commentContent, Answer findAnswer, User user) {
         this.content = commentContent;
         this.answer = findAnswer;
         this.user = user;
+        this.parentCommentId = null;
         findAnswer.getCommentList().add(this);
     }
 
+    //대댓글 생성
     public Comment(String commentContent,Long parentCommentId, Answer findAnswer, User user) {
         this.content = commentContent;
         this.parentCommentId = parentCommentId;
