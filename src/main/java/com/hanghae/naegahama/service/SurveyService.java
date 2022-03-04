@@ -4,10 +4,6 @@ import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 
-import com.hanghae.naegahama.dto.MyPage.MyPostDto;
-import com.hanghae.naegahama.dto.category.CategoryResponseDto;
-import com.hanghae.naegahama.dto.post.PostResponseDto;
-import com.hanghae.naegahama.dto.post.ResponseDto;
 import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
@@ -16,11 +12,8 @@ import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import javax.transaction.Transactional;
@@ -109,22 +102,22 @@ public class SurveyService {
 
 
     //설문조사 결과
-    public SurveyresponseDto getHippo() {
+    public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
+        String hippoName = userDetails.getUser().getHippoName();
 
-        User userhippo = userRepository.findByHippoName();
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
-                userhippo.getHippoName()
+                hippoName
         );
         return surveyresponseDto;
     }
 
     //같은 하마의 요청글 추천.
-    public List<CommendResponseDto> recommend(String hippoName, UserDetailsImpl userDetails) {
+    public List<CommendResponseDto> recommend(String hippoName) {
 
-        //하마 이름이 같은 게시글을 for문을 통해 가져온다.
-        List<Post> posts = postRepository.findAllByUserOrder(hippoName);
+        //하마 이름이 같은 게시글을 포스트 레포지토리에서 가져온다.
+//        User user = userDetails.getUser();
+        List<Post> posts = postRepository.findAllByUserHippoName(hippoName);
         List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
-        User user = userDetails.getUser();
 
         //랜덤 숫자 두개를 추출한다.
         int size = posts.size();
@@ -148,10 +141,10 @@ public class SurveyService {
                 post1.getTitle(),
                 post2.getId(),
                 post2.getTitle()
-                );
+        );
 
         commendResponseDtos.add(commendResponseDto);
 
         return commendResponseDtos;
-}
+    }
 }

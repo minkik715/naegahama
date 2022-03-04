@@ -26,14 +26,13 @@ public class SurveyController {
 
     //설문조사 결과
     @GetMapping("/api/survey")
-    public ResponseEntity<?> getHippo() {
-        return ResponseEntity.ok().body(surveyService.getHippo());
+    public ResponseEntity<?> getHippo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(surveyService.getHippo(userDetails));
     }
 
     //같은 하마의 요청글 추천.
     @GetMapping("/api/survey/{hippoName}")
-    public ResponseEntity<?> recommend(@PathVariable String hippoName,
-                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok().body(surveyService.recommend(hippoName, userDetails));
+    public ResponseEntity<?> recommend(@PathVariable String hippoName) {
+        return ResponseEntity.ok().body(surveyService.recommend(hippoName));
     }
 }
