@@ -34,7 +34,7 @@ public class User extends Timestamped{
     private int point;
 
     @Column
-    private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
+    private String hipponame;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
@@ -82,8 +82,8 @@ public class User extends Timestamped{
         this.hippoLevel = hippoLevel;
     }
 
-    public void setHippoName(String hippoName) {
-        this.hippoName = hippoName;
+    public void setHippoName(String hipponame) {
+        this.hipponame = hipponame;
     }
 
     public void addPoint(Long answerStar)

@@ -14,5 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);
 
+    List<Post> findAllByUser_Hipponame(String hippoName);
+
     Post findPostById(Long id);
 }

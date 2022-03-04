@@ -184,7 +184,25 @@ public class AnswerService
         answer.Star(starPostRequestDto);
         User answerWriter = answer.getUser();
 
+        // 1점을 받을 시 업적 1 획득
+        if ( starPostRequestDto.getStar() == 1)
+        {
+            answerWriter.getAchievement().setAchievement1(1);
+        }
+        // 5점을 받을 시 업적 2 획득
+        else if( starPostRequestDto.getStar() == 5)
+        {
+            answerWriter.getAchievement().setAchievement2(1);
+        }
+
+        // 평가를 한 유저는 업적 7 획득
+        userDetails.getUser().getAchievement().setAchievement7(1);
+
+
+
         answerWriter.addPoint(starPostRequestDto.getStar());
+
+
 
 
 
