@@ -10,6 +10,7 @@ import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
+import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class CommentService {
 
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -45,9 +47,15 @@ public class CommentService {
             user.getCommentList().add(comment);
         }
         Comment save = commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(save);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
 
         return ResponseEntity.ok().body(commentResponseDto);
+        // 최초 요청글 작성시 업적 4 획득
+/*        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement4(1);*/
+
+
     }
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {

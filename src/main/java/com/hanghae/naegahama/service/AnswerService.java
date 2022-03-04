@@ -35,6 +35,8 @@ public class AnswerService
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final AnswerFileRepository answerFileRepository;
+    private final UserRepository userRepository;
+
 
     private final S3Uploader s3Uploader;
 
@@ -42,7 +44,7 @@ public class AnswerService
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
             throws IOException
     {
-//        String Url = s3Uploader.upload(multipartFile, "static");
+//      String Url = s3Uploader.upload(multipartFile, "static");
         //유저를 받고
         User user = userDetails.getUser();
 
@@ -68,6 +70,12 @@ public class AnswerService
             AnswerFile saveFile = answerFileRepository.save(fileUrl);
             saveAnwser.getFileList().add(saveFile);
         }
+
+        // 최초 요청글 작성시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement9(1);
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
@@ -175,21 +183,42 @@ public class AnswerService
         return answerDetailGetResponseDto;
     }
 
-
+    @Transactional
     public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
     {
+        User requestWriter = userDetails.getUser();
+
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        if( answer.getStar() != null )
+        if( answer.getStar() != 0 )
         {
             throw new IllegalArgumentException("이미 평가한 답글입니다.");
         }
 
         answer.Star(starPostRequestDto);
-
         User answerWriter = answer.getUser();
+
+        // 1점을 받을 시 업적 1 획득
+        if ( starPostRequestDto.getStar() == 1)
+        {
+            answerWriter.getAchievement().setAchievement1(1);
+        }
+        // 5점을 받을 시 업적 2 획득
+        else if( starPostRequestDto.getStar() == 5)
+        {
+            answerWriter.getAchievement().setAchievement2(1);
+        }
+
+        // 최초 평가시 업적 7 획득
+        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement7(1);
+
+
+
         answerWriter.addPoint(starPostRequestDto.getStar());
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }

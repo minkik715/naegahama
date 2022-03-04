@@ -64,6 +64,7 @@ public class Answer extends Timestamped {
         this.content = answerPostRequestDto.getContent();
         this.post = post;
         this.user = user;
+        this.star = 0;
     }
 
 
@@ -81,15 +82,6 @@ public class Answer extends Timestamped {
     }
 
 
-
-    public Answer(String title, Integer star, String content, Post post, User user, List<AnswerFile> fileList) {
-        this.title = title;
-        this.star = star;
-        this.content = content;
-        this.post = post;
-        this.user = user;
-        this.fileList = fileList;
-    }
 
     public void Star(StarPostRequestDto starPostRequestDto)
     {
