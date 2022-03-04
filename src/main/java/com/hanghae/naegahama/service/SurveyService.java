@@ -37,7 +37,7 @@ public class SurveyService {
 
 
         ArrayList<Long> longs = new ArrayList<>();
-        for (Long aLong : surveyRequestDto.getNum()) {
+        for (Long aLong : surveyRequestDto.getResult()) {
             longs.add(aLong);
         }
 
@@ -45,7 +45,7 @@ public class SurveyService {
         int plan = 0; // answer값 0으로 초기화
         int action = 0; // answer값 0으로 초기화
 
-        for (int i = 0; i < surveyRequestDto.getNum().length; i++) // 전달받은 배열의 길이만큼 반복
+        for (int i = 0; i < surveyRequestDto.getResult().length; i++) // 전달받은 배열의 길이만큼 반복
         {
             if (longs.get(i) == 1 && (i == 0 || i == 4 || i == 6)) { // 배열 i번 인덱스가 1일때
                 emotion++; // emotion에 1를 더함
