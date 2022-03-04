@@ -9,7 +9,9 @@ import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.ResponseDto;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.*;
+
 import com.hanghae.naegahama.util.S3Uploader;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -33,10 +35,14 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+
     private final RoomService roomService;
     private final S3Uploader s3Uploader;
 
     private final PostFileRepository postFileRepository;
+
+    private final UserRepository userRepository;
+
 
     //요청글 작성
     @Transactional
@@ -70,8 +76,18 @@ public class PostService {
             PostFile saveFile = postFileRepository.save(fileUrl);
             savePost.getFileList().add(saveFile);
         }
+
+        // 최초 요청글 작성시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
+
+
         //요청글이 생길때 채팅방도 하나 생기게 된다.
         return roomService.createRoom(savePost.getTitle(), post);
+
+
+
 
 
     }
