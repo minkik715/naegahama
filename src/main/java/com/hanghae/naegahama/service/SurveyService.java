@@ -32,7 +32,8 @@ public class SurveyService {
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
-    public ResponseEntity createHippo(SurveyRequestDto surveyRequestDto, User user) {
+    public void createHippo(SurveyRequestDto surveyRequestDto, User user)
+    {
 
 
         ArrayList<Long> longs = new ArrayList<>();
@@ -105,8 +106,9 @@ public class SurveyService {
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement6(1);
 
+        userRepository.save(user);
 
-        return ResponseEntity.ok().body(userRepository.save(user));
+
     }
 
 
