@@ -175,7 +175,7 @@ public class UserService {
         // 업적 3 :
         // 업적 4 : commentService.writeComment
         // 업적 5 : postService.createPost
-        // 업적 6 :
+        // 업적 6 : surveyService.createHippo
         // 업적 7 : answerService.answerStar
         // 업적 8 :
         // 업적 9 : answerService.answerWrite;

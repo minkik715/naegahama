@@ -44,7 +44,7 @@ public class AnswerService
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
             throws IOException
     {
-//        String Url = s3Uploader.upload(multipartFile, "static");
+//      String Url = s3Uploader.upload(multipartFile, "static");
         //유저를 받고
         User user = userDetails.getUser();
 
@@ -191,7 +191,7 @@ public class AnswerService
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        if( answer.getStar() != null )
+        if( answer.getStar() != 0 )
         {
             throw new IllegalArgumentException("이미 평가한 답글입니다.");
         }
