@@ -81,19 +81,19 @@ public class SurveyService {
 
         if (action2 == "감성" && plan2 == "계획" && action2 == "외향") {
             hippo = "열심히 노력 하마";
-        } else if (action2 == "감성" && plan2 == "계획" && action2 == "내향") {
+        } else if (emotion2 == "감성" && plan2 == "계획" && action2 == "내향") {
             hippo = "외유내강 하마";
-        } else if (action2 == "감성" && plan2 == "직관" && action2 == "외향") {
+        } else if (emotion2 == "감성" && plan2 == "직관" && action2 == "외향") {
             hippo = "하마 냄새가 나는 하마";
-        } else if (action2 == "감성" && plan2 == "직관" && action2 == "내향") {
+        } else if (emotion2 == "감성" && plan2 == "직관" && action2 == "내향") {
             hippo = "스윗 하마";
-        } else if (action2 == "이성" && plan2 == "계획" && action2 == "외향") {
+        } else if (emotion2 == "이성" && plan2 == "계획" && action2 == "외향") {
             hippo = "내가 리더 하마";
-        } else if (action2 == "이성" && plan2 == "계획" && action2 == "내향") {
+        } else if (emotion2 == "이성" && plan2 == "계획" && action2 == "내향") {
             hippo = "스마트 하마";
-        } else if (action2 == "이성" && plan2 == "직관" && action2 == "외향") {
+        } else if (emotion2 == "이성" && plan2 == "직관" && action2 == "외향") {
             hippo = "세상 시원시원한 하마";
-        } else if (action2 == "이성" && plan2 == "직관" && action2 == "내향") {
+        } else if (emotion2 == "이성" && plan2 == "직관" && action2 == "내향") {
             hippo = "센치 하마";
         }
         user.setHippoName(hippo);
