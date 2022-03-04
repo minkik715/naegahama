@@ -18,17 +18,15 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-
-        authorities.add(() -> {
-            return null;
-        });
-
-        return authorities;
+        return null;
     }
 
     public UserDetailsImpl(User user) {
         this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -38,7 +36,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserEmail();
+        return null;
+        //user.getUserEmail();
     }
 
     @Override
