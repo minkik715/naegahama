@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,35 +19,39 @@ public class Achievement extends Timestamped
     private Long id;
 
     @Column
-    private Long achievement1;
-
+    private int achievement1;
     @Column
-    private Long achievement2;
-
+    private int achievement2;
     @Column
-    private Long achievement3;
-
+    private int achievement3;
     @Column
-    private Long achievement4;
-
+    private int achievement4;
     @Column
-    private Long achievement5;
-
+    private int achievement5;
     @Column
-    private Long achievement6;
-
+    private int achievement6;
     @Column
-    private Long achievement7;
-
+    private int achievement7;
     @Column
-    private Long achievement8;
-
+    private int achievement8;
     @Column
-    private Long achievement9;
-
-    @Column
-    private Long achievement10;
+    private int achievement9;
 
     @OneToOne ( mappedBy = "achievement") // user entity의 achievement 변수에 종속 당하겠다.
     User user;
+
+    public Achievement(User user)
+    {
+        this.achievement1 = 0;
+        this.achievement2 = 0;
+        this.achievement3 = 0;
+        this.achievement4 = 0;
+        this.achievement5 = 0;
+        this.achievement6 = 0;
+        this.achievement7 = 0;
+        this.achievement8 = 0;
+        this.achievement9 = 0;
+        this.user = user;
+    }
+
 }
