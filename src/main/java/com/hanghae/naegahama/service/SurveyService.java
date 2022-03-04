@@ -1,15 +1,23 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 
+import com.hanghae.naegahama.dto.MyPage.MyPostDto;
+import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.ResponseDto;
+import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
+import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
+import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +35,7 @@ import java.util.List;
 public class SurveyService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -97,54 +106,52 @@ public class SurveyService {
         user.setHippoName(hippo);
         return ResponseEntity.ok().body(userRepository.save(user));
     }
+
+
+    //설문조사 결과
+    public SurveyresponseDto getHippo() {
+
+        User userhippo = userRepository.findByHippoName();
+        SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
+                userhippo.getHippoName()
+        );
+        return surveyresponseDto;
+    }
+
+    //같은 하마의 요청글 추천.
+    public List<CommendResponseDto> recommend(String hippoName, UserDetailsImpl userDetails) {
+
+        //하마 이름이 같은 게시글을 for문을 통해 가져온다.
+        List<Post> posts = postRepository.findAllByUserOrder(hippoName);
+        List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
+        User user = userDetails.getUser();
+
+        //랜덤 숫자 두개를 추출한다.
+        int size = posts.size();
+        int min = 0;
+        int random = (int) ((Math.random() * (size - min)) + min);
+
+        int random2 = -1;
+        while (true) {
+            random2 = (int) ((Math.random() * (size - min)) + min);
+            if (random != random2) {
+                break;
+            }
+        }
+
+        //요청게시글에서 램덤으로 두개를 가져온다.
+        Post post1 = posts.get(random);
+        Post post2 = posts.get(random2);
+
+        CommendResponseDto commendResponseDto = new CommendResponseDto(
+                post1.getId(),
+                post1.getTitle(),
+                post2.getId(),
+                post2.getTitle()
+                );
+
+        commendResponseDtos.add(commendResponseDto);
+
+        return commendResponseDtos;
 }
-
-
-//    //설문조사 결과
-//    @ResponseBody
-//    public PostResponseDto getHippo() {
-//
-//        User user = userRepository.findBy();
-//        List<PostResponseDto> response = new ArrayList<>();
-//
-//        for (Post post : posts) {
-//            Integer answerCount = answerRepository.countByPost(post);
-//            Long postLikeCount = postLikeRepository.countByPost(post);
-//            PostResponseDto postResponseDto = new PostResponseDto(
-//                    post.getId(),
-//                    post.getTitle(),
-//                    post.getContent(),
-//                    post.getModifiedAt(),
-//                    answerCount,
-//                    postLikeCount
-//            );
-//            response.add(postResponseDto);
-//        }
-//        return response;
-//    }
-//
-//    //요청글 상세조회.
-//    @ResponseBody
-//    public List<ResponseDto> getPost1(Long postId) {
-//        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
-//        List<ResponseDto> response = new ArrayList<>();
-//
-//        for (Post post : posts) {
-//            Integer answerCount = answerRepository.countByPost(post);
-//            Long postLikeCount = postLikeRepository.countByPost(post);
-//            ResponseDto ResponseDto = new ResponseDto(
-//                    post.getId(),
-//                    post.getTitle(),
-//                    post.getContent(),
-//                    post.getModifiedAt(),
-//                    answerCount,
-//                    post.getUser().getId(),
-//                    post.getUser().getNickName(),
-//                    postLikeCount
-//            );
-//            response.add(ResponseDto);
-//        }
-//        return response;
-//    }
-//
-//}
+}
