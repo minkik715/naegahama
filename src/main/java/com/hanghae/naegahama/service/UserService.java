@@ -162,8 +162,6 @@ public class UserService {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = userDetails.getUser().getAchievement();
 
-        System.out.println(achievement.getAchievement1());
-
         myAchievementDto.getAchievement()[0] = achievement.getAchievement1();
         myAchievementDto.getAchievement()[1] = achievement.getAchievement2();
         myAchievementDto.getAchievement()[2] = achievement.getAchievement3();
@@ -177,12 +175,12 @@ public class UserService {
         // 업적 1 : answerService.answerStar
         // 업적 2 : answerService.answerStar
         // 업적 3 :
-        // 업적 4 :
-        // 업적 5 :
+        // 업적 4 : commentService.writeComment
+        // 업적 5 : postService.createPost
         // 업적 6 :
         // 업적 7 : answerService.answerStar
         // 업적 8 :
-        // 업적 9 :
+        // 업적 9 : answerService.answerWrite;
 
 
 

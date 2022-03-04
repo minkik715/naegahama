@@ -9,10 +9,7 @@ import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.ResponseDto;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
-import com.hanghae.naegahama.repository.AnswerRepository;
-import com.hanghae.naegahama.repository.CommentRepository;
-import com.hanghae.naegahama.repository.PostLikeRepository;
-import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,6 +31,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
 
     //요청글 작성
     @Transactional
@@ -53,6 +51,13 @@ public class PostService {
         log.info("level ={}", postRequestDto.getLevel());
         Post post = new Post(postRequestDto, user);
         log.info("level ={}", post.getLevel());
+
+        // 최초 요청글 작성시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
+
+
         return postRepository.save(post);
     }
 

@@ -37,6 +37,7 @@ public class AnswerService
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final FileRepository fileRepository;
+    private final UserRepository userRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -70,6 +71,12 @@ public class AnswerService
             File saveFile = fileRepository.save(fileUrl);
             saveAnwser.getFileList().add(saveFile);
         }
+
+        // 최초 요청글 작성시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement9(1);
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
@@ -170,9 +177,11 @@ public class AnswerService
         return answerDetailGetResponseDto;
     }
 
-
+    @Transactional
     public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
     {
+        User requestWriter = userDetails.getUser();
+
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
@@ -195,15 +204,14 @@ public class AnswerService
             answerWriter.getAchievement().setAchievement2(1);
         }
 
-        // 평가를 한 유저는 업적 7 획득
-        userDetails.getUser().getAchievement().setAchievement7(1);
+        // 최초 평가시 업적 7 획득
+        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement7(1);
 
 
 
         answerWriter.addPoint(starPostRequestDto.getStar());
-
-
-
 
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
