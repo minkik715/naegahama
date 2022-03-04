@@ -2,6 +2,7 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.comment.CommentRequestDto;
 import com.hanghae.naegahama.dto.message.MessageRequestDto;
 import com.hanghae.naegahama.dto.room.RoomResponseDto;
 import com.hanghae.naegahama.handler.ex.RoomNotFoundException;
@@ -10,6 +11,7 @@ import com.hanghae.naegahama.repository.RoomRepository;
 import com.hanghae.naegahama.repository.UserEnterRoomRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class RoomService {
 
     private final ChatService chatService;
@@ -34,7 +37,7 @@ public class RoomService {
 
     public ResponseEntity<?> createRoom(String name, Post post) {
         //포스트 생성과 동시에 만들어진다.
-        Room saveRoom = roomRepository.save(new Room(name, post));
+        roomRepository.save(new Room(name, post));
         //채팅방과 유저의 연관관계 맺어주기
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -81,8 +84,9 @@ public class RoomService {
                 () -> new RoomNotFoundException("존재하지 않는 방입니다.")
         );
         UserEnterRoom findUserRoom = userEnterRoomRepository.findByUserAndRoom(user, findRoom);
-        if(findUserRoom.getRoomUserStatus() == null) {
+        if(findUserRoom == null) {
             userEnterRoomRepository.save(new UserEnterRoom(user, findRoom, RoomUserStatus.ENTER));
+            log.info("저장성공 user = {}, room = {}", user.getNickName(), findRoom.getName());
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }

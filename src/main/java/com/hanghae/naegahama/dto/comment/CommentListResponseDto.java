@@ -14,7 +14,7 @@ public class CommentListResponseDto {
     private String content;
     private String modifiedAt;
 
-    List<CommentListResponseDto> childCommentListResponseDto;
+    List<CommentListResponseDto> childComment;
 
     public CommentListResponseDto(Comment comment, List<CommentListResponseDto> childCommentListResponseDto) {
         this.answerId = comment.getAnswer().getId();
@@ -23,7 +23,7 @@ public class CommentListResponseDto {
         this.commentWriter = comment.getUser().getNickName();
         this.content = comment.getContent();
         this.modifiedAt = comment.getModifiedAt().toString();
-        this.childCommentListResponseDto = childCommentListResponseDto;
+        this.childComment = childCommentListResponseDto;
     }
     public CommentListResponseDto(Comment comment ) {
         this.answerId = comment.getAnswer().getId();

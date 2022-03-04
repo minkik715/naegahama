@@ -168,7 +168,7 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
-        Long roomId = 1L;
+        Long roomId = post.getRoom().getId();
 
 
         ResponseDto ResponseDto = new ResponseDto(
@@ -184,6 +184,9 @@ public class PostService {
                 fileList,
                 post.getLevel(),
                 roomId);
+
+
+
 
         return ResponseDto;
     }

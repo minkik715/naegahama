@@ -2,6 +2,7 @@ package com.hanghae.naegahama.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import javax.annotation.Resource;
 
 @Service
 @RequiredArgsConstructor
-public class RedisRepository {
+public class RedisRepository{
 
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, String> userRoomMap;
@@ -27,7 +28,6 @@ public class RedisRepository {
     public void removeUserEnterInfo(String sessionId) {
         userRoomMap.delete(ENTER_INFO, sessionId);
     }
-
 
 
     public void removeUserRoomMapping(String sessionId){

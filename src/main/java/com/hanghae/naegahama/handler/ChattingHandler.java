@@ -37,15 +37,16 @@ public class ChattingHandler implements ChannelInterceptor {
             log.info("Connect = {}", jwtToken);
 
         } else if (accessor.getCommand() == StompCommand.SUBSCRIBE) {
-            String simpleDestination = (String) message.getHeaders().get("simpleDestination");
+            String simpleDestination = (String) message.getHeaders().get("simpDestination");
             if (simpleDestination == null) {
                 throw new RoomNotFoundException("존재하지 않는 방입니다.");
             }
             String roomId = chatService.getRoomId(simpleDestination);
 
             String simpSessionId = (String) message.getHeaders().get("simpSessionId");
-
+            log.info("roomId ={}  simpSessionId = {}" , roomId, simpSessionId);
             repository.mappingUserRoom(roomId, simpSessionId);
+            log.info("구독성공");
             chatService.messageResolver(new MessageRequestDto(Long.parseLong(roomId), MessageType.ENTER, ""), jwtToken);
             log.info("SUBSCRIBE {}, {}", simpSessionId, roomId);
         }else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료

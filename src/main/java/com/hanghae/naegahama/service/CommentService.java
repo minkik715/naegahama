@@ -5,15 +5,13 @@ import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.comment.CommentListResponseDto;
-import com.hanghae.naegahama.dto.comment.CommentModifyRequestDto;
-import com.hanghae.naegahama.dto.comment.CommentRequestDto;
-import com.hanghae.naegahama.dto.comment.KidsCommentListResponseDto;
+import com.hanghae.naegahama.dto.comment.*;
 import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +23,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final AnswerRepository answerRepository;
@@ -45,9 +44,10 @@ public class CommentService {
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
         }
-        commentRepository.save(comment);
+        Comment save = commentRepository.save(comment);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(save);
 
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return ResponseEntity.ok().body(commentResponseDto);
     }
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {
@@ -68,6 +68,7 @@ public class CommentService {
     }
 
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getCommentList(Long answerId) {
         //글에 대한 댓글
         Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
@@ -86,8 +87,11 @@ public class CommentService {
                 //보낼 대댓글 리스트
                 List<CommentListResponseDto> childCommentListResponseDto = new ArrayList<>();
                 List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(comment.getId());
+                log.info("id={}",comment.getId());
+
                 for (Comment comment1 : kidsCommentList) {
-                    CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment);
+                    log.info("id={}",comment1.getId());
+                    CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment1);
                     childCommentListResponseDto.add(commentListResponseDto);
                 }
                 CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment, childCommentListResponseDto);

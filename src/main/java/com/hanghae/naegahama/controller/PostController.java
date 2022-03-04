@@ -21,7 +21,7 @@ public class PostController {
 
     // 요청글 작성
     @PostMapping("/api/post")
-    public ResponseEntity<?> createPost(@RequestPart(name = "post") PostRequestDto postRequestDto,
+    public ResponseEntity<?> createPost(@RequestPart(name = "post",required = false) PostRequestDto postRequestDto,
                                         @RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 

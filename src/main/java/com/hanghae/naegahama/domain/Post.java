@@ -82,6 +82,10 @@ public class Post extends Timestamped {
 
     }
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
 //    public Category(CategoryResponseDto categoryResponseDto) {
 //        this.category = categoryResponseDto.getCategory();
 //    }

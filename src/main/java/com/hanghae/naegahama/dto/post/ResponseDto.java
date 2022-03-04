@@ -16,6 +16,7 @@ public class ResponseDto {
     private LocalDateTime modifiedAt;
     private Integer answerCount;
     private Long user_id;
+    private String roomName;
     private String nickname;
     private Long postLikeCount;
     private String level;

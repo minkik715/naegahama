@@ -29,5 +29,6 @@ public class Room extends Timestamped{
     public Room(String name, Post post) {
         this.name = name;
         this.post = post;
+        post.setRoom(this);
     }
 }

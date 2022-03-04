@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/chat")
+@RequestMapping("/api/chat")
 @RequiredArgsConstructor
 public class RoomController {
 

@@ -33,8 +33,8 @@ public class CommentController {
         return commentService.deleteComment(commentId);
     }
 
-    @GetMapping("/answer/{answerId}")
-    public ResponseEntity<?> gettCommentList(@PathVariable Long answerId){
+    @GetMapping("/{answerId}")
+    public ResponseEntity<?> getCommentList(@PathVariable Long answerId){
         return commentService.getCommentList(answerId);
     }
 

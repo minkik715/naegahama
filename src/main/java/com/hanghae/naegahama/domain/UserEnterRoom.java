@@ -11,6 +11,7 @@ import javax.persistence.*;
 public class UserEnterRoom {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_enter_room_id")
     private Long id;
 

@@ -47,8 +47,7 @@ public class ChatService {
         );
         String dateResult = getTime();
         Message message = new Message(messageRequestDto,user,room,dateResult);
-
-
+        log.info(" messageResolver 여기까진 잘왔어");
         sendMessage(message);
         messageRepository.save(message);
 
@@ -94,6 +93,8 @@ public class ChatService {
             }
 
         }
+        log.info("sendMessage여기 까지 잘왔어");
+        log.info("sendMessage = {}", message.getMessage());
         MessageResponseDto messageResponseDto = new MessageResponseDto(message);
         redisTemplate.convertAndSend(channelTopic.getTopic(), messageResponseDto);
     }
