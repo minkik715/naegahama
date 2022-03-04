@@ -23,22 +23,17 @@ public class SurveyController {
         surveyService.createHippo(surveyRequestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
-}
 
-//    //설문조사 결과
-//    @GetMapping("/api/survey")
-//    public ResponseEntity<?> getHippo() {
-//        surveyService.getHippo();
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
-//
-//    //설문결과  추천 요청글.
-//    @GetMapping("/api/survey/{hippoName}")
-//    public ResponseEntity<?> recommend(@PathVariable String hippoName,
-//                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        surveyService.recommend(hippoName, userDetails);
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
-//
-//
-//}
+    //설문조사 결과
+    @GetMapping("/api/survey")
+    public ResponseEntity<?> getHippo() {
+        return ResponseEntity.ok().body(surveyService.getHippo());
+    }
+
+    //같은 하마의 요청글 추천.
+    @GetMapping("/api/survey/{hippoName}")
+    public ResponseEntity<?> recommend(@PathVariable String hippoName,
+                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(surveyService.recommend(hippoName, userDetails));
+    }
+}
