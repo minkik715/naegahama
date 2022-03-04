@@ -1,11 +1,10 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.domain.Message;
-import com.hanghae.naegahama.domain.Room;
-import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.domain.UserEnterRoom;
+import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.message.MessageRequestDto;
 import com.hanghae.naegahama.dto.room.RoomResponseDto;
+import com.hanghae.naegahama.handler.ex.RoomNotFoundException;
 import com.hanghae.naegahama.repository.MessageRepository;
 import com.hanghae.naegahama.repository.RoomRepository;
 import com.hanghae.naegahama.repository.UserEnterRoomRepository;
@@ -27,15 +26,15 @@ import java.util.Optional;
 @Transactional
 public class RoomService {
 
-    private final UserRepository userRepository;
+    private final ChatService chatService;
     private final RoomRepository roomRepository;
     private final UserEnterRoomRepository userEnterRoomRepository;
 
     private final MessageRepository messageRepository;
 
-    public ResponseEntity<?> createRoom(String name) {
+    public ResponseEntity<?> createRoom(String name, Post post) {
         //포스트 생성과 동시에 만들어진다.
-        roomRepository.save(new Room(name));
+        Room saveRoom = roomRepository.save(new Room(name, post));
         //채팅방과 유저의 연관관계 맺어주기
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -73,6 +72,18 @@ public class RoomService {
         }
         Room chatRoom = tmp.get();
         userEnterRoomRepository.deleteByUserAndRoom(user,chatRoom);
+        chatService.messageResolver(new MessageRequestDto(MessageType.QUIT,roomId,user.getId(),user.getNickName(),""));
         return ResponseEntity.ok().body("채팅방 나가기 성공!");
+    }
+
+    public ResponseEntity<?> enterRoom(User user, Long roomId) {
+        Room findRoom = roomRepository.findById(roomId).orElseThrow(
+                () -> new RoomNotFoundException("존재하지 않는 방입니다.")
+        );
+        UserEnterRoom findUserRoom = userEnterRoomRepository.findByUserAndRoom(user, findRoom);
+        if(findUserRoom.getRoomUserStatus() == null) {
+            userEnterRoomRepository.save(new UserEnterRoom(user, findRoom, RoomUserStatus.ENTER));
+        }
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }

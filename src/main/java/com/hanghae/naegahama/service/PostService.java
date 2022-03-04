@@ -38,8 +38,9 @@ public class PostService {
 
     private final PostFileRepository postFileRepository;
 
+    //요청글 작성
     @Transactional
-    public ResponseEntity<BasicResponseDto> createPost(List<MultipartFile> multipartFileList, PostRequestDto postRequestDto, User user) throws IOException {
+    public ResponseEntity<?> createPost(List<MultipartFile> multipartFileList, PostRequestDto postRequestDto, User user) throws IOException {
 
         if (postRequestDto.getTitle() == null) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
@@ -69,37 +70,14 @@ public class PostService {
             PostFile saveFile = postFileRepository.save(fileUrl);
             savePost.getFileList().add(saveFile);
         }
-        roomService.createRoom(savePost.getTitle());
+        //요청글이 생길때 채팅방도 하나 생기게 된다.
+        return roomService.createRoom(savePost.getTitle(), post);
 
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
     }
 
 
-    //전체글 조회
-    public List<PostResponseDto> getPost() {
-
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> response = new ArrayList<>();
-
-        for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            PostResponseDto postResponseDto = new PostResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    post.getModifiedAt(),
-                    answerCount,
-                    postLikeCount
-            );
-            response.add(postResponseDto);
-        }
-        return response;
-    }
-
-
-    //수정
+    //요청글 수정
     @Transactional
     public Post updatePost(
             Long id,
@@ -125,6 +103,30 @@ public class PostService {
     }
 
 
+    //요청글 전체 조회
+
+    public List<PostResponseDto> getPost() {
+
+        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<PostResponseDto> response = new ArrayList<>();
+
+        for (Post post : posts) {
+            Integer answerCount = answerRepository.countByPost(post);
+            Long postLikeCount = postLikeRepository.countByPost(post);
+            PostResponseDto postResponseDto = new PostResponseDto(
+                    post.getId(),
+                    post.getTitle(),
+                    post.getContent(),
+                    post.getModifiedAt(),
+                    answerCount,
+                    postLikeCount
+            );
+            response.add(postResponseDto);
+        }
+        return response;
+    }
+
+    //요청글 상세조회.
     public ResponseDto getPost1(Long postId) {
 
         Post post = postRepository.findById(postId).orElseThrow(
@@ -135,7 +137,7 @@ public class PostService {
 
         List<Long> userIdList = new ArrayList<>();
         for (PostLike postLike : likeLIst) {
-            userIdList.add(postLike.getId());
+            userIdList.add(postLike.getUser().getId());
         }
 
 
@@ -146,6 +148,8 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
+        Long roomId = post.getRoom().getId();
+
 
         ResponseDto ResponseDto = new ResponseDto(
                 post.getId(),
@@ -158,10 +162,13 @@ public class PostService {
                 postLikeCount,
                 userIdList,
                 fileList,
-                post.getLevel());
+                post.getLevel(),
+                roomId);
 
         return ResponseDto;
     }
+
+    //카테고리
 
     public List<CategoryResponseDto> getCategory(String category) {
         List<Post> posts;

@@ -3,6 +3,8 @@
 package com.hanghae.naegahama.handler;
 
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.domain.MessageType;
+import com.hanghae.naegahama.dto.message.MessageRequestDto;
 import com.hanghae.naegahama.handler.ex.RoomNotFoundException;
 import com.hanghae.naegahama.repository.RedisRepository;
 import com.hanghae.naegahama.service.ChatService;
@@ -29,10 +31,10 @@ public class ChattingHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
+        String jwtToken = accessor.getFirstNativeHeader("token");
         if (accessor.getCommand() == StompCommand.CONNECT) {
-            String jwtToken = accessor.getFirstNativeHeader("token");
             jwtAuthenticationProvider.validateToken(jwtToken);
+            log.info("Connect = {}", jwtToken);
 
         } else if (accessor.getCommand() == StompCommand.SUBSCRIBE) {
             String simpleDestination = (String) message.getHeaders().get("simpleDestination");
@@ -44,15 +46,14 @@ public class ChattingHandler implements ChannelInterceptor {
             String simpSessionId = (String) message.getHeaders().get("simpSessionId");
 
             repository.mappingUserRoom(roomId, simpSessionId);
+            chatService.messageResolver(new MessageRequestDto(Long.parseLong(roomId), MessageType.ENTER, ""), jwtToken);
+            log.info("SUBSCRIBE {}, {}", simpSessionId, roomId);
         }else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
 
             // 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 얻는다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
             //나갈떄 redis 맵에서 roomId와 sessionId의 매핑을 끊어줘야 하기때문에 roomId찾고
             String roomId = repository.getUserEnterRoomId(sessionId);
-
-            // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
-            String token = Optional.ofNullable(accessor.getFirstNativeHeader("token")).orElse("UnknownUser");
 
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
             repository.removeUserEnterInfo(sessionId);

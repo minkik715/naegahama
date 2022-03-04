@@ -19,7 +19,7 @@ public class Message extends Timestamped{
     @Column(nullable = false)
     private String message;
 
-    @Column(nullable = false)
+    @Column
     private MessageType messageType;
 
     @Column(nullable = false)

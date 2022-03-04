@@ -58,6 +58,7 @@ public class CommentService {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
+
     public ResponseEntity<?> deleteComment(Long commentId) {
         Comment findComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
@@ -66,23 +67,31 @@ public class CommentService {
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    public ResponseEntity<?> getParentCommentList(Long answerId) {
+
+    public ResponseEntity<?> getCommentList(Long answerId) {
         Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
                 () -> new AnswerNotFoundException("해당 답글이 존재하지 않습니다.")
         );
         List<Comment> commentList = findAnswer.getCommentList();
-        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
+        List<CommentListResponseDto> parentCommentListResponseDtoList = new ArrayList<>();
         if(commentList == null){
             throw new CommentNotFoundException("해당 글에는 댓글이 존재하지 않습니다.");
         }
         for (Comment comment : commentList) {
-            if(comment.getParentCommentId() == null) {
+            List<CommentListResponseDto> childCommentListResponseDto = new ArrayList<>();
+            List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(comment.getId());
+            for (Comment comment1 : kidsCommentList) {
                 CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment);
-                commentListResponseDtoList.add(commentListResponseDto);
-
+                childCommentListResponseDto.add(commentListResponseDto);
             }
+            CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment, childCommentListResponseDto);
+
+
+
+            parentCommentListResponseDtoList.add(commentListResponseDto);
+
         }
-        return ResponseEntity.ok().body(commentListResponseDtoList);
+        return ResponseEntity.ok().body(parentCommentListResponseDtoList);
 
     }
 

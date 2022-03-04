@@ -10,4 +10,7 @@ import java.util.List;
 public interface UserEnterRoomRepository extends JpaRepository<UserEnterRoom, Long> {
     List<UserEnterRoom> findByUserOrderByIdDesc(User user);
     void deleteByUserAndRoom(User user, Room room);
+
+    UserEnterRoom findByUserAndRoom(User user, Room room);
+
 }

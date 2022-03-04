@@ -1,8 +1,5 @@
 package com.hanghae.naegahama.domain;
 
-
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +50,10 @@ public class Post extends Timestamped {
 
     @Column(nullable = false)
     private String level;
+
+    @JoinColumn(name="room_id")
+    @OneToOne
+    private Room room;
 
     @JoinColumn(name = "user_id")
     @ManyToOne

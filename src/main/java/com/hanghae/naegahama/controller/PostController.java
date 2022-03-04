@@ -19,7 +19,7 @@ public class PostController {
 
     private final PostService postService;
 
-    // 게시글 작성
+    // 요청글 작성
     @PostMapping("/api/post")
     public ResponseEntity<?> createPost(@RequestPart(name = "post") PostRequestDto postRequestDto,
                                         @RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
@@ -28,7 +28,7 @@ public class PostController {
         return postService.createPost(multipartFileList,postRequestDto,userDetails.getUser());
     }
 
-    // 게시글 수정
+    // 요청글 수정
     @PutMapping("/api/post/{postId}")
     public ResponseEntity<?> updatePost(
             @PathVariable Long postId,
@@ -40,13 +40,14 @@ public class PostController {
     }
 
 
-    // 게시글 전체조회
+
+    // 요청글 전체조회
     @GetMapping("/api/post")
     public ResponseEntity<?> getPost() {
         return ResponseEntity.ok().body(postService.getPost());
     }
 
-    // 게시글 상세조회
+    // 요청글 상세조회
     @GetMapping("/api/post/{postId}")
     public ResponseEntity<?> getPost1(@PathVariable Long postId) {
         return ResponseEntity.ok().body(postService.getPost1(postId));

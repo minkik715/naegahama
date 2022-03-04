@@ -21,8 +21,10 @@ public class ResponseDto {
     private String level;
     private List<Long> likeUserIdList;
     private List <String> fileList;
+
+    private Long roomId;
     public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
-                       Integer answerCount, Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,String level) {
+                       Integer answerCount, Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,String level,Long roomId) {
         this.postId = id;
         this.title = title;
         this.content = content;
@@ -34,5 +36,6 @@ public class ResponseDto {
         this.likeUserIdList  = likeUserId;
         this.level = level;
         this.fileList = fileList;
+        this.roomId = roomId;
     }
 }

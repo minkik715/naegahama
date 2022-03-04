@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long>
-{
+public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByCreatedAtDesc();
-    List<Post> findAllByUserOrderByModifiedAtDesc(User user);
-    List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);
-    Post findPostById(Long id);
 
+    List<Post> findAllByUserOrderByModifiedAtDesc(User user);
+
+    List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);
+
+    Post findPostById(Long id);
 }

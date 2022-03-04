@@ -26,6 +26,12 @@ public class UserEnterRoom {
         this.roomUserStatus = roomUserStatus;
     }
 
+    public UserEnterRoom(User user, Room room, RoomUserStatus roomUserStatus) {
+        this.user = user;
+        this.room = room;
+        this.roomUserStatus = roomUserStatus;
+    }
+
     @Column(nullable = false)
     private RoomUserStatus roomUserStatus;
 }

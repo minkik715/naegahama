@@ -17,13 +17,17 @@ public class Room extends Timestamped{
     @Column(nullable = false)
     private String name;
 
+    @OneToOne(mappedBy = "room")
+    private Post post;
+
     @OneToMany(mappedBy = "room")
     List<Message> messageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "room")
     List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
 
-    public Room(String name) {
+    public Room(String name, Post post) {
         this.name = name;
+        this.post = post;
     }
 }

@@ -1,67 +1,150 @@
-//package com.hanghae.naegahama.service;
+package com.hanghae.naegahama.service;
+
+import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
+
+import com.hanghae.naegahama.dto.post.PostResponseDto;
+import com.hanghae.naegahama.dto.post.ResponseDto;
+import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
+import com.hanghae.naegahama.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
+
+@EnableAutoConfiguration
+@RequiredArgsConstructor
+@Service
+@Slf4j
+public class SurveyService {
+
+    private final UserRepository userRepository;
+
+    //설문을 바탕으로 유저에게 하마 만들어주기.
+    @Transactional
+    public ResponseEntity createHippo(SurveyRequestDto surveyRequestDto, User user) {
+
+
+        ArrayList<Long> longs = new ArrayList<>();
+        for (Long aLong : surveyRequestDto.getNum()) {
+            longs.add(aLong);
+        }
+
+        int emotion = 0; // answer값 0으로 초기화
+        int plan = 0; // answer값 0으로 초기화
+        int action = 0; // answer값 0으로 초기화
+
+        for (int i = 0; i < surveyRequestDto.getNum().length; i++) // 전달받은 배열의 길이만큼 반복
+        {
+            if (longs.get(i) == 1 && (i == 1 || i == 5 || i == 7)) { // 배열 i번 인덱스가 1일때
+                emotion += emotion; // emotion에 1를 더함
+            }
+            if (longs.get(i) == 1 && (i == 2 || i == 3 || i == 8)) { // 배열 i번 인덱스가 1일때
+                plan += plan; // plan에 1를 더함
+            }
+            if (longs.get(i) == 1 && (i == 4 || i == 6 || i == 9)) { // 배열 i번 인덱스가 1일때
+                action += action; // action에 1를 더함
+            }
+        }
+
+        //결과 도출.
+        String emotion2 = "";
+        String plan2 = "";
+        String action2 = "";
+
+        if (emotion >= 2) { //emotion이 2보다 크거나 같을때
+            emotion2 = "감성";
+        } else if (emotion < 2) {
+            emotion2 = "이성";
+        } else if (plan >= 2) { //emotion이 2보다 크거나 같을때
+            plan2 = "계획";
+        } else if (plan < 2) {
+            plan2 = "직관";
+        } else if (action >= 2) { //emotion이 2보다 크거나 같을때
+            action2 = "외향";
+        } else if (action < 2) {
+            action2 = "내향";
+        }
+
+        //하마 이름 생성.
+        String hippo = "";
+
+        if (action2 == "감성" && plan2 == "계획" && action2 == "외향") {
+            hippo = "열심히 노력 하마";
+        } else if (action2 == "감성" && plan2 == "계획" && action2 == "내향") {
+            hippo = "외유내강 하마";
+        } else if (action2 == "감성" && plan2 == "직관" && action2 == "외향") {
+            hippo = "하마 냄새가 나는 하마";
+        } else if (action2 == "감성" && plan2 == "직관" && action2 == "내향") {
+            hippo = "스윗 하마";
+        } else if (action2 == "이성" && plan2 == "계획" && action2 == "외향") {
+            hippo = "내가 리더 하마";
+        } else if (action2 == "이성" && plan2 == "계획" && action2 == "내향") {
+            hippo = "스마트 하마";
+        } else if (action2 == "이성" && plan2 == "직관" && action2 == "외향") {
+            hippo = "세상 시원시원한 하마";
+        } else if (action2 == "이성" && plan2 == "직관" && action2 == "내향") {
+            hippo = "센치 하마";
+        }
+        user.setHippoName(hippo);
+        return ResponseEntity.ok().body(userRepository.save(user));
+    }
+}
+
+
+//    //설문조사 결과
+//    @ResponseBody
+//    public PostResponseDto getHippo() {
 //
-//import java.util.Scanner;
+//        User user = userRepository.findBy();
+//        List<PostResponseDto> response = new ArrayList<>();
 //
-//public class SurveyService {
-//
-//            Scanner sc = new Scanner(System.in);
-//            int count = 0;
-//
-//            System.out.println("탄수화물 중독 자가진단 테스트 : Y, N 으로 작성해주세요 (대소문자 구별)");
-//            //문항
-//            System.out.println("아침을 배불리 먹은 후 점심시간전에 배가 고프다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("밥, 빵, 과자 등 음식을 먹기 시작하면 끝이 없다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("음식을 금방먹은 후에도만족스럽지 못하고 더 먹는다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("정말 배고프지 않더라도 먹을 때가 있다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("저녁을 먹고 간식을 먹지 않으면 잠이 오지 않는다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("스트레스를 받으면 자꾸 먹고 싶어진다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("책상이나 식탁 위에 항상 과자, 초콜릿 등이 놓여있다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("오후 5시가 되면 피곤함과 배고픔을 느끼고 일이 손에 안 잡힌다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("과자, 초콜릿 등 단음식은 상상만해도 먹고 싶어진다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//            System.out.println("다이어트를 위해 식이조절을 하는데 3일도 못간다");
-//            if(sc.nextLine().equals("Y")){
-//                count++;
-//            }
-//
-//
-//            //결과 출력
-//            if(count>=7){
-//                System.out.println("중독!");
-//                System.out.println("전문의 상담이 필요함");
-//            }else if(4 <= count && count <= 6){
-//                System.out.println("위험!");
-//                System.out.println("탄수화물 섭취 줄이기 위한 식습관 개선이 필요함");
-//            }else if(count<=3){
-//                System.out.println("주의!");
-//                System.out.println("위험한 수준은 아니지만 관리 필요");
-//            }else{
-//                System.out.println("정상");
-//            }
+//        for (Post post : posts) {
+//            Integer answerCount = answerRepository.countByPost(post);
+//            Long postLikeCount = postLikeRepository.countByPost(post);
+//            PostResponseDto postResponseDto = new PostResponseDto(
+//                    post.getId(),
+//                    post.getTitle(),
+//                    post.getContent(),
+//                    post.getModifiedAt(),
+//                    answerCount,
+//                    postLikeCount
+//            );
+//            response.add(postResponseDto);
 //        }
+//        return response;
+//    }
+//
+//    //요청글 상세조회.
+//    @ResponseBody
+//    public List<ResponseDto> getPost1(Long postId) {
+//        List<Post> posts = postRepository.findAllByUserOrderByCreatedAtDesc(postId);
+//        List<ResponseDto> response = new ArrayList<>();
+//
+//        for (Post post : posts) {
+//            Integer answerCount = answerRepository.countByPost(post);
+//            Long postLikeCount = postLikeRepository.countByPost(post);
+//            ResponseDto ResponseDto = new ResponseDto(
+//                    post.getId(),
+//                    post.getTitle(),
+//                    post.getContent(),
+//                    post.getModifiedAt(),
+//                    answerCount,
+//                    post.getUser().getId(),
+//                    post.getUser().getNickName(),
+//                    postLikeCount
+//            );
+//            response.add(ResponseDto);
+//        }
+//        return response;
+//    }
+//
+//}
