@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -20,6 +21,7 @@ public class PostFile extends Timestamped{
     @Column(nullable = false)
     private String url;
 
+    @JsonManagedReference
     @JoinColumn(name = "post_id")
     @ManyToOne
     private Post post;

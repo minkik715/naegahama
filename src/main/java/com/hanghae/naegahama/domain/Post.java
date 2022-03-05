@@ -1,8 +1,8 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -50,17 +50,18 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String level;
 
-    @JoinColumn(name="room_id")
-    @OneToOne
-    private Room room;
-
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
 
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "post")
     private List<PostFile> fileList = new ArrayList<>();
 
@@ -81,9 +82,6 @@ public class Post extends Timestamped {
 
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
 //    public Category(CategoryResponseDto categoryResponseDto) {
 //        this.category = categoryResponseDto.getCategory();

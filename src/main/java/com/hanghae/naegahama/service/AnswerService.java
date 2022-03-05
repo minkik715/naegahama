@@ -211,9 +211,9 @@ public class AnswerService
         }
 
         // 최초 평가시 업적 7 획득
-        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+/*        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement7(1);
+        achievementUser.getAchievement().setAchievement7(1);*/
 
 
 
