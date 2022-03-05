@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,10 +22,12 @@ public class Comment extends Timestamped{
     @Column
     private Long parentCommentId;
 
+    @JsonManagedReference
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;

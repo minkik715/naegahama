@@ -90,9 +90,9 @@ public class InitialData implements ApplicationRunner {
         answerList.add(new Answer("한강 갔습니다.","평점 말고 코딩 대신 해주면 안되나요?",PostList.get(0),userList.get(0)));
         answerList.add(new Answer("라면 후기","내공 냠냠",PostList.get(0),userList.get(2)));
         answerRepository.saveAll(answerList);*/
-        answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 3,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
-        answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 4,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
-        answerList.add(answerRepository.save(new Answer("제가 진라면 잘먹습니다", 5,"라면중에는 진라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(5))));
+        answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 0,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
+        answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 0,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
+        answerList.add(answerRepository.save(new Answer("제가 진라면 잘먹습니다", 0,"라면중에는 진라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(5))));
         answerList.add(answerRepository.save(new Answer("제가 안성탕면 잘먹습니다", 0,"라면중에는 안성탕면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(6))));
         answerList.add(answerRepository.save(new Answer("제가 팔도비빔면 잘먹습니다", 0, "라면중에는 팓로비빔면이 쵝오죠 제가 대신 먹어드릴게요", PostList.get(0), userList.get(2))));
 

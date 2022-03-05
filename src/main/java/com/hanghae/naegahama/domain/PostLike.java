@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +18,12 @@ public class PostLike extends Timestamped{
     @Column(name = "like_id", nullable = false)
     private Long id;
 
+    @JsonManagedReference
     @JoinColumn(name = "post_id")
     @ManyToOne
     private Post post;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
