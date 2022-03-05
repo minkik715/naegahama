@@ -3,7 +3,6 @@ package com.hanghae.naegahama.domain;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -52,11 +51,6 @@ public class Post extends Timestamped {
     private String level;
 
     @JsonManagedReference
-    @JoinColumn(name="room_id")
-    @OneToOne
-    private Room room;
-
-    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
@@ -88,9 +82,6 @@ public class Post extends Timestamped {
 
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
 //    public Category(CategoryResponseDto categoryResponseDto) {
 //        this.category = categoryResponseDto.getCategory();

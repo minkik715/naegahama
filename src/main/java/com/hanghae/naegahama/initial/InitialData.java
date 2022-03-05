@@ -31,7 +31,6 @@ public class InitialData implements ApplicationRunner {
 
     private final CommentRepository commentRepository;
 
-    private final RoomRepository roomRepository;
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
@@ -115,9 +114,6 @@ public class InitialData implements ApplicationRunner {
         commentList.add(commentRepository.save(new Comment("대댓글5", 2L,answerList.get(0),userList.get(2) )));
         commentList.add(commentRepository.save(new Comment("대댓글6", 3L,answerList.get(0),userList.get(1) )));
 
-        for (Post post : PostList) {
-            roomRepository.save(new Room(post.getTitle(),post));
-        }
     }
 
 }

@@ -48,10 +48,6 @@ public class User extends Timestamped{
 
     @JsonBackReference
     @OneToMany(mappedBy = "user")
-    private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
 

@@ -13,6 +13,7 @@ import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
+import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
@@ -193,4 +194,8 @@ public class UserService {
     }
 
 
+    public ResponseEntity<?> userprofile(User user) {
+        UserResponseDto userResponse = new UserResponseDto(user);
+        return ResponseEntity.ok().body(userResponse);
+    }
 }
