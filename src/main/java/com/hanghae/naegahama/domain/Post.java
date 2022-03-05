@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,17 +51,23 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String level;
 
+    @JsonManagedReference
     @JoinColumn(name="room_id")
     @OneToOne
     private Room room;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
 
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "post")
     private List<PostFile> fileList = new ArrayList<>();
 

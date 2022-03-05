@@ -4,8 +4,9 @@ import com.hanghae.naegahama.domain.Message;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Getter @NoArgsConstructor @ToString
 public class MessageResponseDto {
     private String roomId;
@@ -17,11 +18,14 @@ public class MessageResponseDto {
     private String messageType;
 
     public MessageResponseDto(Message message) {
+        log.info("messageResponseDto생성@@@@" );
+        log.info("messageResponseDto생성@@@@" );
         this.roomId = String.valueOf(message.getRoom().getId());
         this.messageType = message.getMessageType().toString();
         this.userId = message.getUser().getId();
         this.sender = message.getUser().getNickName();
         this.message = message.getMessage();
-        this.createdAt = message.getCreatedAt().toString();
+        this.createdAt = message.getTime();
+        log.info("messageResponseDto생성완료" );
     }
 }

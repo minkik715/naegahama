@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -25,6 +26,7 @@ public class AnswerFile extends Timestamped{
         this.answer = answer;
     }
 
+    @JsonManagedReference
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;

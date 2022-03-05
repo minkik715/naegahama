@@ -45,6 +45,22 @@ public class ChatService {
         Room room = roomRepository.findById(messageRequestDto.getRoomId()).orElseThrow(
                 () -> new RoomNotFoundException("해당 방은 존재하지 않습니다.")
         );
+        log.info("user = {}, room = {}", user.getNickName(),room.getName());
+        String dateResult = getTime();
+        Message message = new Message(messageRequestDto,user,room,dateResult);
+        log.info("message = {}", message);
+        sendMessage(message);
+        messageRepository.save(message);
+
+    }
+    public void messageResolver(MessageRequestDto messageRequestDto) {
+        Long userId = messageRequestDto.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("해당 유저는 존재하지 않습니다.")
+        );
+        Room room = roomRepository.findById(messageRequestDto.getRoomId()).orElseThrow(
+                () -> new RoomNotFoundException("해당 방은 존재하지 않습니다.")
+        );
         String dateResult = getTime();
         Message message = new Message(messageRequestDto,user,room,dateResult);
         log.info(" messageResolver 여기까진 잘왔어");
@@ -78,9 +94,12 @@ public class ChatService {
 
         }
         log.info("sendMessage여기 까지 잘왔어");
-        log.info("sendMessage = {}", message.getMessage());
+        log.info("sendMessage = {}", message);
+        log.info("messageResponseDto생성@@@@" );
         MessageResponseDto messageResponseDto = new MessageResponseDto(message);
+        log.info("messageResponseDto생성@@@@" );
         log.info("messageResponseDto = {}", messageResponseDto );
+
         redisTemplate.convertAndSend(channelTopic.getTopic(), messageResponseDto);
     }
 

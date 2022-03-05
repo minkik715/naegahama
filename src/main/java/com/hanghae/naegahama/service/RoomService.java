@@ -2,14 +2,12 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.comment.CommentRequestDto;
 import com.hanghae.naegahama.dto.message.MessageRequestDto;
 import com.hanghae.naegahama.dto.room.RoomResponseDto;
 import com.hanghae.naegahama.handler.ex.RoomNotFoundException;
 import com.hanghae.naegahama.repository.MessageRepository;
 import com.hanghae.naegahama.repository.RoomRepository;
 import com.hanghae.naegahama.repository.UserEnterRoomRepository;
-import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

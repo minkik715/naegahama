@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,12 @@ public class AnswerLike {
     @Column(name = "like_id", nullable = false)
     private Long id;
 
+    @JsonManagedReference
     @JoinColumn(name = "answer_id")
     @ManyToOne
     private Answer answer;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;

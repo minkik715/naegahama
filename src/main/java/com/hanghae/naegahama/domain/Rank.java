@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ public class Rank {
     @Column
     private int rank;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @OneToOne
     private User user;

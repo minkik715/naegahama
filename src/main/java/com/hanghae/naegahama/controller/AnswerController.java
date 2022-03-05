@@ -79,7 +79,7 @@ public class AnswerController
         return answerService.answerDetail(answerId,userDetails);
     }
 
-    @PostMapping("/answer/star/{answerId}")
+    @PostMapping("/star/{answerId}")
     public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);

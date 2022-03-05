@@ -2,8 +2,9 @@ package com.hanghae.naegahama.dto.message;
 
 import com.hanghae.naegahama.domain.MessageType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @NoArgsConstructor
 public class MessageRequestDto {
     public MessageRequestDto( Long roomId, MessageType messageType, String message ) {
         this.roomId = roomId;

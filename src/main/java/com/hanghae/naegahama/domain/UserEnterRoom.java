@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,10 +18,14 @@ public class UserEnterRoom {
     @Column(name = "user_enter_room_id")
     private Long id;
 
+
+
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 
+    @JsonManagedReference
     @JoinColumn(name = "room_id")
     @ManyToOne
     private Room room;

@@ -1,6 +1,8 @@
 package com.hanghae.naegahama.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
 
@@ -33,10 +35,12 @@ public class Answer extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @JsonManagedReference
     @JoinColumn(name = "post_id")
     @ManyToOne
     private Post post;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
@@ -49,12 +53,15 @@ public class Answer extends Timestamped {
         this.user = user;
     }
 
+    @JsonBackReference
     @OneToMany(mappedBy = "answer")
     private List<AnswerLike> likeList = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "answer")
     private List<Comment> commentList = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "answer")
     private List<AnswerFile> fileList = new ArrayList<>();
 
