@@ -22,9 +22,9 @@ import java.util.Enumeration;
 @Slf4j
 public class JwtAuthenticationProvider {
 
-    private String secretKey = "1234";
+    private final String secretKey = "1234";
 
-    private Long tokenValidTime = 1000 * 60 * 60L; // 1시간
+    private final Long tokenValidTime = 6000 * 60 * 60L; // 6시간
 
     private final UserDetailsImplService userDetailsImplService;
 

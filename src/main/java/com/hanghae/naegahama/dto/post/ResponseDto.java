@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.dto.post;
 
-import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,6 @@ public class ResponseDto {
     private LocalDateTime modifiedAt;
     private Integer answerCount;
     private Long user_id;
-    private String roomName;
     private String nickname;
     private Long postLikeCount;
     private String level;
@@ -25,7 +23,7 @@ public class ResponseDto {
 
     private Long roomId;
     public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
-                       Integer answerCount, Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,String level,Long roomId) {
+                       Integer answerCount, Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,String level) {
         this.postId = id;
         this.title = title;
         this.content = content;
@@ -37,6 +35,5 @@ public class ResponseDto {
         this.likeUserIdList  = likeUserId;
         this.level = level;
         this.fileList = fileList;
-        this.roomId = roomId;
     }
 }

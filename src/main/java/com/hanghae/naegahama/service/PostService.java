@@ -36,7 +36,6 @@ public class PostService {
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
 
-    private final RoomService roomService;
     private final S3Uploader s3Uploader;
 
     private final PostFileRepository postFileRepository;
@@ -83,9 +82,7 @@ public class PostService {
         achievementUser.getAchievement().setAchievement5(1);
 
 
-        //요청글이 생길때 채팅방도 하나 생기게 된다.
-        return roomService.createRoom(savePost.getTitle(), post);
-
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
 
 
@@ -184,7 +181,6 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
-        Long roomId = post.getRoom().getId();
 
 
         ResponseDto ResponseDto = new ResponseDto(
@@ -198,8 +194,7 @@ public class PostService {
                 postLikeCount,
                 userIdList,
                 fileList,
-                post.getLevel(),
-                roomId);
+                post.getLevel());
 
 
 
