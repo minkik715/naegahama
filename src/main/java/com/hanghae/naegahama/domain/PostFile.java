@@ -26,7 +26,7 @@ public class PostFile extends Timestamped{
     @ManyToOne
     private Post post;
 
-    public void setAnswer(Post post) {
+    public void setPost(Post post) {
         this.post = post;
     }
 

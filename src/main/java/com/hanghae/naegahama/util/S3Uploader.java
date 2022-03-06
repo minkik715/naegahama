@@ -2,6 +2,7 @@ package com.hanghae.naegahama.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,17 @@ public class S3Uploader {
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(naegahama, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(naegahama, fileName).toString();
+    }
+
+    // S3로 삭제
+    public void deleteS3( String fileName)
+    {
+        Boolean isExistObject = amazonS3Client.doesObjectExist(naegahama,fileName);
+        if (isExistObject)
+        {
+            amazonS3Client.deleteObject(naegahama,fileName);
+        }
+
     }
 
 

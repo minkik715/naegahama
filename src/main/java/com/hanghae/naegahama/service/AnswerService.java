@@ -37,14 +37,15 @@ public class AnswerService
     private final AnswerFileRepository answerFileRepository;
     private final UserRepository userRepository;
 
-
     private final S3Uploader s3Uploader;
 
+    private final String publishing = "작성완료";
+    private final String temporary = "임시저장";
+
     @Transactional
-    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile, Long postId, UserDetailsImpl userDetails)
-            throws IOException
+    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, UserDetailsImpl userDetails)
+
     {
-//      String Url = s3Uploader.upload(multipartFile, "static");
         //유저를 받고
         User user = userDetails.getUser();
 
@@ -52,23 +53,33 @@ public class AnswerService
         Post post = postRepository.findPostById(postId);
 
         //filelist가 빈 Answer를 미리 하나 만들어두고
-        Answer answer = new Answer(answerPostRequestDto,post,user);
+        Answer answer = new Answer(answerPostRequestDto,post,user, publishing);
 
         //저장된 Answer을 꺼내와서
         Answer saveAnwser = answerRepository.save(answer);
-        log.info("saveAnswer Id = {}", saveAnwser.getId());
-        //들어온 파일들을 하나씩 처리하는데
-        for ( MultipartFile file : multipartFile)
+
+        for ( String url : answerPostRequestDto.getFile())
         {
-            String url = s3Uploader.upload(file, "static");
-            //S3에서 받아온 URL을 통해서 file을 만들고
+            // 이미지 파일 url로 answerFile 객체 생성
             AnswerFile fileUrl = new AnswerFile(url);
 
-            //파일에 아까 저장한 Answer를 Set한 후에
+            // answerFile saveanswer를 연관관계 설정
             fileUrl.setAnswer(saveAnwser);
-            //저장된 파일을 Answer에 넣어준다
+
+            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
             AnswerFile saveFile = answerFileRepository.save(fileUrl);
+
+            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
             saveAnwser.getFileList().add(saveFile);
+        }
+
+        // 임시 작성중이던 모든 글 삭제
+        List<Answer> deleteList = answerRepository.findAllByUserAndState(user, temporary);
+
+        for ( Answer deleteAnswer : deleteList)
+        {
+            answerFileRepository.deleteByAnswer(deleteAnswer);
+            answerRepository.deleteById(deleteAnswer.getId());
         }
 
         // 최초 요청글 작성시 업적 5 획득
@@ -76,15 +87,8 @@ public class AnswerService
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement9(1);
 
-
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
-
     }
-
-
-
-
-
 
 
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException

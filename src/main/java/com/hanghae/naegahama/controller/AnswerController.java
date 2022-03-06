@@ -24,15 +24,12 @@ public class AnswerController
 {
     private final AnswerService answerService;
 
+    // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite
-            (@RequestPart (value = "post") AnswerPostRequestDto answerPostRequestDto,
-             @RequestPart(value = "file", required = false) List<MultipartFile> multipartFile,
-             @PathVariable Long postId,
-             @AuthenticationPrincipal UserDetailsImpl userDetails)throws IOException
-
+    public ResponseEntity<?> answerWrite ( AnswerPostRequestDto answerPostRequestDto,
+             @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
+        return answerService.answerWrite(answerPostRequestDto,postId, userDetails);
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 

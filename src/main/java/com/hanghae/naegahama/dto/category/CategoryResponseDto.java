@@ -17,6 +17,7 @@ public class CategoryResponseDto {
     private Long postLikeCount;
 
 
+
     public CategoryResponseDto(Long id, String title, String content,
                                LocalDateTime modifiedAt, Integer answerCount, Long postLikeCount) {
         this.id = id;
@@ -25,5 +26,6 @@ public class CategoryResponseDto {
         this.modifiedAt = modifiedAt;
         this.answerCount = answerCount;
         this.postLikeCount = postLikeCount;
+
     }
 }

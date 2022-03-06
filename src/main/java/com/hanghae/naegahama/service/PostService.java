@@ -3,10 +3,9 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.category.CategoryResponseDto;
-import com.hanghae.naegahama.dto.post.PostRequestDto;
-import com.hanghae.naegahama.dto.post.PostResponseDto;
-import com.hanghae.naegahama.dto.post.ResponseDto;
+import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.*;
 
@@ -21,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,65 +43,139 @@ public class PostService {
 
     private final UserRepository userRepository;
 
+    private final String publishing = "작성완료";
+    private final String temporary = "임시저장";
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(List<MultipartFile> multipartFileList, PostRequestDto postRequestDto, User user) throws IOException {
-
-        if (postRequestDto.getTitle() == null) {
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException
+    {
+        if (postRequestDto.getTitle() == null)
+        {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
+
         String content = postRequestDto.getContent();
-        if (postRequestDto.getContent() == null) {
+        if (postRequestDto.getContent() == null)
+        {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
-        if (content.length() > 1000) {
+
+        if (content.length() > 1000)
+        {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
 
+        // 전달받은 정보로 post 객체 생성
+        Post post = new Post(postRequestDto, user, publishing);
 
-        Post post = new Post(postRequestDto, user);
-
-        //저장된 Answer을 꺼내와서
+        //객체 저장 및 저장된 post 꺼내옴
         Post savePost = postRepository.save(post);
-        //들어온 파일들을 하나씩 처리하는데
-        for (MultipartFile file : multipartFileList) {
-            String url = s3Uploader.upload(file, "static");
-            //S3에서 받아온 URL을 통해서 file을 만들고
+
+        // 이미지 파일 url 배열로 for 반복문을 실행
+        for ( String url : postRequestDto.getFile())
+        {
+            // 이미지 파일 url로 postFile 객체 생성
             PostFile fileUrl = new PostFile(url);
 
-            //파일에 아까 저장한 Answer를 Set한 후에
-            fileUrl.setAnswer(savePost);
-            //저장된 파일을 Answer에 넣어준다
+            // postFile에 savePost를 연관관계 설정
+            fileUrl.setPost(savePost);
+
+            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
             PostFile saveFile = postFileRepository.save(fileUrl);
+
+            // 저장된 postFile을 저장된 post에 한개씩 추가함
             savePost.getFileList().add(saveFile);
         }
 
+        // 잔여시간 처리
+        LocalDateTime deadline = savePost.getCreatedAt().plusHours(postRequestDto.getTimeSet());
+
+        String time = deadline.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"));
+        savePost.setTimeSet(time);
+
+        // 임시 작성중이던 모든 글 삭제
+        List<Post> deleteList = postRepository.findAllByUserAndState(user, temporary);
+
+        for ( Post deletePost : deleteList)
+        {
+            postFileRepository.deleteByPost(deletePost);
+            postRepository.deleteById(deletePost.getId());
+        }
+
+
+        // 퍼블리싱 이벤트? 그거 써서 처리해야함.
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement5(1);
 
-
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
+    }
 
+    // 요청글 임시 저장
+    public ResponseEntity<?> temporaryPost(PostRequestDto postRequestDto, User user)
+    {
+        // 전달받은 정보로 post 객체 생성
+        Post post = new Post(postRequestDto, user, temporary);
 
+        //객체 저장 및 저장된 post 꺼내옴
+        Post savePost = postRepository.save(post);
 
+        // 이미지 파일 url 배열로 for 반복문을 실행
+        for ( String url : postRequestDto.getFile())
+        {
+            // 이미지 파일 url로 postFile 객체 생성
+            PostFile fileUrl = new PostFile(url);
+
+            // postFile에 savePost를 연관관계 설정
+            fileUrl.setPost(savePost);
+
+            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
+            PostFile saveFile = postFileRepository.save(fileUrl);
+
+            // 저장된 postFile을 저장된 post에 한개씩 추가함
+            savePost.getFileList().add(saveFile);
+
+        }
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    // 요청글 불러오기
+    public ResponseEntity<?> temporaryLoad(UserDetailsImpl userDetails)
+    {
+        List<GetTemporaryResponseDto> getTemporaryResponseDtoList = new ArrayList<>();
+
+        User user = userDetails.getUser();
+
+        List<Post> postList = postRepository.findAllByUserAndState(user, temporary);
+
+        for ( Post post : postList)
+        {
+            GetTemporaryResponseDto getTemporaryResponseDto = new GetTemporaryResponseDto(post);
+            getTemporaryResponseDtoList.add(getTemporaryResponseDto);
+        }
+
+        return ResponseEntity.ok().body(getTemporaryResponseDtoList);
     }
 
 
     //요청글 수정
     @Transactional
-    public Post updatePost(
-            Long id,
-            PostRequestDto postRequestDto,
-            UserDetailsImpl userDetails) {
-
+    public Post updatePost(Long id, PutRequestDto postRequestDto, UserDetailsImpl userDetails)
+    {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
+
+
         User user = post.getUser();
+
+        System.out.println(userDetails.getUser().getNickName());
+        System.out.println(user.getNickName());
+
         if (userDetails.getUser() != user) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
@@ -110,7 +185,40 @@ public class PostService {
         if (postRequestDto.getContent().length() > 1000) {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
-        post.UpdatePost(postRequestDto, userDetails.getUser());
+        post.UpdatePost(postRequestDto);
+
+        // 기존에 있던 이미지 파일 초기화
+        for ( PostFile deleteS3 : post.getFileList())
+        {
+            s3Uploader.deleteS3(deleteS3.getUrl());
+        }
+
+
+
+        postFileRepository.deleteByPost(post);
+
+
+
+        // 이미지 파일 url 배열로 for 반복문을 실행
+        for ( String url : postRequestDto.getFile())
+        {
+            // 이미지 파일 url로 postFile 객체 생성
+            PostFile fileUrl = new PostFile(url);
+
+            // postFile에 savePost를 연관관계 설정
+            fileUrl.setPost(post);
+
+            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
+            PostFile saveFile = postFileRepository.save(fileUrl);
+
+            // 저장된 postFile을 저장된 post에 한개씩 추가함
+            post.getFileList().add(saveFile);
+        }
+
+
+
+
+
         postRepository.save(post);
         return post;
     }
@@ -140,7 +248,7 @@ public class PostService {
 
     public List<PostResponseDto> getPost() {
 
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<Post> posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
         List<PostResponseDto> response = new ArrayList<>();
 
         for (Post post : posts) {
@@ -207,9 +315,9 @@ public class PostService {
     public List<CategoryResponseDto> getCategory(String category) {
         List<Post> posts;
         if (category.equals("all")) {
-            posts = postRepository.findAllByOrderByCreatedAtDesc();
+            posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
         } else {
-            posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category,publishing);
         }
         List<CategoryResponseDto> response = new ArrayList<>();
         if (posts == null) {
@@ -225,9 +333,13 @@ public class PostService {
                     post.getModifiedAt(),
                     answerCount,
                     postLikeCount
+
             );
             response.add(categoryResponseDto);
         }
         return response;
     }
+
+
+
 }
