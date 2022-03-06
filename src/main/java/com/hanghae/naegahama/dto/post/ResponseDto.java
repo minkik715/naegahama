@@ -22,7 +22,7 @@ public class ResponseDto {
     private List <String> fileList;
 
     private String category;
-    
+
     public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt, Integer answerCount,
                        Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,
                        String level, String category)

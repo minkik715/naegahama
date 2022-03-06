@@ -309,11 +309,6 @@ public class PostService {
                 post.getLevel(),
                 post.getCategory());
 
-
-
-
-
-
         return ResponseDto;
     }
 
@@ -348,5 +343,11 @@ public class PostService {
     }
 
 
+    public ResponseEntity<?> getTimeSet(Long postId)
+    {
+        Post post = postRepository.getById(postId);
 
+        GetTimeSetDto getTimeSetDto = new GetTimeSetDto(post);
+        return ResponseEntity.ok().body(getTimeSetDto);
+    }
 }

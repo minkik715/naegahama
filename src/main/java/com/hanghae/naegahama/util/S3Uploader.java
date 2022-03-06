@@ -55,7 +55,7 @@ public class S3Uploader {
             amazonS3Client.deleteObject(naegahama,fileName);
         }
         else{
-            System.out.println("s3 파일 delete 에러");
+            System.out.println("삭제할 s3 파일 존재하지 않음");
         }
     }
 

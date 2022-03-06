@@ -63,7 +63,11 @@ public class PostController {
         return postService.updatePost(postId, putRequestDto, userDetails);
     }
 
-
+    @GetMapping("/api/post/timeset/{postId}")
+    public ResponseEntity<?> getTimeSet(@PathVariable Long postId)
+    {
+        return postService.getTimeSet(postId);
+    }
 
 
 //    //요청글 삭제
@@ -75,14 +79,13 @@ public class PostController {
 //        return ResponseEntity.ok().body(new BasicResponseDto("true"));
 //    }
 
-
-
-
     // 요청글 상세조회
     @GetMapping("/api/post/{postId}")
     public ResponseEntity<?> getPost1(@PathVariable Long postId) {
         return ResponseEntity.ok().body(postService.getPost1(postId));
     }
+
+
 
 
 }
