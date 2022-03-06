@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -189,17 +191,24 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
-        // 기존에 있던 이미지 파일 초기화
+        // 기존에 있던 이미지 파일 S3에서 삭제
         for ( PostFile deleteS3 : post.getFileList())
         {
             String[] fileKey = deleteS3.getUrl().split("static/");
-            System.out.println(fileKey[1]);
-            s3Uploader.deleteS3("static/" + fileKey[1]);
+            try
+            {
+                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
+                s3Uploader.deleteS3("static/" + decodeKey);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
         }
-
+        // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 
-        // 이미지 파일 url 배열로 for 반복문을 실행
+        // 새로운 이미지 파일 url 배열로 for 반복문을 실행
         for ( String url : postRequestDto.getFile())
         {
             // 이미지 파일 url로 postFile 객체 생성
@@ -297,7 +306,10 @@ public class PostService {
                 postLikeCount,
                 userIdList,
                 fileList,
-                post.getLevel());
+                post.getLevel(),
+                post.getCategory());
+
+
 
 
 

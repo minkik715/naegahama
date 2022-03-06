@@ -53,15 +53,11 @@ public class S3Uploader {
         if (isExistObject)
         {
             amazonS3Client.deleteObject(naegahama,fileName);
-            System.out.println("s3 사진 삭제 성공~~ ㅠㅠㅠ");
         }
         else{
-            System.out.println("s3 사진 삭제 실패 ㅠㅠㅠ");
+            System.out.println("s3 파일 delete 에러");
         }
-
     }
-
-
 
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {

@@ -34,13 +34,15 @@ public class Post extends Timestamped {
         this.level = level;
         this.user = user;
         this.fileList = fileList;
+
     }
-    public Post(String title, String content, String category, String level, User user) {
+    public Post(String title, String content, String category, String level, User user, String state) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.level = level;
         this.user = user;
+        this.state = state;
     }
 
     @Length(max = 10000)
