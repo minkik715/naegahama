@@ -69,6 +69,11 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<AnswerFile> fileList = new ArrayList<>();
 
+    @JsonBackReference
+    @OneToOne(mappedBy = "answer")
+    private AnswerVideo answerVideo;
+
+
 
     public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user, String state)
     {

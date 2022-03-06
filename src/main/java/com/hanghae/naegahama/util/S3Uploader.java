@@ -48,10 +48,15 @@ public class S3Uploader {
     // S3로 삭제
     public void deleteS3( String fileName)
     {
+
         Boolean isExistObject = amazonS3Client.doesObjectExist(naegahama,fileName);
         if (isExistObject)
         {
             amazonS3Client.deleteObject(naegahama,fileName);
+            System.out.println("s3 사진 삭제 성공~~ ㅠㅠㅠ");
+        }
+        else{
+            System.out.println("s3 사진 삭제 실패 ㅠㅠㅠ");
         }
 
     }

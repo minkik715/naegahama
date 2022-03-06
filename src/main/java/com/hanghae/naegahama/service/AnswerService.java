@@ -37,18 +37,16 @@ public class AnswerService
     private final AnswerFileRepository answerFileRepository;
     private final UserRepository userRepository;
 
+    private final AnswerVideoRepository answerVideoRepository;
+
     private final S3Uploader s3Uploader;
 
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
     @Transactional
-    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, UserDetailsImpl userDetails)
-
+    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
-        //유저를 받고
-        User user = userDetails.getUser();
-
         //answer와 연결된 post를 찾고
         Post post = postRepository.findPostById(postId);
 
@@ -73,6 +71,13 @@ public class AnswerService
             saveAnwser.getFileList().add(saveFile);
         }
 
+        AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
+        videoUrl.setAnswer(saveAnwser);
+        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
+
+
+
+
         // 임시 작성중이던 모든 글 삭제
         List<Answer> deleteList = answerRepository.findAllByUserAndState(user, temporary);
 
@@ -82,10 +87,10 @@ public class AnswerService
             answerRepository.deleteById(deleteAnswer.getId());
         }
 
-        // 최초 요청글 작성시 업적 5 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement9(1);
+//        // 최초 요청글 작성시 업적 5 획득
+//        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+//        achievementUser.getAchievement().setAchievement9(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -126,7 +131,7 @@ public class AnswerService
     }
 
 
-    //삭제
+
     public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile) throws IOException
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(

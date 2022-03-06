@@ -57,11 +57,10 @@ public class PostController {
 
     // 요청글 수정
     @PutMapping("/api/post/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, PutRequestDto postRequestDto,
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PutRequestDto putRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        postService.updatePost(postId, postRequestDto, userDetails);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return postService.updatePost(postId, putRequestDto, userDetails);
     }
 
 

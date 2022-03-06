@@ -106,9 +106,9 @@ public class PostService {
 
         // 퍼블리싱 이벤트? 그거 써서 처리해야함.
         // 최초 요청글 작성시 업적 5 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement5(1);
+//        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+//        achievementUser.getAchievement().setAchievement5(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
@@ -164,7 +164,7 @@ public class PostService {
 
     //요청글 수정
     @Transactional
-    public Post updatePost(Long id, PutRequestDto postRequestDto, UserDetailsImpl userDetails)
+    public ResponseEntity<?> updatePost(Long id, PutRequestDto postRequestDto, UserDetailsImpl userDetails)
     {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
@@ -173,12 +173,14 @@ public class PostService {
 
         User user = post.getUser();
 
-        System.out.println(userDetails.getUser().getNickName());
-        System.out.println(user.getNickName());
+        System.out.println(userDetails.getUser().getId());
+        System.out.println(user.getId());
 
-        if (userDetails.getUser() != user) {
+        if (!userDetails.getUser().getId().equals(user.getId()))
+        {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
+
         if (postRequestDto.getContent() == null) {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
@@ -190,14 +192,12 @@ public class PostService {
         // 기존에 있던 이미지 파일 초기화
         for ( PostFile deleteS3 : post.getFileList())
         {
-            s3Uploader.deleteS3(deleteS3.getUrl());
+            String[] fileKey = deleteS3.getUrl().split("static/");
+            System.out.println(fileKey[1]);
+            s3Uploader.deleteS3("static/" + fileKey[1]);
         }
 
-
-
         postFileRepository.deleteByPost(post);
-
-
 
         // 이미지 파일 url 배열로 for 반복문을 실행
         for ( String url : postRequestDto.getFile())
@@ -215,12 +215,7 @@ public class PostService {
             post.getFileList().add(saveFile);
         }
 
-
-
-
-
-        postRepository.save(post);
-        return post;
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 //    //요청글 삭제

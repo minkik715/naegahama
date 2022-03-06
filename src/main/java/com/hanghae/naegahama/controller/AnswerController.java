@@ -26,10 +26,10 @@ public class AnswerController
 
     // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite ( AnswerPostRequestDto answerPostRequestDto,
+    public ResponseEntity<?> answerWrite (@RequestBody AnswerPostRequestDto answerPostRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return answerService.answerWrite(answerPostRequestDto,postId, userDetails);
+        return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
