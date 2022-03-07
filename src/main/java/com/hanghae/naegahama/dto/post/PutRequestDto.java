@@ -1,20 +1,14 @@
-package com.hanghae.naegahama.dto.answer;
+package com.hanghae.naegahama.dto.post;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
 @Setter
-public class AnswerPostRequestDto
+@Getter
+public class PutRequestDto
 {
-    private String title;
     private String content;
     private List<String> file;
-    private String video;
-
-
-
 }
-
