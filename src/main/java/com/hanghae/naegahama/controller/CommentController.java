@@ -33,14 +33,14 @@ public class CommentController {
         return commentService.deleteComment(commentId);
     }
 
-    @GetMapping("/answer/{answerId}")
-    public ResponseEntity<?> getParentCommentList(@PathVariable Long answerId){
-        return commentService.getParentCommentList(answerId);
+    @GetMapping("/{answerId}")
+    public ResponseEntity<?> getCommentList(@PathVariable Long answerId){
+        return commentService.getCommentList(answerId);
     }
 
-    @GetMapping("/{commentId}")
+  /*  @GetMapping("/{commentId}")
     public ResponseEntity<?> getKidsCommentList(@PathVariable Long commentId){
         return commentService.getKidsCommentList(commentId);
-    }
+    }*/
 }
 

@@ -1,6 +1,8 @@
 package com.hanghae.naegahama.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
 
@@ -27,38 +29,69 @@ public class Answer extends Timestamped {
     private String title;
 
     @Column
-    private Long star;
+    private Integer star;
 
     @Lob
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String state;
+
+
+    @JsonManagedReference
     @JoinColumn(name = "post_id")
     @ManyToOne
     private Post post;
 
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 
-
-    @OneToMany(mappedBy = "answer")
-    private List<AnswerLike> likeList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "answer")
-    private List<Comment> commentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "answer")
-    private List<File> fileList = new ArrayList<>();
-
-
-    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user) {
-        this.title = answerPostRequestDto.getTitle();
-        this.content = answerPostRequestDto.getContent();
+    public Answer(String title, int star, String content, Post post, User user) {
+        this.title = title;
+        this.star = star;
+        this.content = content;
         this.post = post;
         this.user = user;
     }
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "answer")
+    private List<AnswerLike> likeList = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "answer")
+    private List<Comment> commentList = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "answer")
+    private List<AnswerFile> fileList = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToOne(mappedBy = "answer")
+    private AnswerVideo answerVideo;
+
+
+
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user, String state)
+    {
+
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.post = post;
+        this.user = user;
+        this.star = 0;
+        this.state = state;
+    }
+
+
+    public void Update(AnswerPostRequestDto answerPostRequestDto,List<AnswerFile>  fileList){
+        this.title = answerPostRequestDto.getTitle();
+        this.content = answerPostRequestDto.getContent();
+        this.fileList = fileList;
+    }
 
     public Answer(String title, String content, Post post, User user) {
         this.title = title;
@@ -68,12 +101,6 @@ public class Answer extends Timestamped {
     }
 
 
-    public void Update(AnswerPostRequestDto answerPostRequestDto,List<File>  fileList)
-    {
-        this.title = answerPostRequestDto.getTitle();
-        this.content = answerPostRequestDto.getContent();
-        this.fileList = fileList;
-    }
 
     public void Star(StarPostRequestDto starPostRequestDto)
     {

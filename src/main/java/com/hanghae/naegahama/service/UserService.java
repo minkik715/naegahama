@@ -2,6 +2,7 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
@@ -9,8 +10,10 @@ import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
 import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
+import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
+import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
@@ -25,7 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -46,12 +49,21 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final CommentRepository commentRepository;
+    private final AchievementRepository achievementRepository;
+    
+
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
         checkPassword(signUpRequestDto, password);
         User user = new User(signUpRequestDto,encodePassword(password));
         userRepository.save(user);
+
+        // 회원 가입시 업적 리포지토리 저장
+        Achievement achievement = new Achievement(user);
+        achievementRepository.save(achievement);
+        user.setAchievement(achievement);
+
         return new LoginRequestDto(signUpRequestDto.getEmail(),password);
 
     }
@@ -76,9 +88,8 @@ public class UserService {
         );
         loginPassword(password, user);
         String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        Cookie cookie = new Cookie("access-token",token);
-        response.addCookie(cookie);
-        return ResponseEntity.ok().body(sendToken(user));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token,user.getNickName(),user.getId());
+        return ResponseEntity.ok().body(loginResponseDto);
     }
 
     public ResponseEntity<?> login(String kakaoAccessToken) throws EmailNotFoundException {
@@ -86,13 +97,14 @@ public class UserService {
         User user = new User(userInfo);
         userRepository.save(user);
 
+        Achievement achievement = new Achievement(user);
+        achievementRepository.save(achievement);
+        user.setAchievement(achievement);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    private String sendToken(User user) {
-        return jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-    }
+
 
     private void loginPassword(String password, User user) {
         if(passwordEncoder.matches(password, user.getPassword())){
@@ -143,36 +155,47 @@ public class UserService {
         return myAnswerDtoList;
     }
 
+
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails)
     {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
+        Achievement achievement = userDetails.getUser().getAchievement();
 
-        User user = userDetails.getUser();
+        myAchievementDto.getAchievement()[0] = achievement.getAchievement1();
+        myAchievementDto.getAchievement()[1] = achievement.getAchievement2();
+        myAchievementDto.getAchievement()[2] = achievement.getAchievement3();
+        myAchievementDto.getAchievement()[3] = achievement.getAchievement4();
+        myAchievementDto.getAchievement()[4] = achievement.getAchievement5();
+        myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
+        myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
+        myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
+        myAchievementDto.getAchievement()[8] = achievement.getAchievement9();
 
-//        // 더노력HAMA - 최초로 1점 만족도 받았을때 메달 획득
-//        Answer answer = answerRepository.findByUserAndStar(user,1L).orElse(null);
-//        // 로그인한 계정에 Star 값이 1 인 답변글이 없다면 0, 있다면 1을 넣어줌.
-//        user.getAchievement().setAchievement1( answer == null ? 0L : 1L);
-//
-//        //  축하HAMA - 최초로 5점 만족도받았을때
-//        Answer answer2 = answerRepository.findByUserAndStar(user,5L).orElse(null);
-//        user.getAchievement().setAchievement2( answer == null ? 0L : 1L);
-//
-////        // 서치HAMA - 최초로 검색했을 때 - 미구현
-////        achievementList[2] = 0L;
-//
-//        //리액션HAMA - 최초 댓글
-//        Long commentCount = commentRepository.countByUser(user);
-//        achievementList[3] = commentCount < 1 ? 0L : 1L;
+        // 업적 1 : answerService.answerStar
+        // 업적 2 : answerService.answerStar
+        // 업적 3 :
+        // 업적 4 : commentService.writeComment
+        // 업적 5 : postService.createPost
+        // 업적 6 : surveyService.createHippo
+        // 업적 7 : answerService.answerStar
+        // 업적 8 :
+        // 업적 9 : answerService.answerWrite;
+
 
 
         return myAchievementDto;
     }
 
-//    public MyBannerDto myBanner(UserDetailsImpl userDetails)
-//    {
-//        User user = userDetails.getUser();
-//
-//        return new MyBannerDto(user);
-//    }
+    public MyBannerDto myBanner(UserDetailsImpl userDetails)
+    {
+        User user = userDetails.getUser();
+
+        return new MyBannerDto(user);
+    }
+
+
+    public ResponseEntity<?> userprofile(User user) {
+        UserResponseDto userResponse = new UserResponseDto(user);
+        return ResponseEntity.ok().body(userResponse);
+    }
 }

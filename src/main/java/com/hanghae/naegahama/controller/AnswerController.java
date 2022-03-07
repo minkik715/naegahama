@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -25,15 +24,12 @@ public class AnswerController
 {
     private final AnswerService answerService;
 
+    // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite
-            (@RequestPart (value = "post") AnswerPostRequestDto answerPostRequestDto,
-             @RequestPart(value = "file", required = false) List<MultipartFile> multipartFile,
-             @PathVariable Long postId,
-             @AuthenticationPrincipal UserDetailsImpl userDetails)throws IOException
-
+    public ResponseEntity<?> answerWrite (@RequestBody AnswerPostRequestDto answerPostRequestDto,
+             @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
+        return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
@@ -80,7 +76,7 @@ public class AnswerController
         return answerService.answerDetail(answerId,userDetails);
     }
 
-    @PostMapping("/answer/star/{answerId}")
+    @PostMapping("/star/{answerId}")
     public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);

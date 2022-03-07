@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class File extends Timestamped{
+public class PostFile extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +21,23 @@ public class File extends Timestamped{
     @Column(nullable = false)
     private String url;
 
-    @JoinColumn(name = "answer_id")
+    @JsonManagedReference
+    @JoinColumn(name = "post_id")
     @ManyToOne
-    private Answer answer;
+    private Post post;
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
-    public File(String url)
+    public PostFile(String url)
     {
         this.url = url;
     }
+
+    public PostFile(String url, Post post) {
+        this.url = url;
+        this.post = post;
+    }
 }
+

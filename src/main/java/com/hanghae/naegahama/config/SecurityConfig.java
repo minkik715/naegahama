@@ -26,17 +26,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .headers().frameOptions().disable();
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안함.
                 .and()
                 .formLogin().disable() // 기본 로그인 방식 안쓸거임.
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/chatting/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/chatting/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/**").permitAll()
                 .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/api/post/**").permitAll()
+                .antMatchers("/pub").permitAll()
+                .antMatchers("/sub").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())    // 추가

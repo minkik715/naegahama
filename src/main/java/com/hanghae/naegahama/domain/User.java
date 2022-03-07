@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
@@ -36,33 +38,31 @@ public class User extends Timestamped{
     @Column
     private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user")
     private List<PostLike> postLikeList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Message> messageList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<UserEnterRoom> userEnterRoomList = new ArrayList<>();
-
+    @JsonBackReference
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
+
+    @JsonManagedReference
     @OneToOne
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
-
-
-
 
     public User(String email, String nickName, String password, int point) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.point = point;
+        this.hippoLevel = 1;
+
     }
 
     public User(SignUpRequestDto signUpRequestDto, String password) {
@@ -71,11 +71,13 @@ public class User extends Timestamped{
         this.password = password;
         this.hippoLevel = 1;
 
+
     }
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
         this.hippoLevel = 1;
+
     }
     public void setHippoLevel(Integer hippoLevel) {
         this.hippoLevel = hippoLevel;
@@ -85,8 +87,13 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Long answerStar)
+    public void addPoint(Integer answerStar)
     {
         this.point += answerStar*100;
+    }
+
+    public void setAchievement(Achievement achievement)
+    {
+        this.achievement = achievement;
     }
 }

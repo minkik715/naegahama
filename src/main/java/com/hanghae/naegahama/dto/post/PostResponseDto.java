@@ -15,6 +15,7 @@ public class PostResponseDto {
     private Integer answerCount;
     private Long postLikeCount;
 
+
     public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
                            Integer answerCount, Long postLikeCount) {
         this.id = id;
@@ -23,5 +24,6 @@ public class PostResponseDto {
         this.modifiedAt = modifiedAt;
         this.answerCount = answerCount;
         this.postLikeCount = postLikeCount;
+
     }
 }

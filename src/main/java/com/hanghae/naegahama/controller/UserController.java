@@ -2,12 +2,14 @@ package com.hanghae.naegahama.controller;
 
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
 import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
+import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.EmailDuplCheckDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.service.UserService;
@@ -59,6 +61,12 @@ public class UserController {
     {
         return userService.myPost(userDetails);
     }
+    @GetMapping("/user/profile")
+    public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        log.info("user = {}", userDetails.getUser().getNickName());
+        return userService.userprofile(userDetails.getUser());
+    }
+
 
     @GetMapping("/myanswer")
     public List<MyAnswerDto> myAnswer(@AuthenticationPrincipal UserDetailsImpl userDetails)
@@ -72,10 +80,12 @@ public class UserController {
         return userService.myAchievement(userDetails);
     }
 
-//    @GetMapping("/mybanner")
-//    public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
-//    {
-//        return userService.myBanner(userDetails);
-//    }
+    @GetMapping("/mybanner")
+    public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.myBanner(userDetails);
+    }
+
+
 
 }
