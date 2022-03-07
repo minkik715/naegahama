@@ -32,11 +32,15 @@ public class Comment extends Timestamped{
     @ManyToOne
     private User user;
 
+    @Column
+    private String timestamp;
+
     //일반 댓글 생성
-    public Comment(String commentContent, Answer findAnswer, User user) {
+    public Comment(String commentContent, Answer findAnswer, User user,String timestamp) {
         this.content = commentContent;
         this.answer = findAnswer;
         this.user = user;
+        this.timestamp = timestamp;
         this.parentCommentId = null;
         findAnswer.getCommentList().add(this);
     }
@@ -47,10 +51,12 @@ public class Comment extends Timestamped{
         this.parentCommentId = parentCommentId;
         this.answer = findAnswer;
         this.user = user;
+        this.timestamp = null;
         findAnswer.getCommentList().add(this);
     }
 
-    public void setContent(String content) {
+    public void setComment(String content, String timestamp) {
         this.content = content;
+        this.timestamp = timestamp;
     }
 }

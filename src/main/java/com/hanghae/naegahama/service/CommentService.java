@@ -29,7 +29,6 @@ public class CommentService {
 
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -40,7 +39,7 @@ public class CommentService {
         Long parentCommentId = commentRequestDto.getParentCommentId();
         Comment comment = null;
         if(parentCommentId == null) {
-            comment = new Comment(commentContent, findAnswer, user);
+            comment = new Comment(commentContent, findAnswer, user,commentRequestDto.getTimestamp());
             user.getCommentList().add(comment);
         }else{
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
@@ -48,27 +47,24 @@ public class CommentService {
         }
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
-
         return ResponseEntity.ok().body(commentResponseDto);
         // 최초 요청글 작성시 업적 4 획득
 /*        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement4(1);*/
-
-
     }
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {
         Comment findComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
-        findComment.setContent(commentModifyRequestDto.getContent());
+        findComment.setComment(commentModifyRequestDto.getContent(),commentModifyRequestDto.getTimestamp());
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 
     public ResponseEntity<?> deleteComment(Long commentId) {
-        Comment findComment = commentRepository.findById(commentId).orElseThrow(
+       commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
         commentRepository.deleteById(commentId);
@@ -92,19 +88,7 @@ public class CommentService {
         }
         for (Comment comment : commentList) {
             if(comment.getParentCommentId() == null) {
-                //보낼 대댓글 리스트
-                List<CommentListResponseDto> childCommentListResponseDto = new ArrayList<>();
-                List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(comment.getId());
-                log.info("id={}",comment.getId());
-
-                for (Comment comment1 : kidsCommentList) {
-                    log.info("id={}",comment1.getId());
-                    CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment1);
-                    childCommentListResponseDto.add(commentListResponseDto);
-                }
-                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment, childCommentListResponseDto);
-
-
+                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment);
                 parentCommentListResponseDtoList.add(commentListResponseDto);
             }
         }

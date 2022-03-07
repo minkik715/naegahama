@@ -1,15 +1,10 @@
 package com.hanghae.naegahama.controller;
 
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.file.FileResponseDto;
-
 import com.hanghae.naegahama.service.FileService;
-import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +22,8 @@ public class FileController
 
     @PostMapping("/api/upload")
     public ResponseEntity<?> fileURL(@RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
-                                     @RequestPart(name = "video",required = false) MultipartFile videoFile) throws IOException
-    {
+                                     @RequestPart(name = "video",required = false) MultipartFile videoFile) throws IOException {
        return fileService.fileURL(multipartFileList,videoFile);
-
-
-
     }
 
 
