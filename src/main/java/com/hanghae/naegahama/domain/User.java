@@ -36,6 +36,9 @@ public class User extends Timestamped{
     private int point;
 
     @Column
+    private Long kakaoId;
+
+    @Column
     private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
     @JsonBackReference
@@ -76,6 +79,7 @@ public class User extends Timestamped{
     public User(KakaoUserInfo kakaoUserInfo) {
         this.email = kakaoUserInfo.getEmail();
         this.nickName = kakaoUserInfo.getNickname();
+        this.kakaoId = kakaoUserInfo.getId();
         this.hippoLevel = 1;
 
     }

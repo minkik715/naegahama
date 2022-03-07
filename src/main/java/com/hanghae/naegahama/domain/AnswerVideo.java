@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class PostFile extends Timestamped{
+public class AnswerVideo extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,23 +21,22 @@ public class PostFile extends Timestamped{
     @Column(nullable = false)
     private String url;
 
-    @JsonManagedReference
-    @JoinColumn(name = "post_id")
-    @ManyToOne
-    private Post post;
-
-    public void setPost(Post post) {
-        this.post = post;
+    public AnswerVideo(String url, Answer answer) {
+        this.url = url;
+        this.answer = answer;
     }
 
-    public PostFile(String url)
+    @JsonManagedReference
+    @JoinColumn(name = "answer_id")
+    @OneToOne
+    private Answer answer;
+
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+    }
+
+    public AnswerVideo(String url)
     {
         this.url = url;
     }
-
-    public PostFile(String url, Post post) {
-        this.url = url;
-        this.post = post;
-    }
 }
-

@@ -35,6 +35,10 @@ public class Answer extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private String state;
+
+
     @JsonManagedReference
     @JoinColumn(name = "post_id")
     @ManyToOne
@@ -65,13 +69,21 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer")
     private List<AnswerFile> fileList = new ArrayList<>();
 
+    @JsonBackReference
+    @OneToOne(mappedBy = "answer")
+    private AnswerVideo answerVideo;
 
-    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user) {
+
+
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user, String state)
+    {
+
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
         this.post = post;
         this.user = user;
         this.star = 0;
+        this.state = state;
     }
 
 

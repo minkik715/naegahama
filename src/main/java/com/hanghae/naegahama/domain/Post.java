@@ -2,15 +2,18 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.dto.post.PutRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,13 +34,15 @@ public class Post extends Timestamped {
         this.level = level;
         this.user = user;
         this.fileList = fileList;
+
     }
-    public Post(String title, String content, String category, String level, User user) {
+    public Post(String title, String content, String category, String level, User user, String state) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.level = level;
         this.user = user;
+        this.state = state;
     }
 
     @Length(max = 10000)
@@ -50,6 +55,12 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String level;
 
+    @Column
+    private String state;
+
+    @Column
+    private String timeSet;
+
     @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
@@ -60,26 +71,23 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<Answer> answerList;
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "post")
     private List<PostFile> fileList = new ArrayList<>();
 
-    public Post(PostRequestDto postRequestDto, User user) {
+    public Post(PostRequestDto postRequestDto, User user, String state)
+    {
         this.user = user;
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
         this.level = postRequestDto.getLevel();
+        this.state = state;
     }
 
-    public void UpdatePost(PostRequestDto postRequestDto, User user) {
-        this.user = user;
-        this.title = postRequestDto.getTitle();
+    public void UpdatePost(PutRequestDto postRequestDto)
+    {
         this.content = postRequestDto.getContent();
-        this.category = postRequestDto.getCategory();
-        this.level = postRequestDto.getLevel();
-
     }
 
 

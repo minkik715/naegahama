@@ -48,7 +48,7 @@ public class UserController {
 
     @PostMapping("/user/kakaoLogin")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> param){
-        return userService.login(param.get("kakaoToken").toString());
+        return userService.kakaoSignup(param.get("kakaoToken").toString());
     }
 
     @GetMapping("/user")

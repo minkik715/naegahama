@@ -10,7 +10,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @Getter
-public class AnswerDetailGetResponseDto {
+public class AnswerDetailGetResponseDto
+{
     private Long answerId;
     private Long requestWriterId;
 

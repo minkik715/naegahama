@@ -2,6 +2,7 @@ package com.hanghae.naegahama.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,19 @@ public class S3Uploader {
         return amazonS3Client.getUrl(naegahama, fileName).toString();
     }
 
+    // S3로 삭제
+    public void deleteS3( String fileName)
+    {
 
+        Boolean isExistObject = amazonS3Client.doesObjectExist(naegahama,fileName);
+        if (isExistObject)
+        {
+            amazonS3Client.deleteObject(naegahama,fileName);
+        }
+        else{
+            System.out.println("삭제할 s3 파일 존재하지 않음");
+        }
+    }
 
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
