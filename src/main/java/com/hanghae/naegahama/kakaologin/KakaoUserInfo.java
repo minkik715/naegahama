@@ -7,7 +7,8 @@ public class KakaoUserInfo {
     private String nickname;
     private String email;
 
-    public KakaoUserInfo(String nickname, String email) {
+    public KakaoUserInfo(String nickname, String email)
+    {
         this.nickname = nickname;
         this.email = email;
     }

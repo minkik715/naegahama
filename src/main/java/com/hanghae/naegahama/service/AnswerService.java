@@ -44,6 +44,8 @@ public class AnswerService
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
+
+    // 답변글 작성
     @Transactional
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
@@ -75,9 +77,6 @@ public class AnswerService
         videoUrl.setAnswer(saveAnwser);
         AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
 
-
-
-
         // 임시 작성중이던 모든 글 삭제
         List<Answer> deleteList = answerRepository.findAllByUserAndState(user, temporary);
 
@@ -94,6 +93,14 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+    // 답변글 임시 작성
+    public ResponseEntity<?> temporaryAnswer(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
+    {
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+
 
 
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
@@ -231,6 +238,7 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
 
 
 }

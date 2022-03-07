@@ -51,7 +51,8 @@ public class KakaoOAuth2 {
             return new KakaoUserInfo(nickname, UUID.randomUUID().toString());
         }
 
-        else{
+        else
+        {
             return new KakaoUserInfo(email, nickname);
         }
     }

@@ -307,7 +307,8 @@ public class PostService {
                 userIdList,
                 fileList,
                 post.getLevel(),
-                post.getCategory());
+                post.getCategory()
+                );
 
         return ResponseDto;
     }

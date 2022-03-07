@@ -7,6 +7,7 @@ import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
 import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
+import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,14 @@ public class AnswerController
     {
         return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
+    }
+
+    // 요청글 임시 저장
+    @PostMapping("/api/answer/temporary/{postId}")
+    public ResponseEntity<?> temporaryAnswer(@RequestBody AnswerPostRequestDto answerPostRequestDto,
+           @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+        return answerService.temporaryAnswer(answerPostRequestDto,postId,userDetails.getUser());
     }
 
     @ResponseBody
