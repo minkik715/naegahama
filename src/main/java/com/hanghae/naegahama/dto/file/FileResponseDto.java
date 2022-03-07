@@ -1,9 +1,7 @@
 package com.hanghae.naegahama.dto.file;
 
-import com.hanghae.naegahama.domain.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
