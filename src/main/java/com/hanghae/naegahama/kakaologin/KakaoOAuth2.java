@@ -48,11 +48,11 @@ public class KakaoOAuth2 {
 
         if (email == null)
         {
-            return new KakaoUserInfo(nickname, UUID.randomUUID().toString());
+            return new KakaoUserInfo(id,nickname, UUID.randomUUID().toString());
         }
 
         else{
-            return new KakaoUserInfo(email, nickname);
+            return new KakaoUserInfo(id,email, nickname);
         }
     }
 

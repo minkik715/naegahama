@@ -50,13 +50,12 @@ public class UserService {
     private final AnswerLikeRepository answerLikeRepository;
     private final CommentRepository commentRepository;
     private final AchievementRepository achievementRepository;
-    
 
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
         String password = signUpRequestDto.getPassword();
         checkPassword(signUpRequestDto, password);
-        User user = new User(signUpRequestDto,encodePassword(password));
+        User user = new User(signUpRequestDto, encodePassword(password));
         userRepository.save(user);
 
         // 회원 가입시 업적 리포지토리 저장
@@ -64,7 +63,7 @@ public class UserService {
         achievementRepository.save(achievement);
         user.setAchievement(achievement);
 
-        return new LoginRequestDto(signUpRequestDto.getEmail(),password);
+        return new LoginRequestDto(signUpRequestDto.getEmail(), password);
 
     }
 
@@ -73,7 +72,7 @@ public class UserService {
     }
 
     private void checkPassword(SignUpRequestDto signUpRequestDto, String password) {
-        if(password.equals(signUpRequestDto.getPasswordCheck())){
+        if (password.equals(signUpRequestDto.getPasswordCheck())) {
             return;
         }
         throw new PasswordCheckFailException("비밀번호가 일치하지 않습니다.");
@@ -88,66 +87,68 @@ public class UserService {
         );
         loginPassword(password, user);
         String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token,user.getNickName(),user.getId());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getNickName(), user.getId());
         return ResponseEntity.ok().body(loginResponseDto);
     }
 
-    public ResponseEntity<?> login(String kakaoAccessToken) throws EmailNotFoundException {
+    public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException {
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
-        User user = new User(userInfo);
-        userRepository.save(user);
+        log.info("kakaoId = {}", userInfo.getId());
+        User user = userRepository.findByKakaoId(userInfo.getId()).orElse(null);
 
-        Achievement achievement = new Achievement(user);
-        achievementRepository.save(achievement);
-        user.setAchievement(achievement);
+        if (user == null) {
+            User newUser = new User(userInfo);
+            log.info("kakaoId = {}", userInfo.getId());
+            userRepository.save(newUser);
+            Achievement achievement = new Achievement(user);
+            achievementRepository.save(achievement);
+            user.setAchievement(achievement);
+            kakaoSignup(kakaoAccessToken);
+        }
+        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getNickName(), user.getId());
+        return ResponseEntity.ok().body(loginResponseDto);
 
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 
-
     private void loginPassword(String password, User user) {
-        if(passwordEncoder.matches(password, user.getPassword())){
+        if (passwordEncoder.matches(password, user.getPassword())) {
             return;
         }
         throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
     }
 
-    public ResponseEntity<?> emailCheck(String email)
-    {
+    public ResponseEntity<?> emailCheck(String email) {
         Optional<User> byEmail = userRepository.findByEmail(email);
-        if(byEmail.isPresent()){
-          return ResponseEntity.ok().body(new BasicResponseDto("false"));
+        if (byEmail.isPresent()) {
+            return ResponseEntity.ok().body(new BasicResponseDto("false"));
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    public List<MyPostDto> myPost(UserDetailsImpl userDetails)
-    {
+    public List<MyPostDto> myPost(UserDetailsImpl userDetails) {
         List<MyPostDto> myPageDtoList = new ArrayList<>();
 
         User user = userDetails.getUser();
 
         List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
 
-        for ( Post post : postList)
-        {
+        for (Post post : postList) {
             Long likeCount = postLikeRepository.countByPost(post);
-            MyPostDto postMyPageDto = new MyPostDto(post,likeCount);
+            MyPostDto postMyPageDto = new MyPostDto(post, likeCount);
             myPageDtoList.add(postMyPageDto);
         }
 
         return myPageDtoList;
     }
 
-    public List<MyAnswerDto> myAnswer(UserDetailsImpl userDetails)
-    {
+    public List<MyAnswerDto> myAnswer(UserDetailsImpl userDetails) {
         List<MyAnswerDto> myAnswerDtoList = new ArrayList<>();
         User user = userDetails.getUser();
 
         List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
-        for ( Answer answer : answerList)
-        {
+        for (Answer answer : answerList) {
             Long likeCount = answerLikeRepository.countByAnswer(answer);
             MyAnswerDto myAnswerDto = new MyAnswerDto(answer, likeCount);
             myAnswerDtoList.add(myAnswerDto);
@@ -156,8 +157,7 @@ public class UserService {
     }
 
 
-    public MyAchievementDto myAchievement(UserDetailsImpl userDetails)
-    {
+    public MyAchievementDto myAchievement(UserDetailsImpl userDetails) {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = userDetails.getUser().getAchievement();
 
@@ -182,12 +182,10 @@ public class UserService {
         // 업적 9 : answerService.answerWrite;
 
 
-
         return myAchievementDto;
     }
 
-    public MyBannerDto myBanner(UserDetailsImpl userDetails)
-    {
+    public MyBannerDto myBanner(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
 
         return new MyBannerDto(user);
