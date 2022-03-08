@@ -3,6 +3,7 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.hanghae.naegahama.dto.answer.AnswerPutRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
 
@@ -87,10 +88,11 @@ public class Answer extends Timestamped {
     }
 
 
-    public void Update(AnswerPostRequestDto answerPostRequestDto,List<AnswerFile>  fileList){
-        this.title = answerPostRequestDto.getTitle();
-        this.content = answerPostRequestDto.getContent();
-        this.fileList = fileList;
+    public void Update(AnswerPutRequestDto answerPutRequestDto)
+    {
+        this.title = answerPutRequestDto.getTitle();
+        this.content = answerPutRequestDto.getContent();
+
     }
 
     public Answer(String title, String content, Post post, User user) {

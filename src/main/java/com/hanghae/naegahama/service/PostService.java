@@ -47,8 +47,11 @@ public class PostService {
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException {
-        if (postRequestDto.getTitle() == null) {
+
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user)
+    {
+        if (postRequestDto.getTitle() == null)
+        {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
 
@@ -154,7 +157,6 @@ public class PostService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
-
         User user = post.getUser();
 
         System.out.println(userDetails.getUser().getId());
@@ -172,6 +174,7 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
+
         // 기존에 있던 이미지 파일 S3에서 삭제
        /* for (PostFile deleteS3 : post.getFileList()) {
             String[] fileKey = deleteS3.getUrl().split("static/");
@@ -182,6 +185,7 @@ public class PostService {
                 e.printStackTrace();
             }
         }*/
+
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 
@@ -236,7 +240,9 @@ public class PostService {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
             LocalDateTime deadLine = post.getDeadLine();
+
             String timeSet = getDeadLine(deadLine);
+
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
@@ -254,8 +260,8 @@ public class PostService {
 
 
     //요청글 상세조회.
-    public ResponseDto getPost1(Long postId) {
-
+    public ResponseDto getPost1(Long postId)
+    {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
         );
@@ -292,6 +298,7 @@ public class PostService {
                 post.getCategory(),
                 getDeadLine(post.getDeadLine()),
                 post.getStatus());
+
 
 
         return ResponseDto;
