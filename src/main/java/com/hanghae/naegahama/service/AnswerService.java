@@ -86,7 +86,7 @@ public class AnswerService
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement9(1);
+        achievementUser.getAchievement().setAchievement8(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -274,10 +274,10 @@ public class AnswerService
             answerWriter.getAchievement().setAchievement2(1);
         }
 
-//        // 최초 평가시 업적 7 획득
-//        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
-//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-//        achievementUser.getAchievement().setAchievement7(1);
+        // 최초 평가시 업적 7 획득
+        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement7(1);
 
 
 

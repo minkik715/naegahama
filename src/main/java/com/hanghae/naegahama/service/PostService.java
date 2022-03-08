@@ -34,6 +34,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
 
     private final S3Uploader s3Uploader;
 
@@ -95,13 +96,12 @@ public class PostService {
             postRepository.deleteById(deletePost.getId());
         }
 
-
-        // 퍼블리싱 이벤트? 그거 써서 처리해야함.
-        // 최초 요청글 작성시 업적 5 획득
-        user.getAchievement().setAchievement5(1);
+        // 최초 평가시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
-
     }
 
     // 요청글 임시 저장
@@ -171,7 +171,6 @@ public class PostService {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
         post.UpdatePost(postRequestDto);
-
 
         // 기존에 있던 이미지 파일 S3에서 삭제
        /* for (PostFile deleteS3 : post.getFileList()) {

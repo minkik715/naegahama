@@ -173,18 +173,16 @@ public class UserService {
         myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
         myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
         myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
-        myAchievementDto.getAchievement()[8] = achievement.getAchievement9();
 
-        // 업적 1 : answerService.answerStar
-        // 업적 2 : answerService.answerStar
-        // 업적 3 :
-        // 업적 4 : commentService.writeComment
-        // 업적 5 : postService.createPost
-        // 업적 6 : surveyService.createHippo
-        // 업적 7 : answerService.answerStar
-        // 업적 8 :
-        // 업적 9 : answerService.answerWrite;
 
+        // 업적 1 : answerService.answerStar      [ 최초 answer 글 1점 획득 ]
+        // 업적 2 : answerService.answerStar      [ 최초 answer 글 5점 획득 ]
+        // 업적 3 :                               [ 최초 검색기능 사용 - 미구현 ]
+        // 업적 4 : commentService.writeComment   [ 최초 comment 작성 ]
+        // 업적 5 : postService.createPost        [ 최초 post 글 작성 ]
+        // 업적 6 : surveyService.createHippo     [ 최초 survay 설문조사 완료 ]
+        // 업적 7 : answerService.answerStar      [ 최초 answer 글 평가 ]
+        // 업적 8 : answerService.answerWrite;    [ 최초 answer 글 작성 ]
 
         return myAchievementDto;
     }
