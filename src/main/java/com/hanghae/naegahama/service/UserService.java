@@ -102,16 +102,16 @@ public class UserService {
             User newUser = new User(userInfo);
             log.info("kakaoId = {}", userInfo.getId());
             saveUser = userRepository.save(newUser);
+            achievementRepository.save(new Achievement(saveUser));
         }else{
-            saveUser = userRepository.save(user);
+            saveUser = user;
         }
-        achievementRepository.save(new Achievement(saveUser));
         return getLoginResponseDtoResponseEntity(saveUser);
     }
 
     private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
         String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getNickName(), user.getId());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getId(),user.getUserStatus());
         return ResponseEntity.ok().body(loginResponseDto);
     }
 
@@ -201,14 +201,10 @@ public class UserService {
         return ResponseEntity.ok().body(userResponse);
     }
 
+    @Transactional
     public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
-
-
-        try {
-            user.setBasicInfo(userInfoRequestDto);
-        }catch (Exception ignored){
-            throw new IllegalArgumentException("틀린 인자입니다.");
-        }
+        user.setBasicInfo(userInfoRequestDto);
+        userRepository.save(user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }

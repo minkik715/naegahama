@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter @AllArgsConstructor @NoArgsConstructor
 public class LoginResponseDto {
     private String token;
-    private String nickname;
     private Long userId;
+    private String UserStatus;
 }
