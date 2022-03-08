@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+@EnableScheduling
 @EnableJpaAuditing
 @SpringBootApplication
 public class NaegahamaApplication {
@@ -24,12 +25,12 @@ public class NaegahamaApplication {
     }
 
 
-  /*  @Bean
+   @Bean
     public TaskScheduler taskScheduler() {
 
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(3);
 
         return taskScheduler;
-    }*/
+    }
 }

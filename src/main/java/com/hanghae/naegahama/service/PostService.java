@@ -3,7 +3,6 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.*;
@@ -21,10 +20,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @EnableAutoConfiguration
@@ -174,7 +173,7 @@ public class PostService {
         post.UpdatePost(postRequestDto);
 
         // 기존에 있던 이미지 파일 S3에서 삭제
-        for (PostFile deleteS3 : post.getFileList()) {
+       /* for (PostFile deleteS3 : post.getFileList()) {
             String[] fileKey = deleteS3.getUrl().split("static/");
             try {
                 String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
@@ -182,7 +181,7 @@ public class PostService {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 
@@ -237,23 +236,7 @@ public class PostService {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
             LocalDateTime deadLine = post.getDeadLine();
-            String timeSet;
-            long minutes = 61;
-            if (deadLine.isBefore(LocalDateTime.now())) {
-                timeSet = "마감된 요청글 입니다.";
-            } else {
-                long hour = ChronoUnit.HOURS.between(LocalDateTime.now(),deadLine);
-                timeSet = hour + "시간 후 마감";
-                if (hour < 1) {
-                    minutes = ChronoUnit.MINUTES.between( LocalDateTime.now(),deadLine);
-                    timeSet = minutes + "분 후 마감";
-
-                }if (minutes < 1) {
-                    long seconds = ChronoUnit.SECONDS.between( LocalDateTime.now(),deadLine);
-                    timeSet = seconds + "초 후 마감";
-
-                }
-            }
+            String timeSet = getDeadLine(deadLine);
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
@@ -261,12 +244,14 @@ public class PostService {
                     post.getModifiedAt(),
                     answerCount,
                     postLikeCount,
-                    timeSet
+                    timeSet,
+                    post.getStatus()
             );
             response.add(postResponseDto);
         }
         return response;
     }
+
 
     //요청글 상세조회.
     public ResponseDto getPost1(Long postId) {
@@ -290,7 +275,7 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
-
+        getDeadLine(post.getDeadLine());
 
         ResponseDto ResponseDto = new ResponseDto(
                 post.getId(),
@@ -304,35 +289,39 @@ public class PostService {
                 userIdList,
                 fileList,
                 post.getLevel(),
-                post.getCategory());
+                post.getCategory(),
+                getDeadLine(post.getDeadLine()),
+                post.getStatus());
+
 
         return ResponseDto;
     }
 
     //카테고리
 
-    public List<CategoryResponseDto> getCategory(String category) {
+    public List<PostResponseDto> getCategory(String category) {
         List<Post> posts;
         if (category.equals("all")) {
             posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
         } else {
             posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
         }
-        List<CategoryResponseDto> response = new ArrayList<>();
+        List<PostResponseDto> response = new ArrayList<>();
         if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
-            CategoryResponseDto categoryResponseDto = new CategoryResponseDto(
+            PostResponseDto categoryResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getModifiedAt(),
                     answerCount,
-                    postLikeCount
-
+                    postLikeCount,
+                    getDeadLine(post.getDeadLine()),
+                    post.getStatus()
             );
             response.add(categoryResponseDto);
         }
@@ -348,32 +337,80 @@ public class PostService {
     }*/
 
     public ResponseEntity<?> getPostByCategoryAndSort(String category, String sort) {
+
+        Comparator<Post> comparator = new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                if(o1.getDeadLine().isBefore(o2.getDeadLine())){
+                    return -1;
+                }else if (!o1.getDeadLine().isBefore(o2.getDeadLine())){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }
+        };
         List<Post> posts;
-        if (category.equals("all")) {
-            posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
-        } else {
-            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
+        if (sort.equals("like")) {
+            if (category.equals("all")) {
+                posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
+            } else {
+                posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
+            }
             Collections.sort(posts);
+        } else if(sort.equals("time")) {
+            if (category.equals("all")) {
+                posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
+            } else {
+                posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
+            }
+            Collections.sort(posts,comparator);
+        }else{
+            posts = null;
         }
 
-        List<CategoryResponseDto> response = new ArrayList<>();
+
+        List<PostResponseDto> response = new ArrayList<>();
         if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
-            CategoryResponseDto categoryResponseDto = new CategoryResponseDto(
+            PostResponseDto categoryResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getModifiedAt(),
                     answerCount,
-                    postLikeCount
-
+                    postLikeCount,
+                    getDeadLine(post.getDeadLine()),
+                    post.getStatus()
             );
             response.add(categoryResponseDto);
         }
         return ResponseEntity.ok().body(response);
+    }
+
+    private String getDeadLine(LocalDateTime deadLine) {
+        String timeSet;
+        long minutes = 61;
+        if (deadLine.isBefore(LocalDateTime.now())) {
+            timeSet = "마감된 요청글 입니다.";
+        } else {
+            long hour = ChronoUnit.HOURS.between(LocalDateTime.now(), deadLine);
+            timeSet = hour + "시간 후 마감";
+            if (hour < 1) {
+                minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+                timeSet = minutes + "분 후 마감";
+
+            }
+            if (minutes < 1) {
+                long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
+                timeSet = seconds + "초 후 마감";
+
+            }
+        }
+        return timeSet;
     }
 }

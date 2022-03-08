@@ -23,9 +23,11 @@ public class ResponseDto {
 
     private String category;
 
+    private String timeSet;
+    private String status;
     public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt, Integer answerCount,
                        Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,
-                       String level, String category)
+                       String level, String category,String timeSet,String status)
     {
         this.postId = id;
         this.title = title;
@@ -39,5 +41,7 @@ public class ResponseDto {
         this.level = level;
         this.fileList = fileList;
         this.category = category;
+        this.timeSet = timeSet;
+        this.status = status;
     }
 }
