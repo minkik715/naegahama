@@ -158,7 +158,6 @@ public class PostService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
-
         User user = post.getUser();
 
         System.out.println(userDetails.getUser().getId());

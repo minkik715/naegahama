@@ -3,10 +3,7 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
-import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
-import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
-import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
+import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -128,6 +125,7 @@ public class AnswerService
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
+
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
     {
         List<String> urlList = new ArrayList<>();
@@ -143,7 +141,7 @@ public class AnswerService
          return urlList;
     }
 
-    // 요청 글에 달린 answerList
+    // 요청 글에 달린 answerList 조회
     public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
@@ -163,22 +161,37 @@ public class AnswerService
     }
 
 
-
-    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPostRequestDto answerPostRequestDto, List<MultipartFile> multipartFile) throws IOException
+    // 응답글 수정
+    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        List<AnswerFile> fileList = new ArrayList<>();
 
-        for ( MultipartFile file : multipartFile)
-        {
-            String url = s3Uploader.upload(file, "static");
+        answer.Update(answerPutRequestDto);
+
+        // 기존에 있던 포스트파일 제거
+        answerFileRepository.deleteByAnswer(answer);
+        answerVideoRepository.deleteByAnswer(answer);
+
+        // 새로운 이미지 파일 url 배열로 for 반복문을 실행
+        for (String url : answerPutRequestDto.getFile()) {
+            // 이미지 파일 url로 postFile 객체 생성
             AnswerFile fileUrl = new AnswerFile(url);
-            fileList.add(fileUrl);
+
+            // postFile에 savePost를 연관관계 설정
+            fileUrl.setAnswer(answer);
+
+            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
+            AnswerFile saveFile = answerFileRepository.save(fileUrl);
+
+            // 저장된 postFile을 저장된 post에 한개씩 추가함
+            answer.getFileList().add(saveFile);
         }
 
-        answer.Update(answerPostRequestDto,fileList);
+        AnswerVideo videoUrl = new AnswerVideo(answerPutRequestDto.getVideo());
+        videoUrl.setAnswer(answer);
+        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -260,10 +273,10 @@ public class AnswerService
             answerWriter.getAchievement().setAchievement2(1);
         }
 
-        // 최초 평가시 업적 7 획득
-        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement7(1);
+//        // 최초 평가시 업적 7 획득
+//        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+//        achievementUser.getAchievement().setAchievement7(1);
 
 
 
@@ -274,5 +287,8 @@ public class AnswerService
     }
 
 
-
+//    public ResponseEntity<?> temporaryLoad(UserDetailsImpl userDetails)
+//    {
+//
+//    }
 }
