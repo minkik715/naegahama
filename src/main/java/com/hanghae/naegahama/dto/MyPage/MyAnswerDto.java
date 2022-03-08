@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,15 +15,20 @@ public class MyAnswerDto
     private String title;
 //    private String content;
     private LocalDateTime modifiedAt;
-    private Long likeCount;
+    private String nickname;
+    private String imgUrl;
+    private String category;
 //    private Integer answerCount ;
 
-    public MyAnswerDto(Answer answer, Long likeCount)
+    public MyAnswerDto(Answer answer, User user)
     {
         this.answerId = answer.getId();
         this.title = answer.getTitle();
         this.modifiedAt = answer.getModifiedAt();
-        this.likeCount = likeCount;
+        this.nickname = user.getNickName();
+        this.imgUrl = user.getHippoName();
+        this.category = answer.getPost().getCategory();
+
     }
 
 

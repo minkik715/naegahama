@@ -3,11 +3,8 @@ package com.hanghae.naegahama.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
-import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
+import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
-import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.signup.NickNameDuplicateCheckDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
@@ -85,6 +82,12 @@ public class UserController {
     public MyBannerDto myBanner(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return userService.myBanner(userDetails);
+    }
+
+    @GetMapping("/mycount")
+    public MyCountDto mycount(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.mycount(userDetails);
     }
 
 

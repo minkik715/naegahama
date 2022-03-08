@@ -59,7 +59,8 @@ public class PostService {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
 
-        if (content.length() > 1000) {
+        if (content.length() > 1000)
+        {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
 
@@ -100,6 +101,7 @@ public class PostService {
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement5(1);
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
