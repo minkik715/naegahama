@@ -92,7 +92,6 @@ public class User extends Timestamped{
         this.nickName = kakaoUserInfo.getNickname();
         this.kakaoId = kakaoUserInfo.getId();
         this.hippoLevel = 1;
-
     }
 
     public void setBasicInfo(UserInfoRequestDto userInfoRequestDto){

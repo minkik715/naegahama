@@ -6,19 +6,18 @@ import com.hanghae.naegahama.dto.post.PutRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Post extends Timestamped {
+public class Post extends Timestamped implements Comparable<Post>{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
@@ -27,26 +26,9 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    public Post(String title, String content, String category, String level, User user, List<PostFile> fileList) {
-        this.title = title;
-        this.content = content;
-        this.category = category;
-        this.level = level;
-        this.user = user;
-        this.fileList = fileList;
 
-    }
-    public Post(String title, String content, String category, String level, User user, String state) {
-        this.title = title;
-        this.content = content;
-        this.category = category;
-        this.level = level;
-        this.user = user;
-        this.state = state;
-    }
 
-    @Length(max = 10000)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String content;
 
     @Column(nullable = false)
@@ -59,13 +41,16 @@ public class Post extends Timestamped {
     private String state;
 
     @Column
-    private String timeSet;
+    private LocalDateTime deadLine;
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
     @ManyToOne
     private User user;
 
+    public void setDeadLine(LocalDateTime deadLine) {
+        this.deadLine = deadLine;
+    }
 
     @JsonManagedReference
     @OneToMany(mappedBy = "post")
@@ -75,6 +60,27 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post")
     private List<PostFile> fileList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<PostLike> postLikes = new ArrayList<>();
+
+    public Post(String title, String content, String category, String level, User user, List<PostFile> fileList) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.level = level;
+        this.user = user;
+        this.fileList = fileList;
+
+    }
+    public Post(String title, String content, String category, String level, User user, String state, int timeSet) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.level = level;
+        this.user = user;
+        this.state = state;
+        this.deadLine = LocalDateTime.now().plusHours((long)timeSet);
+    }
     public Post(PostRequestDto postRequestDto, User user, String state)
     {
         this.user = user;
@@ -88,6 +94,11 @@ public class Post extends Timestamped {
     public void UpdatePost(PutRequestDto postRequestDto)
     {
         this.content = postRequestDto.getContent();
+    }
+
+    @Override
+    public int compareTo(Post o) {
+        return o.getPostLikes().size() - getPostLikes().size();
     }
 
 

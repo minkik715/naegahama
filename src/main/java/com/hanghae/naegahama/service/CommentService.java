@@ -29,6 +29,7 @@ public class CommentService {
 
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -47,11 +48,10 @@ public class CommentService {
         }
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
+        user.getAchievement().setAchievement4(1);
+
         return ResponseEntity.ok().body(commentResponseDto);
         // 최초 요청글 작성시 업적 4 획득
-/*        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement4(1);*/
     }
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {
