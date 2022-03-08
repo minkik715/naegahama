@@ -44,6 +44,8 @@ public class AnswerService
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
+
+    // 답변글 작성
     @Transactional
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
@@ -75,9 +77,6 @@ public class AnswerService
         videoUrl.setAnswer(saveAnwser);
         AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
 
-
-
-
         // 임시 작성중이던 모든 글 삭제
         List<Answer> deleteList = answerRepository.findAllByUserAndState(user, temporary);
 
@@ -94,6 +93,42 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+    // 답변글 임시 작성
+    public ResponseEntity<?> temporaryAnswer(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
+    {
+        //answer와 연결된 post를 찾고
+        Post post = postRepository.findPostById(postId);
+
+        //filelist가 빈 Answer를 미리 하나 만들어두고
+        Answer answer = new Answer(answerPostRequestDto,post,user, temporary);
+
+        //저장된 Answer을 꺼내와서
+        Answer saveAnwser = answerRepository.save(answer);
+
+        for ( String url : answerPostRequestDto.getFile())
+        {
+            // 이미지 파일 url로 answerFile 객체 생성
+            AnswerFile fileUrl = new AnswerFile(url);
+
+            // answerFile saveanswer를 연관관계 설정
+            fileUrl.setAnswer(saveAnwser);
+
+            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
+            AnswerFile saveFile = answerFileRepository.save(fileUrl);
+
+            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
+            saveAnwser.getFileList().add(saveFile);
+        }
+
+        AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
+        videoUrl.setAnswer(saveAnwser);
+        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+
 
 
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
@@ -231,6 +266,7 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
 
 
 }

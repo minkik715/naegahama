@@ -48,8 +48,11 @@ public class PostService {
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException {
-        if (postRequestDto.getTitle() == null) {
+
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user)
+    {
+        if (postRequestDto.getTitle() == null)
+        {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
 
@@ -173,16 +176,22 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
-        // 기존에 있던 이미지 파일 S3에서 삭제
-        for (PostFile deleteS3 : post.getFileList()) {
-            String[] fileKey = deleteS3.getUrl().split("static/");
-            try {
-                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
-                s3Uploader.deleteS3("static/" + decodeKey);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
+
+//        // 기존에 있던 이미지 파일 S3에서 삭제
+//        for ( PostFile deleteS3 : post.getFileList())
+//        {
+//            String[] fileKey = deleteS3.getUrl().split("static/");
+//            try
+//            {
+//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
+//                s3Uploader.deleteS3("static/" + decodeKey);
+//            }
+//            catch (UnsupportedEncodingException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
+
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 
@@ -304,7 +313,8 @@ public class PostService {
                 userIdList,
                 fileList,
                 post.getLevel(),
-                post.getCategory());
+                post.getCategory()
+                );
 
         return ResponseDto;
     }
