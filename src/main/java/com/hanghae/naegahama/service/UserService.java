@@ -197,9 +197,11 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
+    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
+    {
         user.setBasicInfo(userInfoRequestDto);
         userRepository.save(user);
+
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
@@ -211,7 +213,5 @@ public class UserService {
         Long answerCount = answerRepository.countByUser(user);
 
         return new MyCountDto(user,postCount,answerCount);
-
-
     }
 }
