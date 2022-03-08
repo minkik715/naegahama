@@ -18,7 +18,8 @@ public class NaegahamaApplication {
             + "classpath:application.yml,"
             + "classpath:aws.yml";
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         new SpringApplicationBuilder(NaegahamaApplication.class)
                 .properties(APPLICATION_LOCATIONS)
                 .run(args);
