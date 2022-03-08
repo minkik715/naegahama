@@ -203,6 +203,7 @@ public class AnswerService
 
         answerLikeRepository.deleteByAnswer(answer);
         answerFileRepository.deleteByAnswer(answer);
+        answerVideoRepository.deleteByAnswer(answer);
         commentRepository.deleteByAnswer(answer);
 
         answerRepository.deleteById(answerId);
