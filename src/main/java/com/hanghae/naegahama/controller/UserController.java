@@ -50,8 +50,10 @@ public class UserController {
         return userService.kakaoSignup(param.get("kakaoToken").toString());
     }
 
-    @PostMapping("/user")
+    @PostMapping("/userinfo")
     public ResponseEntity<?> setUserInfo(@RequestBody UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        log.info("userinfoRequestDto = {} ", userInfoRequestDto );
+        log.info("username = {}", userDetails.getUser().getNickName());
         return userService.setUserInfo(userDetails.getUser(),userInfoRequestDto);
     }
     @GetMapping("/mypost")

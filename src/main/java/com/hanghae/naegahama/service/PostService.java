@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -236,7 +234,7 @@ public class PostService {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
             LocalDateTime deadLine = post.getDeadLine();
-            String timeSet = getDeadLine(deadLine);
+            String timeSet = getDeadLine(post);
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
@@ -275,7 +273,7 @@ public class PostService {
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
         }
-        getDeadLine(post.getDeadLine());
+        getDeadLine(post);
 
         ResponseDto ResponseDto = new ResponseDto(
                 post.getId(),
@@ -290,7 +288,7 @@ public class PostService {
                 fileList,
                 post.getLevel(),
                 post.getCategory(),
-                getDeadLine(post.getDeadLine()),
+                getDeadLine(post),
                 post.getStatus());
 
 
@@ -320,7 +318,7 @@ public class PostService {
                     post.getModifiedAt(),
                     answerCount,
                     postLikeCount,
-                    getDeadLine(post.getDeadLine()),
+                    getDeadLine(post),
                     post.getStatus()
             );
             response.add(categoryResponseDto);
@@ -341,76 +339,115 @@ public class PostService {
         Comparator<Post> comparator = new Comparator<Post>() {
             @Override
             public int compare(Post o1, Post o2) {
-                if(o1.getDeadLine().isBefore(o2.getDeadLine())){
+                if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
                     return -1;
-                }else if (!o1.getDeadLine().isBefore(o2.getDeadLine())){
+                } else if (!o1.getDeadLine().isBefore(o2.getDeadLine())) {
                     return 1;
-                }else{
+                } else {
                     return 0;
                 }
             }
         };
         List<Post> posts;
-        if (sort.equals("like")) {
-            if (category.equals("all")) {
-                posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
-            } else {
-                posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
-            }
-            Collections.sort(posts);
-        } else if(sort.equals("time")) {
-            if (category.equals("all")) {
-                posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
-            } else {
-                posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
-            }
-            Collections.sort(posts,comparator);
-        }else{
-            posts = null;
-        }
-
-
         List<PostResponseDto> response = new ArrayList<>();
+        List<PostResponseDto> tempresponse = new ArrayList<>();
+        if (category.equals("all")) {
+            posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
+        } else {
+            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
+        }
         if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
-        for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            PostResponseDto categoryResponseDto = new PostResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    post.getModifiedAt(),
-                    answerCount,
-                    postLikeCount,
-                    getDeadLine(post.getDeadLine()),
-                    post.getStatus()
-            );
-            response.add(categoryResponseDto);
+        if (sort.equals("like")) {
+            Collections.sort(posts);
+
+            for (Post post : posts) {
+                Integer answerCount = answerRepository.countByPost(post);
+                Long postLikeCount = postLikeRepository.countByPost(post);
+                PostResponseDto categoryResponseDto = new PostResponseDto(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getModifiedAt(),
+                        answerCount,
+                        postLikeCount,
+                        getDeadLine(post),
+                        post.getStatus()
+                );
+                response.add(categoryResponseDto);
+            }
+        } else if (sort.equals("time")) {
+            Collections.sort(posts, comparator);
+            for (Post post : posts) {
+                if (post.getStatus().equals("true")) {
+                    Integer answerCount = answerRepository.countByPost(post);
+                    Long postLikeCount = postLikeRepository.countByPost(post);
+                    PostResponseDto categoryResponseDto = new PostResponseDto(
+                            post.getId(),
+                            post.getTitle(),
+                            post.getContent(),
+                            post.getModifiedAt(),
+                            answerCount,
+                            postLikeCount,
+                            getDeadLine(post),
+                            post.getStatus()
+                    );
+                    response.add(categoryResponseDto);
+                } else {
+                    Integer answerCount = answerRepository.countByPost(post);
+                    Long postLikeCount = postLikeRepository.countByPost(post);
+                    PostResponseDto categoryResponseDto = new PostResponseDto(
+                            post.getId(),
+                            post.getTitle(),
+                            post.getContent(),
+                            post.getModifiedAt(),
+                            answerCount,
+                            postLikeCount,
+                            getDeadLine(post),
+                            post.getStatus()
+                    );
+                    tempresponse.add(categoryResponseDto);
+                }
+            }
+            response.addAll(tempresponse);
+
+        } else {
+            throw new PostNotFoundException("글이 존재하지 않습니다");
         }
+
+
+        response.addAll(tempresponse);
         return ResponseEntity.ok().body(response);
     }
 
-    private String getDeadLine(LocalDateTime deadLine) {
+
+    private String getDeadLine(Post post) {
         String timeSet;
+        LocalDateTime deadLine = post.getDeadLine();
         long minutes = 61;
         if (deadLine.isBefore(LocalDateTime.now())) {
+            post.setStatus("false");
             timeSet = "마감된 요청글 입니다.";
         } else {
-            long hour = ChronoUnit.HOURS.between(LocalDateTime.now(), deadLine);
-            timeSet = hour + "시간 후 마감";
+            minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+            int hour = (int) (minutes / 60);
+            minutes = minutes % 60;
+            timeSet = "마감 " + hour + "시간 " + minutes + "분 전";
+
             if (hour < 1) {
                 minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                timeSet = minutes + "분 후 마감";
+                timeSet = "마감 " + minutes + "분 전";
 
             }
             if (minutes < 1) {
                 long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
-                timeSet = seconds + "초 후 마감";
+                timeSet = "마감 " + seconds + "초 전";
 
             }
         }
         return timeSet;
     }
 }
+
+
