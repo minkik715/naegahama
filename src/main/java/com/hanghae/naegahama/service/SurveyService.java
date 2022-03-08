@@ -12,7 +12,6 @@ import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -102,9 +101,7 @@ public class SurveyService {
         user.setHippoName(hippo);
 
         // 최초 요청글 작성시 업적 5 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement6(1);
+        user.getAchievement().setAchievement6(1);
 
         userRepository.save(user);
 

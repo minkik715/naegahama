@@ -3,7 +3,6 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.category.CategoryResponseDto;
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -24,7 +22,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @EnableAutoConfiguration
@@ -35,7 +35,6 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
 
@@ -43,40 +42,33 @@ public class PostService {
 
     private final PostFileRepository postFileRepository;
 
-    private final UserRepository userRepository;
 
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException
-    {
-        if (postRequestDto.getTitle() == null)
-        {
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException {
+        if (postRequestDto.getTitle() == null) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
 
         String content = postRequestDto.getContent();
-        if (postRequestDto.getContent() == null)
-        {
+        if (postRequestDto.getContent() == null) {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
 
-        if (content.length() > 1000)
-        {
+        if (content.length() > 1000) {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
 
-        // 전달받은 정보로 post 객체 생성
-        Post post = new Post(postRequestDto, user, publishing);
+        // 전달받은 정보로 post 객체 생성;
 
         //객체 저장 및 저장된 post 꺼내옴
-        Post savePost = postRepository.save(post);
+        Post savePost = postRepository.save(new Post(postRequestDto, user, publishing));
 
         // 이미지 파일 url 배열로 for 반복문을 실행
-        for ( String url : postRequestDto.getFile())
-        {
+        for (String url : postRequestDto.getFile()) {
             // 이미지 파일 url로 postFile 객체 생성
             PostFile fileUrl = new PostFile(url);
 
@@ -92,15 +84,13 @@ public class PostService {
 
         // 잔여시간 처리
         LocalDateTime deadline = savePost.getCreatedAt().plusHours(postRequestDto.getTimeSet());
+        savePost.setDeadLine(deadline);
 
-        String time = deadline.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"));
-        savePost.setTimeSet(time);
 
         // 임시 작성중이던 모든 글 삭제
         List<Post> deleteList = postRepository.findAllByUserAndState(user, temporary);
 
-        for ( Post deletePost : deleteList)
-        {
+        for (Post deletePost : deleteList) {
             postFileRepository.deleteByPost(deletePost);
             postRepository.deleteById(deletePost.getId());
         }
@@ -108,17 +98,14 @@ public class PostService {
 
         // 퍼블리싱 이벤트? 그거 써서 처리해야함.
         // 최초 요청글 작성시 업적 5 획득
-//        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-//        achievementUser.getAchievement().setAchievement5(1);
+        user.getAchievement().setAchievement5(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
     }
 
     // 요청글 임시 저장
-    public ResponseEntity<?> temporaryPost(PostRequestDto postRequestDto, User user)
-    {
+    public ResponseEntity<?> temporaryPost(PostRequestDto postRequestDto, User user) {
         // 전달받은 정보로 post 객체 생성
         Post post = new Post(postRequestDto, user, temporary);
 
@@ -126,8 +113,7 @@ public class PostService {
         Post savePost = postRepository.save(post);
 
         // 이미지 파일 url 배열로 for 반복문을 실행
-        for ( String url : postRequestDto.getFile())
-        {
+        for (String url : postRequestDto.getFile()) {
             // 이미지 파일 url로 postFile 객체 생성
             PostFile fileUrl = new PostFile(url);
 
@@ -146,16 +132,14 @@ public class PostService {
     }
 
     // 요청글 불러오기
-    public ResponseEntity<?> temporaryLoad(UserDetailsImpl userDetails)
-    {
+    public ResponseEntity<?> temporaryLoad(UserDetailsImpl userDetails) {
         List<GetTemporaryResponseDto> getTemporaryResponseDtoList = new ArrayList<>();
 
         User user = userDetails.getUser();
 
         List<Post> postList = postRepository.findAllByUserAndState(user, temporary);
 
-        for ( Post post : postList)
-        {
+        for (Post post : postList) {
             GetTemporaryResponseDto getTemporaryResponseDto = new GetTemporaryResponseDto(post);
             getTemporaryResponseDtoList.add(getTemporaryResponseDto);
         }
@@ -166,8 +150,7 @@ public class PostService {
 
     //요청글 수정
     @Transactional
-    public ResponseEntity<?> updatePost(Long id, PutRequestDto postRequestDto, UserDetailsImpl userDetails)
-    {
+    public ResponseEntity<?> updatePost(Long id, PutRequestDto postRequestDto, UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
@@ -178,8 +161,7 @@ public class PostService {
         System.out.println(userDetails.getUser().getId());
         System.out.println(user.getId());
 
-        if (!userDetails.getUser().getId().equals(user.getId()))
-        {
+        if (!userDetails.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
 
@@ -192,16 +174,12 @@ public class PostService {
         post.UpdatePost(postRequestDto);
 
         // 기존에 있던 이미지 파일 S3에서 삭제
-        for ( PostFile deleteS3 : post.getFileList())
-        {
+        for (PostFile deleteS3 : post.getFileList()) {
             String[] fileKey = deleteS3.getUrl().split("static/");
-            try
-            {
+            try {
                 String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
                 s3Uploader.deleteS3("static/" + decodeKey);
-            }
-            catch (UnsupportedEncodingException e)
-            {
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
@@ -209,8 +187,7 @@ public class PostService {
         postFileRepository.deleteByPost(post);
 
         // 새로운 이미지 파일 url 배열로 for 반복문을 실행
-        for ( String url : postRequestDto.getFile())
-        {
+        for (String url : postRequestDto.getFile()) {
             // 이미지 파일 url로 postFile 객체 생성
             PostFile fileUrl = new PostFile(url);
 
@@ -255,16 +232,36 @@ public class PostService {
         List<Post> posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
         List<PostResponseDto> response = new ArrayList<>();
 
+
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
+            LocalDateTime deadLine = post.getDeadLine();
+            String timeSet;
+            long minutes = 61;
+            if (deadLine.isBefore(LocalDateTime.now())) {
+                timeSet = "마감된 요청글 입니다.";
+            } else {
+                long hour = ChronoUnit.HOURS.between(LocalDateTime.now(),deadLine);
+                timeSet = hour + "시간 후 마감";
+                if (hour < 1) {
+                    minutes = ChronoUnit.MINUTES.between( LocalDateTime.now(),deadLine);
+                    timeSet = minutes + "분 후 마감";
+
+                }if (minutes < 1) {
+                    long seconds = ChronoUnit.SECONDS.between( LocalDateTime.now(),deadLine);
+                    timeSet = seconds + "초 후 마감";
+
+                }
+            }
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getModifiedAt(),
                     answerCount,
-                    postLikeCount
+                    postLikeCount,
+                    timeSet
             );
             response.add(postResponseDto);
         }
@@ -319,7 +316,7 @@ public class PostService {
         if (category.equals("all")) {
             posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
         } else {
-            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category,publishing);
+            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
         }
         List<CategoryResponseDto> response = new ArrayList<>();
         if (posts == null) {
@@ -343,11 +340,40 @@ public class PostService {
     }
 
 
-    public ResponseEntity<?> getTimeSet(Long postId)
-    {
+    /*public ResponseEntity<?> getTimeSet(Long postId) {
         Post post = postRepository.getById(postId);
 
         GetTimeSetDto getTimeSetDto = new GetTimeSetDto(post);
         return ResponseEntity.ok().body(getTimeSetDto);
+    }*/
+
+    public ResponseEntity<?> getPostByCategoryAndSort(String category, String sort) {
+        List<Post> posts;
+        if (category.equals("all")) {
+            posts = postRepository.findAllByStateOrderByCreatedAtDesc(publishing);
+        } else {
+            posts = postRepository.findAllByCategoryAndStateOrderByCreatedAtDesc(category, publishing);
+            Collections.sort(posts);
+        }
+
+        List<CategoryResponseDto> response = new ArrayList<>();
+        if (posts == null) {
+            throw new PostNotFoundException("글이 존재하지 않습니다");
+        }
+        for (Post post : posts) {
+            Integer answerCount = answerRepository.countByPost(post);
+            Long postLikeCount = postLikeRepository.countByPost(post);
+            CategoryResponseDto categoryResponseDto = new CategoryResponseDto(
+                    post.getId(),
+                    post.getTitle(),
+                    post.getContent(),
+                    post.getModifiedAt(),
+                    answerCount,
+                    postLikeCount
+
+            );
+            response.add(categoryResponseDto);
+        }
+        return ResponseEntity.ok().body(response);
     }
 }

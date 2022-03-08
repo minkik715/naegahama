@@ -1,8 +1,8 @@
 package com.hanghae.naegahama.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
 import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/user/kakaoLogin")
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> param){
+    public ResponseEntity<?> login(@RequestBody Map<String, Object> param) throws JsonProcessingException {
         return userService.kakaoSignup(param.get("kakaoToken").toString());
     }
 

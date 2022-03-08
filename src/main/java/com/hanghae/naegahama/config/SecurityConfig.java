@@ -34,11 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 기본 로그인 방식 안쓸거임.
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers(HttpMethod.GET,"/chatting/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/**").permitAll()
                 .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/pub").permitAll()
-                .antMatchers("/sub").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())    // 추가
@@ -51,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+       // configuration.addAllowedOrigin("http://hyunee.shop.s3-website.ap-northeast-2.amazonaws.com");
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

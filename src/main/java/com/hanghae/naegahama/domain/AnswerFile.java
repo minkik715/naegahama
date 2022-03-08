@@ -3,7 +3,6 @@ package com.hanghae.naegahama.domain;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -17,8 +16,8 @@ public class AnswerFile extends Timestamped{
     @Column(name = "file_id")
     private Long id;
 
-    @Length(max=1000)
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 1000)
     private String url;
 
     public AnswerFile(String url, Answer answer) {
