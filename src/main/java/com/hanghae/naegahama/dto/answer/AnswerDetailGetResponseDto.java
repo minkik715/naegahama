@@ -37,7 +37,10 @@ public class AnswerDetailGetResponseDto
 
     private List<String> fileList;
 
-    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList, List<String> fileList, String category) {
+    private String video;
+
+    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList,
+                                      List<String> fileList, String category) {
         this.answerId = answer.getId();
         this.requestWriterId = answer.getPost().getUser().getId();
         this.answerWriterId = answer.getId();
@@ -51,6 +54,7 @@ public class AnswerDetailGetResponseDto
         this.likeUserList = likeUserList;
         this.fileList = fileList;
         this.category = category;
+        this.video = answer.getAnswerVideo().getUrl();
 
     }
 

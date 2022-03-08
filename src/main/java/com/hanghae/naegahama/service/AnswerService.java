@@ -128,9 +128,6 @@ public class AnswerService
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-
-
-
     public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
     {
         List<String> urlList = new ArrayList<>();
@@ -201,6 +198,7 @@ public class AnswerService
     }
 
 
+    // 답변글 상세 조회
     public AnswerDetailGetResponseDto answerDetail(Long answerId, UserDetailsImpl userDetails)
     {
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
@@ -213,6 +211,7 @@ public class AnswerService
         List<Long> likeUserList = new ArrayList<>();
 
         List<AnswerFile> findAnswerFileList = answerFileRepository.findAllByAnswerOrderByCreatedAt(answer);
+
         List<String> fileList = new ArrayList<>();
         for (AnswerFile answerFile : findAnswerFileList) {
             fileList.add(answerFile.getUrl());
@@ -221,6 +220,13 @@ public class AnswerService
         {
             likeUserList.add(likeUser.getUser().getId());
         }
+
+//        AnswerVideo answerVideo = answerVideoRepository.findByAnswer(answer).orElseThrow(
+//                () -> new IllegalArgumentException("비디오가 존재하지 않습니다."));
+
+
+
+
 
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList, answer.getPost().getCategory());
 

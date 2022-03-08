@@ -257,7 +257,8 @@ public class PostService {
                     minutes = ChronoUnit.MINUTES.between( LocalDateTime.now(),deadLine);
                     timeSet = minutes + "분 후 마감";
 
-                }if (minutes < 1) {
+                }if (minutes < 1)
+                {
                     long seconds = ChronoUnit.SECONDS.between( LocalDateTime.now(),deadLine);
                     timeSet = seconds + "초 후 마감";
 
@@ -278,8 +279,8 @@ public class PostService {
     }
 
     //요청글 상세조회.
-    public ResponseDto getPost1(Long postId) {
-
+    public ResponseDto getPost1(Long postId)
+    {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
         );
