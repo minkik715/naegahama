@@ -15,10 +15,10 @@ public class PostResponseDto {
     private Integer answerCount;
     private Long postLikeCount;
     private String timeSet;
-
+    private String status;
 
     public PostResponseDto(Long id, String title, String content, LocalDateTime modifiedAt,
-                           Integer answerCount, Long postLikeCount, String timeSet) {
+                           Integer answerCount, Long postLikeCount, String timeSet,String status) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -26,6 +26,7 @@ public class PostResponseDto {
         this.answerCount = answerCount;
         this.postLikeCount = postLikeCount;
         this.timeSet = timeSet;
+        this.status = status;
 
     }
 }

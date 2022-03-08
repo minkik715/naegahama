@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Post extends Timestamped implements Comparable<Post>{
+public class Post extends Timestamped implements Comparable<Post> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,9 @@ public class Post extends Timestamped implements Comparable<Post>{
 
     @Column
     private String state;
+
+    @Column
+    private String status;
 
     @Column
     private LocalDateTime deadLine;
@@ -70,8 +74,9 @@ public class Post extends Timestamped implements Comparable<Post>{
         this.level = level;
         this.user = user;
         this.fileList = fileList;
-
+        this.status = "true";
     }
+
     public Post(String title, String content, String category, String level, User user, String state, int timeSet) {
         this.title = title;
         this.content = content;
@@ -79,8 +84,10 @@ public class Post extends Timestamped implements Comparable<Post>{
         this.level = level;
         this.user = user;
         this.state = state;
+        this.status = "true";
         this.deadLine = LocalDateTime.now().plusHours((long)timeSet);
     }
+
     public Post(PostRequestDto postRequestDto, User user, String state)
     {
         this.user = user;
@@ -89,6 +96,8 @@ public class Post extends Timestamped implements Comparable<Post>{
         this.category = postRequestDto.getCategory();
         this.level = postRequestDto.getLevel();
         this.state = state;
+        this.status = "true";
+
     }
 
     public void UpdatePost(PutRequestDto postRequestDto)
@@ -99,6 +108,10 @@ public class Post extends Timestamped implements Comparable<Post>{
     @Override
     public int compareTo(Post o) {
         return o.getPostLikes().size() - getPostLikes().size();
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 
