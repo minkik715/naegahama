@@ -18,4 +18,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<Answer> findByUserAndStar (User user, Long star);
 
     List<Answer> findAllByUserAndState(User user, String state);
+
+    Long countByUser(User user);
 }

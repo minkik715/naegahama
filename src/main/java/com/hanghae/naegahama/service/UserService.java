@@ -8,12 +8,9 @@ import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
-import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
+import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
-import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
-import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
@@ -138,9 +135,9 @@ public class UserService {
 
         List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
 
-        for (Post post : postList) {
-            Long likeCount = postLikeRepository.countByPost(post);
-            MyPostDto postMyPageDto = new MyPostDto(post, likeCount);
+        for (Post post : postList)
+        {
+            MyPostDto postMyPageDto = new MyPostDto(post, user);
             myPageDtoList.add(postMyPageDto);
         }
 
@@ -153,8 +150,8 @@ public class UserService {
 
         List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
         for (Answer answer : answerList) {
-            Long likeCount = answerLikeRepository.countByAnswer(answer);
-            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, likeCount);
+
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user);
             myAnswerDtoList.add(myAnswerDto);
         }
         return myAnswerDtoList;
@@ -204,5 +201,17 @@ public class UserService {
         user.setBasicInfo(userInfoRequestDto);
         userRepository.save(user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    public MyCountDto mycount(UserDetailsImpl userDetails)
+    {
+        User user = userDetails.getUser();
+
+        Long postCount = postRepository.countByUser(user);
+        Long answerCount = answerRepository.countByUser(user);
+
+        return new MyCountDto(user,postCount,answerCount);
+
+
     }
 }
