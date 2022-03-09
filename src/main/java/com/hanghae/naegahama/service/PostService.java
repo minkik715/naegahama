@@ -35,16 +35,9 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
-
-    private final S3Uploader s3Uploader;
-
     private final PostFileRepository postFileRepository;
-
-    private final UserRepository userRepository;
-
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
@@ -191,20 +184,20 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
-        // 기존에 있던 이미지 파일 S3에서 삭제
-        for ( PostFile deleteS3 : post.getFileList())
-        {
-            String[] fileKey = deleteS3.getUrl().split("static/");
-            try
-            {
-                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
-                s3Uploader.deleteS3("static/" + decodeKey);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-            }
-        }
+//        // 기존에 있던 이미지 파일 S3에서 삭제
+//        for ( PostFile deleteS3 : post.getFileList())
+//        {
+//            String[] fileKey = deleteS3.getUrl().split("static/");
+//            try
+//            {
+//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
+//                s3Uploader.deleteS3("static/" + decodeKey);
+//            }
+//            catch (UnsupportedEncodingException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 

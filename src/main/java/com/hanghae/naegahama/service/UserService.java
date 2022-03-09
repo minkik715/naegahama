@@ -15,6 +15,7 @@ import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
+import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
@@ -119,9 +120,9 @@ public class UserService {
         throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
     }
 
-    public ResponseEntity<?> emailCheck(String email) {
-        Optional<User> byEmail = userRepository.findByEmail(email);
-        if (byEmail.isPresent()) {
+    public ResponseEntity<?> nicknameCheck(String nickname) {
+        Optional<User> findNickname = userRepository.findByNickName(nickname);
+        if (findNickname.isPresent()) {
             return ResponseEntity.ok().body(new BasicResponseDto("false"));
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
@@ -195,5 +196,16 @@ public class UserService {
     public ResponseEntity<?> userprofile(User user) {
         UserResponseDto userResponse = new UserResponseDto(user);
         return ResponseEntity.ok().body(userResponse);
+    }
+
+    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
+
+
+        try {
+            user.setBasicInfo(userInfoRequestDto);
+        }catch (Exception ignored){
+            throw new IllegalArgumentException("틀린 인자입니다.");
+        }
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }

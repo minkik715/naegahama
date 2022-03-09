@@ -3,6 +3,7 @@ package com.hanghae.naegahama.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
+import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class User extends Timestamped{
     @Column( nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String nickName;
 
     @Column(name = "password")
@@ -39,7 +40,17 @@ public class User extends Timestamped{
     private Long kakaoId;
 
     @Column
-    private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
+    private String hippoName;  //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
+
+    @Column
+    private String category;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String age;
+
 
     @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
@@ -58,6 +69,11 @@ public class User extends Timestamped{
     @OneToOne
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
+
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "user")
+    private List<Search> searchWord = new ArrayList<>();
 
     public User(String email, String nickName, String password, int point) {
         this.email = email;
@@ -83,6 +99,13 @@ public class User extends Timestamped{
         this.hippoLevel = 1;
 
     }
+
+    public void setBasicInfo(UserInfoRequestDto userInfoRequestDto){
+        this.nickName = userInfoRequestDto.getNickname();
+        this.gender = userInfoRequestDto.getGender();
+        this.age = userInfoRequestDto.getAge();
+        this.category = userInfoRequestDto.getCategory();
+    }
     public void setHippoLevel(Integer hippoLevel) {
         this.hippoLevel = hippoLevel;
     }
@@ -99,5 +122,9 @@ public class User extends Timestamped{
     public void setAchievement(Achievement achievement)
     {
         this.achievement = achievement;
+    }
+
+    public void setSearch(List<Search> searchWord) {
+        this.searchWord = searchWord;
     }
 }
