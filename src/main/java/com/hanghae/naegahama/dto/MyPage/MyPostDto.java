@@ -2,6 +2,7 @@ package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +29,8 @@ public class MyPostDto
         this.title = post.getTitle();
         this.modifiedAt = post.getModifiedAt();
         this.nickname = user.getNickName();
-        this.imgUrl = user.getHippoName();
         this.category = post.getCategory();
+        this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
 //        this.likeCount = likeCount;
 
     }

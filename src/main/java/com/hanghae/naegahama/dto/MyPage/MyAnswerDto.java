@@ -2,6 +2,7 @@ package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,7 @@ public class MyAnswerDto
         this.title = answer.getTitle();
         this.modifiedAt = answer.getModifiedAt();
         this.nickname = user.getNickName();
-        this.imgUrl = user.getHippoName();
+        this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
         this.category = answer.getPost().getCategory();
 
     }

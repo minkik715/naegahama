@@ -149,7 +149,8 @@ public class UserService {
         User user = userDetails.getUser();
 
         List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
-        for (Answer answer : answerList) {
+        for (Answer answer : answerList)
+        {
 
             MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user);
             myAnswerDtoList.add(myAnswerDto);
