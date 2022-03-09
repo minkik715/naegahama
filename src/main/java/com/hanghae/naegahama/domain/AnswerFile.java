@@ -23,6 +23,7 @@ public class AnswerFile extends Timestamped{
     public AnswerFile(String url, Answer answer) {
         this.url = url;
         this.answer = answer;
+        this.status = true;
     }
 
     @JsonManagedReference
@@ -30,12 +31,20 @@ public class AnswerFile extends Timestamped{
     @ManyToOne
     private Answer answer;
 
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    private Boolean status;
+
     public void setAnswer(Answer answer) {
         this.answer = answer;
     }
 
     public AnswerFile(String url)
     {
+        this.status = true;
+
         this.url = url;
     }
 }

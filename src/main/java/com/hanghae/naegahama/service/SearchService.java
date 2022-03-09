@@ -37,7 +37,7 @@ public class SearchService {
 
     //검색키워드 유저정보에 저장.
     public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
-
+        log.info("searchWord = {}", searchWord);
         if (userDetails == null) {
         } else {
             User user = userDetails.getUser();
@@ -50,16 +50,20 @@ public class SearchService {
         List<SearchRequest> searchRequests = new ArrayList<>();
 
         Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
-        if (posts == null) {
+        if (posts.size()==0) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
+            String file = null;
+            if (post.getFileList().size() !=0) {
+                file = post.getFileList().get(0).getUrl();
+            }
             SearchRequest searchRequest = new SearchRequest(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
-                    post.getFileList().get(0).getUrl(),
-                    post.getModifiedAt()
+                    post.getModifiedAt(),
+                    file
             );
             searchRequests.add(searchRequest);
         }
@@ -74,20 +78,26 @@ public class SearchService {
 
     //답변글 검색
     public SearchAnswerRequest answerSearchList(String searchWord) {
+
+        log.info("searchWord = {}", searchWord);
         List<Answer> Answers = answerRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
         List<SearchRequest> searchRequests = new ArrayList<>();
 
         Integer postCount = postRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
-        if (Answers == null) {
+        if (Answers.size() == 0) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Answer Answer : Answers) {
+            String file = null;
+            if(Answer.getFileList().size() !=0){
+                file = Answer.getFileList().get(0).getUrl();
+            }
             SearchRequest searchRequest = new SearchRequest(
                     Answer.getId(),
                     Answer.getTitle(),
                     Answer.getContent(),
-                    Answer.getFileList().get(0).getUrl(),
-                    Answer.getModifiedAt()
+                    Answer.getModifiedAt(),
+                    file
             );
             searchRequests.add(searchRequest);
         }

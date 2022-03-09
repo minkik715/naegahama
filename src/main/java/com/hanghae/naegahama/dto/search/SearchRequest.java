@@ -15,12 +15,16 @@ public class SearchRequest {
     private String file;
     private LocalDateTime modifiedAt;
 
-    public SearchRequest(Long id, String title, String content, String file,
-                         LocalDateTime modifiedAt) {
+    public SearchRequest(Long id, String title, String content,
+                         LocalDateTime modifiedAt, String file) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.file = file;
+        this.file =file;
         this.modifiedAt = modifiedAt;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }
