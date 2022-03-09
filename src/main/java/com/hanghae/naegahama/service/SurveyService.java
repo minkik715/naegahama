@@ -4,7 +4,6 @@ import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
-
 import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
@@ -105,7 +104,6 @@ public class SurveyService {
         user.getAchievement().setAchievement6(1);
 
         userRepository.save(user);
-
 
     }
 

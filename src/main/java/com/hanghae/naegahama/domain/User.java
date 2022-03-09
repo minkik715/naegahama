@@ -41,7 +41,7 @@ public class User extends Timestamped{
     private Long kakaoId;
 
     @Column
-    private String hippoName;    //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
+    private String hippoName;  //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
 
     @Column
     private String category;
@@ -73,6 +73,11 @@ public class User extends Timestamped{
     @OneToOne
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
+
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "user")
+    private List<Search> searchWord = new ArrayList<>();
 
     public User(String email, String nickName, String password, int point) {
         this.email = email;
@@ -125,5 +130,9 @@ public class User extends Timestamped{
     public void setAchievement(Achievement achievement)
     {
         this.achievement = achievement;
+    }
+
+    public void setSearch(List<Search> searchWord) {
+        this.searchWord = searchWord;
     }
 }
