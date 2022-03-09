@@ -34,12 +34,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+
     private final UserRepository userRepository;
 
     private final S3Uploader s3Uploader;
 
-    private final PostFileRepository postFileRepository;
 
+    private final PostFileRepository postFileRepository;
 
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
@@ -174,6 +175,7 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
+
         // 기존에 있던 이미지 파일 S3에서 삭제
        /* for (PostFile deleteS3 : post.getFileList()) {
             String[] fileKey = deleteS3.getUrl().split("static/");
@@ -184,6 +186,7 @@ public class PostService {
                 e.printStackTrace();
             }
         }*/
+
 
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);

@@ -15,9 +15,14 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findAllByPostIdOrderByCreatedAt(Long id);
     Integer countByPost(Post post);
     List<Answer> findAllByUserOrderByModifiedAtDesc ( User user);
-    Optional<Answer> findByUserAndStar (User user, Long star);
 
     List<Answer> findAllByUserAndState(User user, String state);
 
+
     Long countByUser(User user);
+
+    // 검색된 키워드 불러오기.
+    List<Answer> findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(String searchWord, String searchWord2);    // 최신순
+    Integer countByContentContainingOrTitleContaining(String searchWord, String searchWord2);
 }
+
