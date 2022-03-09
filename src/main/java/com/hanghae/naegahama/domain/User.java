@@ -7,6 +7,7 @@ import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class User extends Timestamped{
     @Column
     private String age;
 
+    @Column
+    private String userStatus;
+
 
     @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
@@ -81,6 +85,7 @@ public class User extends Timestamped{
         this.password = password;
         this.point = point;
         this.hippoLevel = 1;
+        this.userStatus = "true";
 
     }
 
@@ -89,6 +94,7 @@ public class User extends Timestamped{
         this.nickName = signUpRequestDto.getNickname();
         this.password = password;
         this.hippoLevel = 1;
+        this.userStatus = "true";
 
 
     }
@@ -97,14 +103,16 @@ public class User extends Timestamped{
         this.nickName = kakaoUserInfo.getNickname();
         this.kakaoId = kakaoUserInfo.getId();
         this.hippoLevel = 1;
-
+        this.userStatus = "true";
     }
 
+    @Transactional
     public void setBasicInfo(UserInfoRequestDto userInfoRequestDto){
         this.nickName = userInfoRequestDto.getNickname();
         this.gender = userInfoRequestDto.getGender();
         this.age = userInfoRequestDto.getAge();
         this.category = userInfoRequestDto.getCategory();
+        this.userStatus = "false";
     }
     public void setHippoLevel(Integer hippoLevel) {
         this.hippoLevel = hippoLevel;

@@ -19,6 +19,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findAllByUserAndState(User user, String state);
 
     // 검색된 키워드 불러오기.
-    List<Answer> findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(String searchWord);    // 최신순
-    Long countByPost(Answer answer);
+    List<Answer> findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(String searchWord, String searchWord2);    // 최신순
+    Integer countByContentContainingOrTitleContaining(String searchWord, String searchWord2);
 }

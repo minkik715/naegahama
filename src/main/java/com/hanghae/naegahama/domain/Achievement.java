@@ -52,6 +52,7 @@ public class Achievement extends Timestamped
         this.achievement8 = 0;
         this.achievement9 = 0;
         this.user = user;
+        user.setAchievement(this);
     }
 
 }

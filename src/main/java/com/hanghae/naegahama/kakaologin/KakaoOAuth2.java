@@ -1,25 +1,31 @@
 package com.hanghae.naegahama.kakaologin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
-@Component
-public class KakaoOAuth2 {
-    public KakaoUserInfo getUserInfo(String accessToken) {
-        // 2. 액세스 토큰 -> 카카오 사용자 정보
-        KakaoUserInfo userInfo = getUserInfoByToken(accessToken);
 
-        return userInfo;
+@Component
+@Slf4j
+@Transactional
+public class KakaoOAuth2 {
+    public KakaoUserInfo getUserInfo(String accessToken) throws JsonProcessingException {
+        // 2. 액세스 토큰 -> 카카오 사용자 정보
+        return getUserInfoByToken(accessToken);
     }
 
-    private KakaoUserInfo getUserInfoByToken(String accessToken) {
+    private KakaoUserInfo getUserInfoByToken(String accessToken) throws JsonProcessingException {
         // HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -37,23 +43,21 @@ public class KakaoOAuth2 {
                 String.class
         );
 
-        JSONObject body = new JSONObject(response.getBody());
-        Long id = body.getLong("id");
-        String email = null;
-        if(!body.getJSONObject("kakao_account").getBoolean("email_needs_agreement"))
-        {
-            email = body.getJSONObject("kakao_account").getString("email");
+        String responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        Long id = jsonNode.get("id").asLong();
+        String nickname = jsonNode.get("properties")
+                .get("nickname").asText();
+        String email;
+        if (jsonNode.get("kakao_account").get("email") == null) {
+            email = UUID.randomUUID().toString() + "@hippo.com";
+        } else {
+            email = jsonNode.get("kakao_account")
+                    .get("email").asText();
         }
-        String nickname = body.getJSONObject("properties").getString("nickname");
-
-        if (email == null)
-        {
-            return new KakaoUserInfo(id,nickname, UUID.randomUUID().toString());
-        }
-
-        else{
-            return new KakaoUserInfo(id,email, nickname);
-        }
+        log.info("id = {}, nickname = {}, email = {}", id, nickname, email);
+        return new KakaoUserInfo(id, nickname, email);
     }
 
 }

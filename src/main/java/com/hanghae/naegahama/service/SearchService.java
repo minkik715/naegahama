@@ -2,10 +2,9 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
-import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.search.SearchAnswerRequestDto;
-import com.hanghae.naegahama.dto.search.SearchPostRequestDto;
-import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
+import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
+import com.hanghae.naegahama.dto.search.SearchPostRequest;
+import com.hanghae.naegahama.dto.search.SearchRequest;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class SearchService {
 //        searchRepository.save(search);
 
     //검색키워드 유저정보에 저장.
-    public List<SearchPostRequestDto> postSearchList(String searchWord, UserDetailsImpl userDetails) {
+    public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
 
         if (userDetails == null) {
         } else {
@@ -45,55 +44,62 @@ public class SearchService {
             Search search = new Search(searchWord, user);
             searchRepository.save(search);
         }
+
         //요청글 검색.
-        List<Post> posts = postRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord);
+        List<Post> posts = postRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
+        List<SearchRequest> searchRequests = new ArrayList<>();
 
-        List<SearchPostRequestDto> response = new ArrayList<>();
-
+        Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
         if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
-            Long postCount = postRepository.countByPost(post);
-            SearchPostRequestDto searchPostRequestDto = new SearchPostRequestDto(
+            SearchRequest searchRequest = new SearchRequest(
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
                     post.getFileList().get(0).getUrl(),
-                    post.getModifiedAt(),
-                    postCount
+                    post.getModifiedAt()
             );
-            response.add(searchPostRequestDto);
+            searchRequests.add(searchRequest);
         }
-        return response;
+
+        SearchPostRequest searchPostRequest = new SearchPostRequest(
+                searchRequests,
+                answerCount
+        );
+        return searchPostRequest;
     }
 
 
     //답변글 검색
-    public List<SearchAnswerRequestDto> answerSearchList(String searchWord) {
+    public SearchAnswerRequest answerSearchList(String searchWord) {
+        List<Answer> Answers = answerRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
+        List<SearchRequest> searchRequests = new ArrayList<>();
 
-        List<Answer> answers = answerRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord);
-
-        List<SearchAnswerRequestDto> response = new ArrayList<>();
-
-        if (answers == null) {
+        Integer postCount = postRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
+        if (Answers == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
-        for (Answer answer : answers) {
-            Long answerCount = answerRepository.countByPost(answer);
-            SearchAnswerRequestDto searchAnswerRequestDto = new SearchAnswerRequestDto(
-                    answer.getId(),
-                    answer.getTitle(),
-                    answer.getContent(),
-                    answer.getFileList().get(0).getUrl(),
-                    answer.getModifiedAt(),
-                    answerCount
+        for (Answer Answer : Answers) {
+            SearchRequest searchRequest = new SearchRequest(
+                    Answer.getId(),
+                    Answer.getTitle(),
+                    Answer.getContent(),
+                    Answer.getFileList().get(0).getUrl(),
+                    Answer.getModifiedAt()
             );
-            response.add(searchAnswerRequestDto);
+            searchRequests.add(searchRequest);
         }
-        return response;
+
+        SearchAnswerRequest searchAnswerRequest = new SearchAnswerRequest(
+                searchRequests,
+                postCount
+        );
+        return searchAnswerRequest;
     }
 }
+
 
 //    //최근검색어 순위
 //    public List<SearchAnswerRequestDto> SearchList() {

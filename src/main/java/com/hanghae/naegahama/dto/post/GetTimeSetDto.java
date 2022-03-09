@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.dto.post;
+/*package com.hanghae.naegahama.dto.post;
 
 import com.hanghae.naegahama.domain.Post;
 import lombok.Getter;
@@ -18,4 +18,4 @@ public class GetTimeSetDto
         this.timeSetStart = post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm"));
         this.timeSetEnd = post.getTimeSet();
     }
-}
+}*/

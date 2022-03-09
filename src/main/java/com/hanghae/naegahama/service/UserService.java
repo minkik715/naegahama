@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.Achievement;
@@ -87,29 +88,31 @@ public class UserService {
                 () -> new EmailNotFoundException("해당 이메일은 존재하지 않습니다.")
         );
         loginPassword(password, user);
-        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getNickName(), user.getId());
-        return ResponseEntity.ok().body(loginResponseDto);
+        return getLoginResponseDtoResponseEntity(user);
     }
 
-    public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException {
+    @Transactional
+    public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException, JsonProcessingException {
+        log.info("kakaoAccessToken ={}", kakaoAccessToken);
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
-        log.info("kakaoId = {}", userInfo.getId());
+        log.info("kakaoId = {}, nickname = {}", userInfo.getId(), userInfo.getNickname());
         User user = userRepository.findByKakaoId(userInfo.getId()).orElse(null);
-
+        User saveUser;
         if (user == null) {
             User newUser = new User(userInfo);
             log.info("kakaoId = {}", userInfo.getId());
-            userRepository.save(newUser);
-            Achievement achievement = new Achievement(user);
-            achievementRepository.save(achievement);
-            user.setAchievement(achievement);
-            kakaoSignup(kakaoAccessToken);
+            saveUser = userRepository.save(newUser);
+            achievementRepository.save(new Achievement(saveUser));
+        }else{
+            saveUser = user;
         }
-        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getNickName(), user.getId());
-        return ResponseEntity.ok().body(loginResponseDto);
+        return getLoginResponseDtoResponseEntity(saveUser);
+    }
 
+    private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
+        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getId(),user.getUserStatus());
+        return ResponseEntity.ok().body(loginResponseDto);
     }
 
 
@@ -198,14 +201,10 @@ public class UserService {
         return ResponseEntity.ok().body(userResponse);
     }
 
+    @Transactional
     public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
-
-
-        try {
-            user.setBasicInfo(userInfoRequestDto);
-        }catch (Exception ignored){
-            throw new IllegalArgumentException("틀린 인자입니다.");
-        }
+        user.setBasicInfo(userInfoRequestDto);
+        userRepository.save(user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }

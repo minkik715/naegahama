@@ -1,7 +1,6 @@
 package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PutRequestDto;
 import com.hanghae.naegahama.service.PostService;
@@ -9,11 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
 public class PostController {
@@ -63,12 +58,12 @@ public class PostController {
         return postService.updatePost(postId, putRequestDto, userDetails);
     }
 
-    @GetMapping("/api/post/timeset/{postId}")
+   /* @GetMapping("/api/post/timeset/{postId}")
     public ResponseEntity<?> getTimeSet(@PathVariable Long postId)
     {
         return postService.getTimeSet(postId);
     }
-
+*/
 
 //    //요청글 삭제
 //    @DeleteMapping("/api/post/{postId}")
@@ -83,6 +78,11 @@ public class PostController {
     @GetMapping("/api/post/{postId}")
     public ResponseEntity<?> getPost1(@PathVariable Long postId) {
         return ResponseEntity.ok().body(postService.getPost1(postId));
+    }
+
+    @GetMapping("/api/post/category/{category}/{sort}")
+    public ResponseEntity<?> getPostByCategoryAndSort(@PathVariable String category, @PathVariable String sort){
+        return postService.getPostByCategoryAndSort(category, sort);
     }
 
 

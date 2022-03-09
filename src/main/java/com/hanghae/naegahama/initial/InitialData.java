@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.initial;
 
 import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -31,6 +32,8 @@ public class InitialData implements ApplicationRunner {
 
     private final CommentRepository commentRepository;
 
+    private final PostLikeRepository postLikeRepository;
+
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
@@ -49,30 +52,30 @@ public class InitialData implements ApplicationRunner {
 
         //요청글 만들기
         List<Post> PostList = new ArrayList<>();
-        PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0),"작성완료"));
-        PostList.add(new Post("치킨먹어주실분", "황금올리브로 야무지게 먹어주세요!", "cook","중", userList.get(0),"작성완료"));
-        PostList.add(new Post("자전거대신타주실분", "한강 공원 한바퀴만 돌아주세요!", "health","상", userList.get(1),"작성완료"));
-        PostList.add(new Post("푸시업해주실분", "저대신 푸시업 20개만 해주세요!", "health","하", userList.get(1),"작성완료"));
-        PostList.add(new Post("코딩해주실분!", "저대신 코딩좀 해주세요..", "knowledge","중", userList.get(2),"작성완료"));
-        PostList.add(new Post("숙제풀어주실분", "숙제좀 저대신 해주세요!", "knowledge","상", userList.get(2),"작성완료"));
-        PostList.add(new Post("레고 만들어주실분", "거북선 만들기 어렵네요", "create","하", userList.get(3),"작성완료"));
-        PostList.add(new Post("음 음", "음 음", "create","중", userList.get(3),"작성완료"));
-        PostList.add(new Post("한강가주실분!", "한강가주실분", "visit","상", userList.get(4),"작성완료"));
-        PostList.add(new Post("제주도 바다 보여주세요!", "제주도 바다 보여주세요!", "visit","하", userList.get(4),"작성완료"));
-        PostList.add(new Post("개발자 브이로그 보고싶어요!", "개발자 브이로그 보고싶어요", "job","중", userList.get(5),"작성완료"));
-        PostList.add(new Post("백수브이로그 궁금해요", "백수브이로그 궁금해요", "job","상", userList.get(5),"작성완료"));
-        PostList.add(new Post("고양이사진 보여주세요", "고양이사진 보여주세요", "pet","하", userList.get(6),"작성완료"));
-        PostList.add(new Post("강아지사진 보여주세요", "신라면으로 야무지게 먹어주세요!", "pet","중", userList.get(6),"작성완료"));
-        PostList.add(new Post("오늘 패션 짜주세요!", "오늘 패션 짜주세요!", "fashion","상", userList.get(5),"작성완료"));
-        PostList.add(new Post("이 옷 있으신분 착용샷 보여주세요!", "이 옷 있으신분 착용샷 보여주세요!", "fashion","하", userList.get(5),"작성완료"));
-        PostList.add(new Post("cosult1", "cosult1content", "consult","중", userList.get(4),"작성완료"));
-        PostList.add(new Post("cosult2", "cosult2content", "consult","상", userList.get(4),"작성완료"));
-        PostList.add(new Post("맥북 신상 후기", "맥북 신상 후기", "device","하", userList.get(3),"작성완료"));
-        PostList.add(new Post("세탁히 신상 후기", "세탁히 신상 후기", "device","중", userList.get(3),"작성완료"));
-        PostList.add(new Post("life1", "life1content", "life","상", userList.get(2),"작성완료"));
-        PostList.add(new Post("life2", "life2content", "life","하", userList.get(2),"작성완료"));
-        PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1),"작성완료"));
-        PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1),"작성완료"));
+        PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0),"작성완료",1));
+        PostList.add(new Post("치킨먹어주실분", "황금올리브로 야무지게 먹어주세요!", "cook","중", userList.get(0),"작성완료",2));
+        PostList.add(new Post("자전거대신타주실분", "한강 공원 한바퀴만 돌아주세요!", "health","상", userList.get(1),"작성완료",3));
+        PostList.add(new Post("푸시업해주실분", "저대신 푸시업 20개만 해주세요!", "health","하", userList.get(1),"작성완료",4));
+        PostList.add(new Post("코딩해주실분!", "저대신 코딩좀 해주세요..", "knowledge","중", userList.get(2),"작성완료",1));
+        PostList.add(new Post("숙제풀어주실분", "숙제좀 저대신 해주세요!", "knowledge","상", userList.get(2),"작성완료",6));
+        PostList.add(new Post("레고 만들어주실분", "거북선 만들기 어렵네요", "create","하", userList.get(3),"작성완료",7));
+        PostList.add(new Post("음 음", "음 음", "create","중", userList.get(3),"작성완료",8));
+        PostList.add(new Post("한강가주실분!", "한강가주실분", "visit","상", userList.get(4),"작성완료",9));
+        PostList.add(new Post("제주도 바다 보여주세요!", "제주도 바다 보여주세요!", "visit","하", userList.get(4),"작성완료",10));
+        PostList.add(new Post("개발자 브이로그 보고싶어요!", "개발자 브이로그 보고싶어요", "job","중", userList.get(5),"작성완료",1));
+        PostList.add(new Post("백수브이로그 궁금해요", "백수브이로그 궁금해요", "job","상", userList.get(5),"작성완료",12));
+        PostList.add(new Post("고양이사진 보여주세요", "고양이사진 보여주세요", "pet","하", userList.get(6),"작성완료",13));
+        PostList.add(new Post("강아지사진 보여주세요", "신라면으로 야무지게 먹어주세요!", "pet","중", userList.get(6),"작성완료",14));
+        PostList.add(new Post("오늘 패션 짜주세요!", "오늘 패션 짜주세요!", "fashion","상", userList.get(5),"작성완료",15));
+        PostList.add(new Post("이 옷 있으신분 착용샷 보여주세요!", "이 옷 있으신분 착용샷 보여주세요!", "fashion","하", userList.get(5),"작성완료",16));
+        PostList.add(new Post("cosult1", "cosult1content", "consult","중", userList.get(4),"작성완료",1));
+        PostList.add(new Post("cosult2", "cosult2content", "consult","상", userList.get(4),"작성완료",5));
+        PostList.add(new Post("맥북 신상 후기", "맥북 신상 후기", "device","하", userList.get(3),"작성완료",4));
+        PostList.add(new Post("세탁히 신상 후기", "세탁히 신상 후기", "device","중", userList.get(3),"작성완료",3));
+        PostList.add(new Post("life1", "life1content", "life","상", userList.get(2),"작성완료",1));
+        PostList.add(new Post("life2", "life2content", "life","하", userList.get(2),"작성완료",7));
+        PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1),"작성완료",9));
+        PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1),"작성완료",1));
         postRepository.saveAll(PostList);
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7353f438-b3ad-41c7-84fd-109a6f299f1412345.jpg", PostList.get(0))));
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/247cf91e-ce0e-41af-b873-5cd12637193c12345.jpg", PostList.get(0))));
@@ -80,8 +83,7 @@ public class InitialData implements ApplicationRunner {
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", PostList.get(0))));
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", PostList.get(0))));
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", PostList.get(0))));
-
-
+        PostList.get(1).setStatus("false");
 
 
         List<Answer> answerList = new ArrayList<>();
@@ -113,6 +115,14 @@ public class InitialData implements ApplicationRunner {
         commentList.add(commentRepository.save(new Comment("대댓글4", 1L,answerList.get(0),userList.get(3) )));
         commentList.add(commentRepository.save(new Comment("대댓글5", 2L,answerList.get(0),userList.get(2) )));
         commentList.add(commentRepository.save(new Comment("대댓글6", 3L,answerList.get(0),userList.get(1) )));
+
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(0),PostList.get(1))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(0),PostList.get(0))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(1),PostList.get(1))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(2),PostList.get(1))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(3),PostList.get(1))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(4),PostList.get(15))));
+        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(5),PostList.get(15))));
 
     }
 
