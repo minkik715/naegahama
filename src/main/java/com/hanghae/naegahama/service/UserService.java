@@ -201,7 +201,8 @@ public class UserService {
         return ResponseEntity.ok().body(userResponse);
     }
 
-    @Transactional
+    // 하나의 트랜젝션이 끝나면 1차 영속성 컨텍스트는 초기화된다.
+    //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!
     public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
         user.setBasicInfo(userInfoRequestDto);
         userRepository.save(user);

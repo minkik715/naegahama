@@ -13,6 +13,7 @@ public class CommentResponseDto {
     private String commentWriter;
     private String content;
     private String modifiedAt;
+    private String timestamp;
 
 
     public CommentResponseDto(Comment save,Long answerId) {
@@ -22,5 +23,6 @@ public class CommentResponseDto {
         this.answerId = answerId;
         this.commentId = save.getId();
         this.commentWriterId = save.getUser().getId();
+        this.timestamp = save.getTimestamp();
     }
 }

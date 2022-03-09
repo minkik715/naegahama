@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtAuthenticationProvider.tokenResolver(request);
         if (token != null && jwtAuthenticationProvider.validateToken(token)){
             // getAuthentication 으로 인증상태(정보)를 가져와서
-            Authentication authentication = jwtAuthenticationProvider.getAuthentication(token);
+            Authentication authentication = jwtAuthenticationProvider.getAuthentication(token, response);
 
             // SecurityContextHolder에 저장해주어 인증상태를 유지하도록 해줌.
             SecurityContextHolder.getContext().setAuthentication(authentication);
