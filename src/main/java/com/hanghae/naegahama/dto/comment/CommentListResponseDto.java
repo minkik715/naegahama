@@ -14,6 +14,8 @@ public class CommentListResponseDto {
     private String content;
     private String modifiedAt;
 
+    private String timestamp;
+
 
     public CommentListResponseDto(Comment comment) {
         this.answerId = comment.getAnswer().getId();
@@ -22,5 +24,6 @@ public class CommentListResponseDto {
         this.commentWriter = comment.getUser().getNickName();
         this.content = comment.getContent();
         this.modifiedAt = comment.getModifiedAt().toString();
+        this.timestamp = comment.getTimestamp();
     }
 }

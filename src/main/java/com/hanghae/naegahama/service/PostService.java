@@ -5,6 +5,7 @@ import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
+import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 
 import com.hanghae.naegahama.util.S3Uploader;
@@ -16,13 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @EnableAutoConfiguration
 @RequiredArgsConstructor
@@ -34,18 +31,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
-
-    private final S3Uploader s3Uploader;
-
     private final PostFileRepository postFileRepository;
-
 
     private final String publishing = "작성완료";
     private final String temporary = "임시저장";
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) throws IOException {
+
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) {
         if (postRequestDto.getTitle() == null) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
@@ -80,9 +74,12 @@ public class PostService {
         }
 
         // 잔여시간 처리
-        LocalDateTime deadline = savePost.getCreatedAt().plusHours(postRequestDto.getTimeSet());
-        savePost.setDeadLine(deadline);
-
+        if (postRequestDto.getTimeSet() == 0) {
+            savePost.setDeadLine(null);
+        } else {
+            LocalDateTime deadline = savePost.getCreatedAt().plusHours(postRequestDto.getTimeSet());
+            savePost.setDeadLine(deadline);
+        }
 
         // 임시 작성중이던 모든 글 삭제
         List<Post> deleteList = postRepository.findAllByUserAndState(user, temporary);
@@ -152,7 +149,6 @@ public class PostService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
-
         User user = post.getUser();
 
         System.out.println(userDetails.getUser().getId());
@@ -170,6 +166,7 @@ public class PostService {
         }
         post.UpdatePost(postRequestDto);
 
+
         // 기존에 있던 이미지 파일 S3에서 삭제
        /* for (PostFile deleteS3 : post.getFileList()) {
             String[] fileKey = deleteS3.getUrl().split("static/");
@@ -180,6 +177,21 @@ public class PostService {
                 e.printStackTrace();
             }
         }*/
+//        // 기존에 있던 이미지 파일 S3에서 삭제
+//        for ( PostFile deleteS3 : post.getFileList())
+//        {
+//            String[] fileKey = deleteS3.getUrl().split("static/");
+//            try
+//            {
+//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
+//                s3Uploader.deleteS3("static/" + decodeKey);
+//            }
+//            catch (UnsupportedEncodingException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
+
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
 
@@ -233,8 +245,9 @@ public class PostService {
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
-            LocalDateTime deadLine = post.getDeadLine();
             String timeSet = getDeadLine(post);
+
+
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
                     post.getTitle(),
@@ -253,7 +266,6 @@ public class PostService {
 
     //요청글 상세조회.
     public ResponseDto getPost1(Long postId) {
-
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
         );
@@ -425,28 +437,44 @@ public class PostService {
     private String getDeadLine(Post post) {
         String timeSet;
         LocalDateTime deadLine = post.getDeadLine();
-        long minutes = 61;
-        if (deadLine.isBefore(LocalDateTime.now())) {
-            post.setStatus("false");
+        if (deadLine == null) {
             timeSet = "마감된 요청글 입니다.";
         } else {
-            minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-            int hour = (int) (minutes / 60);
-            minutes = minutes % 60;
-            timeSet = "마감 " + hour + "시간 " + minutes + "분 전";
-
-            if (hour < 1) {
+            long minutes = 61;
+            if (deadLine.isBefore(LocalDateTime.now())) {
+                post.setStatus("false");
+                timeSet = "마감된 요청글 입니다.";
+            } else {
                 minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                timeSet = "마감 " + minutes + "분 전";
+                int hour = (int) (minutes / 60);
+                minutes = minutes % 60;
+                timeSet = "마감 " + hour + "시간 " + minutes + "분 전";
 
-            }
-            if (minutes < 1) {
-                long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
-                timeSet = "마감 " + seconds + "초 전";
+                if (hour < 1) {
+                    minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+                    timeSet = "마감 " + minutes + "분 전";
 
+                }
+                if (minutes < 1) {
+                    long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
+                    timeSet = "마감 " + seconds + "초 전";
+
+                }
             }
         }
         return timeSet;
+    }
+
+    public ResponseEntity<?> finishPost(Long postId, User user) {
+        Post findPost = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("존재하지 않는 글 입니다.")
+        );
+        if(!findPost.getUser().getId().equals(user.getId())){
+            throw new UserNotFoundException("권한이 존재하지 않습니다");
+        }
+
+        findPost.setStatus("false");
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 }
 

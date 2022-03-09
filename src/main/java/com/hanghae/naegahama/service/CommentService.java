@@ -67,6 +67,7 @@ public class CommentService {
        commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
+        commentRepository.deleteAll(commentRepository.findAllByParentCommentId(commentId));
         commentRepository.deleteById(commentId);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -97,6 +98,9 @@ public class CommentService {
     }
 
     public ResponseEntity<?> getKidsCommentList(Long commentId) {
+        Comment parentComment = commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFoundException("해당 댓글은 존재하지 않습니다.")
+        );
         List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(commentId);
         List<KidsCommentListResponseDto> kidsCommentListResponseDtoList = new ArrayList<>();
         if(kidsCommentList == null){
@@ -107,7 +111,8 @@ public class CommentService {
             kidsCommentListResponseDtoList.add(kidsCommentListResponseDto);
 
         }
-        return ResponseEntity.ok().body(kidsCommentListResponseDtoList);
+        AllCommentResponseDto allCommentResponseDto = new AllCommentResponseDto(new CommentResponseDto(parentComment,parentComment.getAnswer().getId()),kidsCommentListResponseDtoList);
+        return ResponseEntity.ok().body(allCommentResponseDto);
     }
 }
 

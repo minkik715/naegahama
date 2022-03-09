@@ -44,6 +44,7 @@ public class RankService {
         rankRepository.deleteAll();
         //현재 랭크 5위 까지 가져오기
 
+
         //랭크 변동 확인하기
         for (int i = 0; i < top5ByOrderByPointDesc.size(); i++) {
             // 과거에 존재하지 않았다면

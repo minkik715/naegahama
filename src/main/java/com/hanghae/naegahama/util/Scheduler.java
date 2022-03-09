@@ -1,7 +1,9 @@
 package com.hanghae.naegahama.util;
 
+import com.hanghae.naegahama.domain.AnswerFile;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.repository.AnswerFileRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +20,7 @@ import java.util.List;
 public class Scheduler {
 
     private final PostRepository postRepository;
-
+    private final AnswerFileRepository answerFileRepository;
     //로직구현
     //초 분 시간, 일 월 요일
     @Transactional
@@ -28,6 +30,17 @@ public class Scheduler {
         for (Post post : posts) {
             if(post.getStatus().equals("true") && post.getDeadLine().isBefore(LocalDateTime.now())){
                 post.setStatus("false");
+            }
+        }
+    }
+
+    @Transactional
+    @Scheduled(cron = "*/15 * * * * *")
+    public void changeStatusShrots(){
+        List<AnswerFile> answerFiles = answerFileRepository.findAll();
+        for (AnswerFile answerFile : answerFiles) {
+            if(answerFile.getStatus().equals(false)){
+                answerFile.setStatus(true);
             }
         }
     }
