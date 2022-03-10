@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.initial;
 
 import com.hanghae.naegahama.domain.*;
@@ -42,7 +43,8 @@ public class InitialData implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
 
-        /*
+        */
+/*
         동영상은 파일 중에서도 사이즈가 크다 보니까 성능상의 이슈가 특히 중요하다고 느꼈다. 구현한 4가지 기능(압축, 썸네일, 크기, 재생시간 추출)의 작업 시간과 CPU 사용률을 대략적으로 살펴봤을 때, 특히 동영상 압축 작업이 가장 오래 걸리고 CPU 사용률이 높게 치솟았다. 이러한 점들 때문에 실제 서비스를 운영하는 환경에서는 동영상을 처리하는 별도의 서버를 두는 것도 고려해볼 수 있을 거 같다.
 
 그리고 ffmpeg과 같은 멀티미디어를 따로 설치해야 하기 때문에, AWS를 사용한다면 EC2에 별도로 ffmpeg을 설치해 AMI로 구성할지 등에 대한 고민도 필요할 거 같다.
@@ -50,7 +52,8 @@ public class InitialData implements ApplicationRunner {
 지난번 Animated GIF 썸네일 생성하기에 이어서 이번에 동영상 파일 처리를 위한 작업을 진행했는데 ffmpeg을 설치하는 것부터 시작해서 많은 삽질을 한 거 같다...
 
 그래도 원하는 결과물을 만들어낼 수 있어서 뿌듯했고 그 과정에서 동영상 처리를 위해 주의할 점을 계속적으로 고민해볼 수 있는 좋은 기회였다.
-         */
+         *//*
+
 
         //유저만들기
         List<User> userList = new ArrayList<>();
@@ -142,4 +145,4 @@ public class InitialData implements ApplicationRunner {
 
     }
 
-}
+}*/

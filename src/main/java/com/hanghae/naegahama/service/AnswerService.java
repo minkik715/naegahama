@@ -70,7 +70,8 @@ public class AnswerService
         AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
         videoUrl.setAnswer(saveAnwser);
 
-
+        //빠뜨리신 재균님?
+        answerVideoRepository.save(videoUrl);
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));

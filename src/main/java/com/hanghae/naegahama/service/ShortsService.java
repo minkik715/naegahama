@@ -2,10 +2,12 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.AnswerFile;
+import com.hanghae.naegahama.domain.AnswerVideo;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.shorts.ShortsResponseDto;
 import com.hanghae.naegahama.handler.ex.AnswerFileNotFoundException;
 import com.hanghae.naegahama.repository.AnswerFileRepository;
+import com.hanghae.naegahama.repository.AnswerVideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.*;
 @Transactional
 public class ShortsService {
 
-    private final AnswerFileRepository answerFileRepository;
+    private final AnswerVideoRepository answerVideoRepository;
  /*   public ResponseEntity<?> getThreeShorts() {
         List<AnswerFile> mp4File = answerFileRepository.findAllByUrlEndingWith("mp4");
         long size = (long)mp4File.size();
@@ -42,7 +44,7 @@ public class ShortsService {
     }*/
 
     public ResponseEntity<?> getOneShorts() {
-        List<AnswerFile> mp4File = answerFileRepository.findAllByStatusAndUrlEndingWith(true,"mp4");
+        List<AnswerVideo> mp4File = answerVideoRepository.findAllByStatusAndUrlEndingWithOrUrlEndingWith(true,"mp4", "short");
 
         int size = mp4File.size();
         if(size == 0){
@@ -50,11 +52,15 @@ public class ShortsService {
         }
         int randomNum = ((int) (Math.random() * size));
 
-            AnswerFile findAnswerFile = mp4File.get(randomNum);
+            AnswerVideo findAnswerFile = mp4File.get(randomNum);
             findAnswerFile.setStatus(false);
             Answer answer = findAnswerFile.getAnswer();
             User user = answer.getUser();
-        ShortsResponseDto shortsResponseDto =(new ShortsResponseDto(findAnswerFile.getUrl(),answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId()));
+            String url = findAnswerFile.getUrl();
+            if(url.substring(url.lastIndexOf(".")+1).equals("mp4")){
+                url = url.replace("mp4", "short");
+            }
+        ShortsResponseDto shortsResponseDto =(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId()));
         return ResponseEntity.ok().body(shortsResponseDto);
 
     }
