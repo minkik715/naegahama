@@ -9,13 +9,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "ranks")
 public class Rank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rank_id")
     private Long id;
 
-    @Column
+    @Column(name = "ranks")
     private int rank;
 
     @JsonManagedReference

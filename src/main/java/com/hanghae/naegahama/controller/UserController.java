@@ -47,6 +47,7 @@ public class UserController {
 
     @PostMapping("/user/kakaoLogin")
     public ResponseEntity<?> login(@RequestBody Map<String, Object> param) throws JsonProcessingException {
+
         return userService.kakaoSignup(param.get("kakaoToken").toString());
     }
 

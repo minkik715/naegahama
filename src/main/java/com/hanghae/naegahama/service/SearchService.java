@@ -37,11 +37,13 @@ public class SearchService {
     //검색키워드 유저정보에 저장.
     public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
         log.info("searchWord = {}", searchWord);
-        if (userDetails == null) {
-        } else {
+        if (!(userDetails == null)) {
             User user = userDetails.getUser();
-            Search search = new Search(searchWord, user);
-            searchRepository.save(search);
+            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) ;
+            {
+                Search search = new Search(searchWord, user);
+                searchRepository.save(search);
+            }
         }
 
         //요청글 검색.
@@ -49,12 +51,12 @@ public class SearchService {
         List<SearchRequest> searchRequests = new ArrayList<>();
 
         Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
-        if (posts.size()==0) {
+        if (posts.size() == 0) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
             String file = null;
-            if (post.getFileList().size() !=0) {
+            if (post.getFileList().size() != 0) {
                 file = post.getFileList().get(0).getUrl();
             }
             SearchRequest searchRequest = new SearchRequest(
@@ -88,7 +90,7 @@ public class SearchService {
         }
         for (Answer Answer : Answers) {
             String file = null;
-            if(Answer.getFileList().size() !=0){
+            if (Answer.getFileList().size() != 0) {
                 file = Answer.getFileList().get(0).getUrl();
             }
             SearchRequest searchRequest = new SearchRequest(
