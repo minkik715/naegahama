@@ -29,7 +29,7 @@ public class FileService
         {
             for ( MultipartFile multipartFile : multipartFileList)
             {
-                String fileUrl = s3Uploader.upload(multipartFile, "static");
+                String fileUrl = s3Uploader.upload(multipartFile, "static",false);
                 file.add(fileUrl);
             }
         }
@@ -37,7 +37,7 @@ public class FileService
         // 비디오가 있을 경우 s3에 넣고 url 값을 받음.
         if ( videoFile != null)
         {
-            video = s3Uploader.upload(videoFile, "static");
+            video = s3Uploader.upload(videoFile, "static",true);
         }
 
         FileResponseDto fileResponseDto = new FileResponseDto(file, video);

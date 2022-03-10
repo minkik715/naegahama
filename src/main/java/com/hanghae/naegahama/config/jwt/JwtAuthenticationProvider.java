@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -52,9 +53,9 @@ public class JwtAuthenticationProvider {
     } // 추출하면 username, email등 유저의 정보가 나오게 됨.
 
     // JWT 토큰에서 인증 정보 조회
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token, HttpServletResponse response) {
 
-        UserDetails userDetails = userDetailsImplService.checkUserByUserId(this.getuserId(token));
+        UserDetails userDetails = userDetailsImplService.checkUserByUserId(this.getuserId(token), response);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

@@ -13,8 +13,5 @@ public class AnswerPostRequestDto
     private String content;
     private List<String> file;
     private String video;
-
-
-
 }
 

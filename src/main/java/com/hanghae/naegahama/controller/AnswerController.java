@@ -3,10 +3,8 @@ package com.hanghae.naegahama.controller;
 
 
 import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.dto.answer.AnswerDetailGetResponseDto;
-import com.hanghae.naegahama.dto.answer.AnswerGetResponseDto;
-import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
-import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
+import com.hanghae.naegahama.dto.answer.*;
+import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,7 @@ public class AnswerController
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
+
     @ResponseBody
     @GetMapping("/answer/{postId}")
     public List<AnswerGetResponseDto> answerList(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
@@ -42,27 +41,20 @@ public class AnswerController
 
 
 
-    @PostMapping("/answer/file")
-    public List<String> fileUpload(@RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
+
+    @PutMapping("/answer/{answerId}")
+    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @RequestBody AnswerPutRequestDto answerPutRequestDto)
     {
-        return answerService.fileTest(multipartFile);
+        return answerService.answerUpdate(answerId, userDetails, answerPutRequestDto);
     }
 
-
-//    @PutMapping("/{answerId}")
-//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+//    // 임시 저장 글 리스트 불러오기
+//    @GetMapping("/answer/temporary")
+//    public ResponseEntity<?> temporaryLoad(@AuthenticationPrincipal UserDetailsImpl userDetails)
 //    {
-//
+//        return answerService.temporaryLoad(userDetails);
 //    }
-    @PatchMapping("/answer/{answerId}")
-    public ResponseEntity<?> answerUpdate (
-            @PathVariable Long answerId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart (value = "post") AnswerPostRequestDto answerPostRequestDto,
-            @RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
-    {
-        return answerService.answerUpdate(answerId, userDetails, answerPostRequestDto, multipartFile);
-    }
 
     @DeleteMapping("/answer/{answerId}")
     public ResponseEntity<?> answerDelete ( @PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)

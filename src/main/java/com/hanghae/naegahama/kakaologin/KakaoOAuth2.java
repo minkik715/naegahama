@@ -43,6 +43,7 @@ public class KakaoOAuth2 {
                 String.class
         );
 
+
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
@@ -55,6 +56,7 @@ public class KakaoOAuth2 {
         } else {
             email = jsonNode.get("kakao_account")
                     .get("email").asText();
+
         }
         log.info("id = {}, nickname = {}, email = {}", id, nickname, email);
         return new KakaoUserInfo(id, nickname, email);

@@ -38,8 +38,6 @@ public class Post extends Timestamped implements Comparable<Post> {
     @Column(nullable = false)
     private String level;
 
-    @Column
-    private String state;
 
     @Column
     private String status;
@@ -77,25 +75,23 @@ public class Post extends Timestamped implements Comparable<Post> {
         this.status = "true";
     }
 
-    public Post(String title, String content, String category, String level, User user, String state, int timeSet) {
+    public Post(String title, String content, String category, String level, User user, int timeSet) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.level = level;
         this.user = user;
-        this.state = state;
         this.status = "true";
         this.deadLine = LocalDateTime.now().plusHours((long)timeSet);
     }
 
-    public Post(PostRequestDto postRequestDto, User user, String state)
+    public Post(PostRequestDto postRequestDto, User user)
     {
         this.user = user;
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
         this.level = postRequestDto.getLevel();
-        this.state = state;
         this.status = "true";
 
     }

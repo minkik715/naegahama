@@ -34,10 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 기본 로그인 방식 안쓸거임.
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers(HttpMethod.GET,"/api/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/**").permitAll()
                 .antMatchers("/api/user/**").permitAll()
-                .anyRequest()
-                .permitAll()
+                .anyRequest().permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())    // 추가
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtAuthenticationProvider),
