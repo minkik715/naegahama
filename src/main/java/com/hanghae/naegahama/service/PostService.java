@@ -448,7 +448,6 @@ public class PostService {
                 if (minutes < 1) {
                     long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
                     timeSet = "마감 " + seconds + "초 전";
-
                 }
             }
         }

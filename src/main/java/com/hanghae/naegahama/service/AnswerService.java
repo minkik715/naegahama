@@ -18,9 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -132,20 +129,7 @@ public class AnswerService
     }
 
 
-    public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
-    {
-        List<String> urlList = new ArrayList<>();
 
-        for ( MultipartFile file : multipartFile)
-        {
-
-            String url = s3Uploader.upload(file, "static");
-            urlList.add(url);
-            log.info(url);
-        }
-
-         return urlList;
-    }
 
     // 요청 글에 달린 answerList 조회
     public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)

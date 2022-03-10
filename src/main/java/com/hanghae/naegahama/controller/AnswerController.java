@@ -48,11 +48,7 @@ public class AnswerController
 
 
 
-    @PostMapping("/answer/file")
-    public List<String> fileUpload(@RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
-    {
-        return answerService.fileTest(multipartFile);
-    }
+
 
 
 //    @PutMapping("/{answerId}")
