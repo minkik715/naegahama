@@ -31,7 +31,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
-
     private final UserRepository userRepository;
 
     private final PostFileRepository postFileRepository;
