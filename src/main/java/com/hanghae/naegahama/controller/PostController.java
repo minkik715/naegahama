@@ -23,20 +23,7 @@ public class PostController {
         return postService.createPost(postRequestDto,userDetails.getUser());
     }
 
-    // 요청글 임시 저장
-    @PostMapping("/api/post/temporary")
-    public ResponseEntity<?> temporaryPost(@RequestBody PostRequestDto postRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 
-        return postService.temporaryPost(postRequestDto,userDetails.getUser());
-    }
-
-    // 임시 저장 글 리스트 불러오기
-    @GetMapping("/api/post/temporary")
-    public ResponseEntity<?> temporaryLoad(@AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
-        return postService.temporaryLoad(userDetails);
-    }
 
     // 요청글 전체조회
     @GetMapping("/api/post")

@@ -22,18 +22,34 @@ import java.util.UUID;
 public class S3Uploader {
 
     private final AmazonS3Client amazonS3Client;
-
+    private final VideoEncode videoEncode;
     @Value("${cloud.aws.s3.bucket}")
     public String naegahama;
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException{
+    public String upload(MultipartFile multipartFile, String dirName, Boolean isVideo) throws IOException{
         File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
+        if(isVideo){
+            File convertFile = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
+            // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    fos.write(multipartFile.getBytes());
+                }
+            }
+            log.info("ok");
+            videoEncode.videoEncode(convertFile.getAbsolutePath(),System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
+            File file = new File(System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
+            removeNewFile(uploadFile);
+            return upload(file, dirName);
 
-        return upload(uploadFile, dirName);
+
+        }else {
+            return upload(uploadFile, dirName);
+        }
     }
     // S3로 파일 업로드하기
     private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
+        String fileName = dirName + "/" + UUID.randomUUID().toString() + uploadFile.getName();   // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -42,6 +58,7 @@ public class S3Uploader {
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(naegahama, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        removeNewFile(uploadFile);
         return amazonS3Client.getUrl(naegahama, fileName).toString();
     }
 
@@ -61,11 +78,8 @@ public class S3Uploader {
 
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("AnswerFile delete success");
-            return;
-        }
-        log.info("AnswerFile delete fail");
+        targetFile.delete();
+        log.info("{} delete success", targetFile.getName());
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException

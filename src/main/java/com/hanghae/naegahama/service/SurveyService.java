@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@EnableAutoConfiguration
 @RequiredArgsConstructor
 @Service
 @Slf4j
