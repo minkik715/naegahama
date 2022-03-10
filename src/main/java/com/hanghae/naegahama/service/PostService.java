@@ -4,10 +4,8 @@ import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.post.*;
-import com.hanghae.naegahama.handler.ex.PostNotFoundException;
-import com.hanghae.naegahama.handler.ex.UserNotFoundException;
+import com.hanghae.naegahama.handler.ex.*;
 import com.hanghae.naegahama.repository.*;
-
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,61 +26,31 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
     private final PostFileRepository postFileRepository;
 
-
     //요청글 작성
-    @Transactional
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails)
+    {
+        // 로그인 예외 처리 + json 데이터 예외처리
+        UserCheck(userDetails);
+        PostWriteException(postRequestDto);
 
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, User user) {
-        if (postRequestDto.getTitle() == null) {
-            throw new IllegalArgumentException("제목을 입력해주세요.");
+        // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
+        User user = GetUser(userDetails);
+        Long postCount = postRepository.countByUser(user);
+
+        // Post 작성 및 저장
+        PostWrite(postRequestDto,user);
+        // 최초 요청글 작성 업적 획득
+        PostWriteAchievement(user);
+        // 3, 6번째 요청글 작성 시 50 경험치 획득
+        if (postCount == 3 || postCount == 6)
+        {
+            PostWriteAddPoint(user);
         }
-
-        String content = postRequestDto.getContent();
-        if (postRequestDto.getContent() == null) {
-            throw new IllegalArgumentException("내용을 입력해주세요.");
-        }
-
-        if (content.length() > 1000) {
-            throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
-        }
-
-        // 전달받은 정보로 post 객체 생성;
-
-        //객체 저장 및 저장된 post 꺼내옴
-        Post savePost = postRepository.save(new Post(postRequestDto, user));
-
-        // 이미지 파일 url 배열로 for 반복문을 실행
-        for (String url : postRequestDto.getFile()) {
-            // 이미지 파일 url로 postFile 객체 생성
-            PostFile fileUrl = new PostFile(url);
-
-            // postFile에 savePost를 연관관계 설정
-            fileUrl.setPost(savePost);
-
-            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
-            PostFile saveFile = postFileRepository.save(fileUrl);
-
-            // 저장된 postFile을 저장된 post에 한개씩 추가함
-            savePost.getFileList().add(saveFile);
-        }
-        // 잔여시간 처리
-        if (postRequestDto.getTimeSet() == 0) {
-            savePost.setDeadLine(null);
-        } else {
-            LocalDateTime deadline = savePost.getCreatedAt().plusHours(postRequestDto.getTimeSet());
-            savePost.setDeadLine(deadline);
-        }
-
-
-
-        // 퍼블리싱 이벤트? 그거 써서 처리해야함.
-        // 최초 요청글 작성시 업적 5 획득
-        user.getAchievement().setAchievement5(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
-
     }
 
 
@@ -124,20 +92,7 @@ public class PostService {
                 e.printStackTrace();
             }
         }*/
-//        // 기존에 있던 이미지 파일 S3에서 삭제
-//        for ( PostFile deleteS3 : post.getFileList())
-//        {
-//            String[] fileKey = deleteS3.getUrl().split("static/");
-//            try
-//            {
-//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
-//                s3Uploader.deleteS3("static/" + decodeKey);
-//            }
-//            catch (UnsupportedEncodingException e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
+
 
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
@@ -192,8 +147,8 @@ public class PostService {
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
-            String timeSet = getDeadLine(post);
 
+            String timeSet = getDeadLine(post);
 
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
@@ -405,7 +360,6 @@ public class PostService {
                 if (minutes < 1) {
                     long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
                     timeSet = "마감 " + seconds + "초 전";
-
                 }
             }
         }
@@ -423,6 +377,103 @@ public class PostService {
         findPost.setStatus("false");
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+
+
+
+    // Post 작성 json 데이터 예외처리
+    private void PostWriteException(PostRequestDto postRequestDto)
+    {
+        // 전달받은 json 데이터에서 전달받은 제목값이 null이라면 예외처리
+        if (postRequestDto.getTitle().equals(""))
+        {
+            throw new PostWriteTitleNullException("제목이 입력되지 않았습니다.");
+        }
+        // 전달받은 json 데이터에서 전달받은 내용값이 null이라면 예외처리
+        if (postRequestDto.getContent().equals(""))
+        {
+            throw new PostWriteContentNullException("내용이 입력되지 않았습니다.");
+        }
+        // 전달받은 json 데이터에서 전달받은 범주값이 null이라면 예외처리
+        if (postRequestDto.getCategory().equals(""))
+        {
+            throw new PostWriteCategoryNullException("범주가 설정되지 않았습니다.");
+        }
+        // 전달받은 json 데이터에서 전달받은 난이도값이 null이라면 예외처리
+        if (postRequestDto.getLevel().equals(""))
+        {
+            throw new PostWriteLevelNullException("난이도가 설정되지 않았습니다.");
+        }
+
+//        if (postRequestDto.getContent().length() > 1000)
+//        {
+//            throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
+//        }
+
+    }
+
+    // 유저 로그인 검사
+    private void UserCheck(UserDetailsImpl userDetails)
+    {
+        if ( userDetails == null)
+        {
+            throw new LoginUserNotFoundException("로그인 상태가 아닙니다.");
+        }
+    }
+
+    // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
+    private User GetUser(UserDetailsImpl userDetails)
+    {
+        return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new LoginUserNotFoundException("업적 달성 유저를 찾을 수 없습니다."));
+    }
+
+
+
+    // Post 작성 및 저장
+    private void PostWrite(PostRequestDto postRequestDto, User user)
+    {
+        // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
+
+        Post post = postRepository.save(new Post(postRequestDto, user));
+
+        // 파라미터의 이미지 파일 url의 갯수만큼 반복
+        for (String url : postRequestDto.getFile())
+        {
+            // post의 파일 url 리스트를 가지고 있을 postFile 엔티티 생성 및 저장
+            PostFile saveFile = postFileRepository.save(new PostFile(url, post));
+            // 저장된 postFile을 저장된 post의 fileList에 한개씩 추가함
+            post.getFileList().add(saveFile);
+        }
+
+        // 잔여시간 처리
+        if (postRequestDto.getTimeSet() == 0)
+        {
+            post.setDeadLine(null);
+        }
+        else
+        {
+            LocalDateTime deadline = post.getCreatedAt().plusHours(postRequestDto.getTimeSet());
+            post.setDeadLine(deadline);
+        }
+    }
+
+    // 최초 요청글 작성 업적 획득
+    private void PostWriteAchievement(User user)
+    {
+        user.getAchievement().setAchievement5(1);
+    }
+
+    // 3, 6번째 요청글 작성 시 50 경험치 획득
+    private void PostWriteAddPoint(User user)
+    {
+        Long postCount = postRepository.countByUser(user);
+        if (postCount == 3 || postCount == 6)
+        {
+            user.addPoint(50);
+        }
+    }
+
 }
 
 

@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.config.jwt;
 
+import com.hanghae.naegahama.handler.ex.LoginUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
 
         // Request의 Header에서 token값을 가져온다.
         String token = jwtAuthenticationProvider.tokenResolver(request);

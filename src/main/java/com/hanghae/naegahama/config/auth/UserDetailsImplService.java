@@ -27,8 +27,9 @@ public class UserDetailsImplService implements UserDetailsService {
         return null;
     }
 
-    @Transactional(readOnly = true)
-    public UserDetails checkUserByUserId(String userIdStr, HttpServletResponse response){
+    @Transactional
+    public UserDetails checkUserByUserId(String userIdStr, HttpServletResponse response)
+    {
         long userId = Long.parseLong(userIdStr);
         User findUser = userRepository.findById(userId).orElseThrow(
                 () -> new EmailNotFoundException("가입되지 않은 이메일입니다.")

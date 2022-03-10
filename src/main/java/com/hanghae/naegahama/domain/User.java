@@ -122,9 +122,9 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Integer answerStar)
+    public void addPoint(Integer point)
     {
-        this.point += answerStar*100;
+        this.point += point;
     }
 
     public void setAchievement(Achievement achievement)

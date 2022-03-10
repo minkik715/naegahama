@@ -101,10 +101,32 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PostWriteTitleNullException.class)
+    public ResponseEntity<ErrorResponse> PostWriteTitleNullException(PostWriteTitleNullException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PostWriteContentNullException.class)
+    public ResponseEntity<ErrorResponse> PostWriteContentNullException(PostWriteContentNullException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PostWriteCategoryNullException.class)
+    public ResponseEntity<ErrorResponse> PostWriteCategoryNullException(PostWriteCategoryNullException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PostWriteLevelNullException.class)
+    public ResponseEntity<ErrorResponse> PostWriteLevelNullException(PostWriteLevelNullException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage())
                 , HttpStatus.BAD_REQUEST);
     }
+
+
 
 }
