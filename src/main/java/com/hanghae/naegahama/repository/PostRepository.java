@@ -22,6 +22,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 작성 완료된 글 카테고리 분야로 보기.
     List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);    // 최신순
 
+    Long countByUser(User user);
+
 //    List<Post> findAllByCategoryAndStateOrderByTimeSet(String category, String state);          // 잔여시간 순
 //    // 좋아요 순
 
@@ -31,4 +33,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Post findPostById(Long id);
     Integer countByContentContainingOrTitleContaining(String searchWord, String searchWord2);
+
 }

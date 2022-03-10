@@ -28,6 +28,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
+
     private final PostFileRepository postFileRepository;
 
 
@@ -44,7 +46,8 @@ public class PostService {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
 
-        if (content.length() > 1000) {
+        if (content.length() > 1000)
+        {
             throw new IllegalArgumentException("1000자 이하로 입력해주세요.");
         }
 
@@ -76,13 +79,13 @@ public class PostService {
         }
 
 
+        // 최초 평가시 업적 5 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
 
-        // 퍼블리싱 이벤트? 그거 써서 처리해야함.
-        // 최초 요청글 작성시 업적 5 획득
-        user.getAchievement().setAchievement5(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
-
     }
 
 
@@ -124,20 +127,7 @@ public class PostService {
                 e.printStackTrace();
             }
         }*/
-//        // 기존에 있던 이미지 파일 S3에서 삭제
-//        for ( PostFile deleteS3 : post.getFileList())
-//        {
-//            String[] fileKey = deleteS3.getUrl().split("static/");
-//            try
-//            {
-//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
-//                s3Uploader.deleteS3("static/" + decodeKey);
-//            }
-//            catch (UnsupportedEncodingException e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
+
 
         // 기존에 있던 포스트파일 제거
         postFileRepository.deleteByPost(post);
@@ -192,8 +182,8 @@ public class PostService {
         for (Post post : posts) {
             Integer answerCount = answerRepository.countByPost(post);
             Long postLikeCount = postLikeRepository.countByPost(post);
-            String timeSet = getDeadLine(post);
 
+            String timeSet = getDeadLine(post);
 
             PostResponseDto postResponseDto = new PostResponseDto(
                     post.getId(),
@@ -405,7 +395,6 @@ public class PostService {
                 if (minutes < 1) {
                     long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
                     timeSet = "마감 " + seconds + "초 전";
-
                 }
             }
         }

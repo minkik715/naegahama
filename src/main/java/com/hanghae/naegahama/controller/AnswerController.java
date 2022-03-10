@@ -40,8 +40,6 @@ public class AnswerController
     }
 
 
-
-
     @PutMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
                                            @RequestBody AnswerPutRequestDto answerPutRequestDto)
