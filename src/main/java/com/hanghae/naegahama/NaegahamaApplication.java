@@ -30,7 +30,7 @@ public class NaegahamaApplication {
     public TaskScheduler taskScheduler() {
 
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(3);
+        taskScheduler.setPoolSize(2);
 
         return taskScheduler;
     }

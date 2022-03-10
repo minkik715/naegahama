@@ -101,9 +101,9 @@ public class InitialData implements ApplicationRunner {
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7353f438-b3ad-41c7-84fd-109a6f299f1412345.jpg", answerList.get(0))));
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/247cf91e-ce0e-41af-b873-5cd12637193c12345.jpg", answerList.get(0))));
         answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/47fa85c8-f441-4ccc-a40f-5fa417acded2bandicam+2022-02-24+17-32-15-816.mp4", answerList.get(0))));
-        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", answerList.get(0))));
-        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", answerList.get(0))));
-        answerList.get(0).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", answerList.get(0))));
+        answerList.get(1).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/b86131c7-5979-4bce-8805-8f9ab9e28992bandicam+2022-01-18+14-47-03-954.mp4", answerList.get(1))));
+        answerList.get(2).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/8fe04b0c-dcb9-4380-b6f6-2dd3aa3a941dbandicam+2022-02-24+09-51-56-101.mp4", answerList.get(2))));
+        answerList.get(3).getFileList().add(answerFileRepository.save(new AnswerFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7648875c-60df-4211-a46c-0b1053fec5b3bandicam+2022-01-13+11-26-34-713.mp4", answerList.get(3))));
 
         List<Comment> commentList = new ArrayList<>();
         commentList.add(commentRepository.save(new Comment("정말 맛있게 드셨네요!!!", null,answerList.get(0),userList.get(0) )));

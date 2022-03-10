@@ -49,8 +49,6 @@ public class UserController {
 
     @PostMapping("/userinfo")
     public ResponseEntity<?> setUserInfo(@RequestBody UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        log.info("userinfoRequestDto = {} ", userInfoRequestDto );
-        log.info("username = {}", userDetails.getUser().getNickName());
         return userService.setUserInfo(userDetails.getUser(),userInfoRequestDto);
     }
     @GetMapping("/mypost")
@@ -84,11 +82,13 @@ public class UserController {
         return userService.myBanner(userDetails);
     }
 
+
     @GetMapping("/mycount")
     public MyCountDto mycount(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return userService.mycount(userDetails);
     }
+
 
 
 

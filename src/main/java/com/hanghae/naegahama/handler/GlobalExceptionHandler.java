@@ -12,6 +12,13 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ExceptionHandler(AnswerFileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> AnswerFileNotFoundException(AnswerFileNotFoundException e){
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException e){
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -25,7 +32,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException e) {
+    public ResponseEntity<ErrorResponse> EmailNotFoundException(EmailNotFoundException e) {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

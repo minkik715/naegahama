@@ -48,12 +48,15 @@ public class AnswerService
     {
         //answer와 연결된 post를 찾고
         Post post = postRepository.findPostById(postId);
+        if(post.getStatus().equals("false")){
+            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
+        }
 
         //filelist가 빈 Answer를 미리 하나 만들어두고
-        Answer answer = new Answer(answerPostRequestDto,post,user, publishing);
+       // Answer answer = new Answer(answerPostRequestDto,post,user, publishing);
 
         //저장된 Answer을 꺼내와서
-        Answer saveAnwser = answerRepository.save(answer);
+        Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user, publishing));
 
         for ( String url : answerPostRequestDto.getFile())
         {
@@ -169,7 +172,10 @@ public class AnswerService
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
-
+        Post post = postRepository.findPostById(answer.getPost().getId());
+        if(post.getStatus().equals("false")){
+            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 수정할 수 없습니다.");
+        }
 
         answer.Update(answerPutRequestDto);
 

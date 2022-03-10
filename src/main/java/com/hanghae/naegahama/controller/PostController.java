@@ -84,6 +84,11 @@ public class PostController {
     public ResponseEntity<?> getPostByCategoryAndSort(@PathVariable String category, @PathVariable String sort){
         return postService.getPostByCategoryAndSort(category, sort);
     }
+    //요청글 마감
+    @PostMapping("/api/post/{postId}")
+    public ResponseEntity<?> finishPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(postService.finishPost(postId, userDetails.getUser()));
+    }
 
 
 
