@@ -37,18 +37,16 @@ public class PostService {
         PostWriteException(postRequestDto);
 
         // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
-        User user = GetUser(userDetails);
-        Long postCount = postRepository.countByUser(user);
+        User user = GetUser(userDetails);;
 
         // Post 작성 및 저장
         PostWrite(postRequestDto,user);
+
         // 최초 요청글 작성 업적 획득
-        PostWriteAchievement(user);
+        user.getAchievement().setAchievement5(1);
+
         // 3, 6번째 요청글 작성 시 50 경험치 획득
-        if (postCount == 3 || postCount == 6)
-        {
-            PostWriteAddPoint(user);
-        }
+        PostWriteAddPoint(user);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -458,13 +456,7 @@ public class PostService {
         }
     }
 
-    // 최초 요청글 작성 업적 획득
-    private void PostWriteAchievement(User user)
-    {
-        user.getAchievement().setAchievement5(1);
-    }
 
-    // 3, 6번째 요청글 작성 시 50 경험치 획득
     private void PostWriteAddPoint(User user)
     {
         Long postCount = postRepository.countByUser(user);
@@ -473,6 +465,8 @@ public class PostService {
             user.addPoint(50);
         }
     }
+
+
 
 }
 
