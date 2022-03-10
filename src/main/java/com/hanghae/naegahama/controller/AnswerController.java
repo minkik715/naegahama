@@ -31,13 +31,6 @@ public class AnswerController
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
-    // 요청글 임시 저장
-    @PostMapping("/answer/temporary/{postId}")
-    public ResponseEntity<?> temporaryAnswer(@RequestBody AnswerPostRequestDto answerPostRequestDto,
-           @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
-        return answerService.temporaryAnswer(answerPostRequestDto,postId,userDetails.getUser());
-    }
 
     @ResponseBody
     @GetMapping("/answer/{postId}")
@@ -48,18 +41,7 @@ public class AnswerController
 
 
 
-    @PostMapping("/answer/file")
-    public List<String> fileUpload(@RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
-    {
-        return answerService.fileTest(multipartFile);
-    }
 
-
-//    @PutMapping("/{answerId}")
-//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
-//    {
-//
-//    }
     @PutMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
                                            @RequestBody AnswerPutRequestDto answerPutRequestDto)
