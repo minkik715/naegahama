@@ -25,11 +25,13 @@ public class Scheduler {
     //초 분 시간, 일 월 요일
     @Transactional
     @Scheduled(cron = "*/30 * * * * *")
-    public void changeTime(){
+    public void changeTime() {
         List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
-            if(post.getStatus().equals("true") && post.getDeadLine().isBefore(LocalDateTime.now())){
-                post.setStatus("false");
+            if (post.getDeadLine() != null) {
+                if (post.getStatus().equals("true") && post.getDeadLine().isBefore(LocalDateTime.now())) {
+                    post.setStatus("false");
+                }
             }
         }
     }
