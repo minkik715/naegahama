@@ -24,6 +24,5 @@ hs_err_pid*
 JwtAuthenticationProvider
 application.yml
 aws.yml
-ffmpeg.exe
-ffplay.exe
-ffprobe.exe
+*.exe
+
