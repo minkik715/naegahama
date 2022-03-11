@@ -1,25 +1,19 @@
 package com.hanghae.naegahama.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
-import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
+import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
-import com.hanghae.naegahama.handler.ex.EmailNotFoundException;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
-import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
-import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +35,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final KakaoOAuth2 kakaoOAuth2;
 
     //
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final AnswerLikeRepository answerLikeRepository;
-    private final CommentRepository commentRepository;
     private final AchievementRepository achievementRepository;
 
 
@@ -92,7 +82,7 @@ public class UserService {
   /*  @Transactional
     public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException, JsonProcessingException {
         log.info("kakaoAccessToken ={}", kakaoAccessToken);
-        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
+        KakaoUserInfoDto userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
         log.info("kakaoId = {}, nickname = {}", userInfo.getId(), userInfo.getNickname());
         User user = userRepository.findByKakaoId(userInfo.getId()).orElse(null);
         User saveUser;
@@ -136,9 +126,9 @@ public class UserService {
 
         List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
 
-        for (Post post : postList) {
-            Long likeCount = postLikeRepository.countByPost(post);
-            MyPostDto postMyPageDto = new MyPostDto(post, likeCount);
+        for (Post post : postList)
+        {
+            MyPostDto postMyPageDto = new MyPostDto(post, user);
             myPageDtoList.add(postMyPageDto);
         }
 
@@ -150,9 +140,10 @@ public class UserService {
         User user = userDetails.getUser();
 
         List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
-        for (Answer answer : answerList) {
-            Long likeCount = answerLikeRepository.countByAnswer(answer);
-            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, likeCount);
+        for (Answer answer : answerList)
+        {
+
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user);
             myAnswerDtoList.add(myAnswerDto);
         }
         return myAnswerDtoList;
@@ -171,18 +162,16 @@ public class UserService {
         myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
         myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
         myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
-        myAchievementDto.getAchievement()[8] = achievement.getAchievement9();
 
-        // 업적 1 : answerService.answerStar
-        // 업적 2 : answerService.answerStar
-        // 업적 3 :
-        // 업적 4 : commentService.writeComment
-        // 업적 5 : postService.createPost
-        // 업적 6 : surveyService.createHippo
-        // 업적 7 : answerService.answerStar
-        // 업적 8 :
-        // 업적 9 : answerService.answerWrite;
 
+        // 업적 1 : answerService.answerStar      [ 최초 answer 글 1점 획득 ]
+        // 업적 2 : answerService.answerStar      [ 최초 answer 글 5점 획득 ]
+        // 업적 3 :                               [ 최초 검색기능 사용 - 미구현 ]
+        // 업적 4 : commentService.writeComment   [ 최초 comment 작성 ]
+        // 업적 5 : postService.createPost        [ 최초 post 글 작성 ]
+        // 업적 6 : surveyService.createHippo     [ 최초 survay 설문조사 완료 ]
+        // 업적 7 : answerService.answerStar      [ 최초 answer 글 평가 ]
+        // 업적 8 : answerService.answerWrite;    [ 최초 answer 글 작성 ]
 
         return myAchievementDto;
     }
@@ -199,11 +188,23 @@ public class UserService {
         return ResponseEntity.ok().body(userResponse);
     }
 
+
     // 하나의 트랜젝션이 끝나면 1차 영속성 컨텍스트는 초기화된다.
     //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!
-    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto) {
+    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
+    {
         user.setBasicInfo(userInfoRequestDto);
         userRepository.save(user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
+    }
+
+    public MyCountDto mycount(UserDetailsImpl userDetails)
+    {
+        User user = userDetails.getUser();
+
+        Long postCount = postRepository.countByUser(user);
+        Long answerCount = answerRepository.countByUser(user);
+
+        return new MyCountDto(user,postCount,answerCount);
     }
 }

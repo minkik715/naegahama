@@ -27,8 +27,6 @@ public class Post extends Timestamped implements Comparable<Post> {
     @Column(nullable = false)
     private String title;
 
-
-
     @Column(nullable = false, length = 10000)
     private String content;
 
@@ -50,7 +48,8 @@ public class Post extends Timestamped implements Comparable<Post> {
     @ManyToOne
     private User user;
 
-    public void setDeadLine(LocalDateTime deadLine) {
+    public void setDeadLine(LocalDateTime deadLine)
+    {
         this.deadLine = deadLine;
     }
 
@@ -93,7 +92,6 @@ public class Post extends Timestamped implements Comparable<Post> {
         this.category = postRequestDto.getCategory();
         this.level = postRequestDto.getLevel();
         this.status = "true";
-
     }
 
     public void UpdatePost(PutRequestDto postRequestDto)

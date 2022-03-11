@@ -51,12 +51,22 @@ public class CommentService {
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
         }
+
+
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
-        user.getAchievement().setAchievement4(1);
+
+
+        // 최초 평가시 업적 7 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement4(1);
+
 
         return ResponseEntity.ok().body(commentResponseDto);
-        // 최초 요청글 작성시 업적 4 획득
+
+
+
     }
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {

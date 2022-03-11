@@ -18,12 +18,10 @@ public class PostController {
     // 요청글 작성
     @PostMapping("/api/post")
     public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return postService.createPost(postRequestDto,userDetails.getUser());
+        return postService.createPost(postRequestDto,userDetails);
     }
-
-
 
     // 요청글 전체조회
     @GetMapping("/api/post")
@@ -45,21 +43,6 @@ public class PostController {
         return postService.updatePost(postId, putRequestDto, userDetails);
     }
 
-   /* @GetMapping("/api/post/timeset/{postId}")
-    public ResponseEntity<?> getTimeSet(@PathVariable Long postId)
-    {
-        return postService.getTimeSet(postId);
-    }
-*/
-
-//    //요청글 삭제
-//    @DeleteMapping("/api/post/{postId}")
-//    public ResponseEntity<?> deletePost(@PathVariable Long postId,
-//                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        postService.deletePost(postId, userDetails);
-//
-//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-//    }
 
     // 요청글 상세조회
     @GetMapping("/api/post/{postId}")
