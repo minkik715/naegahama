@@ -10,6 +10,7 @@ import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import com.hanghae.naegahama.repository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.security.jwt.JwtTokenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,10 +25,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.Lob;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -39,7 +42,7 @@ public class KakaoUserService {
     }
 
     public ResponseEntity<?> kakaoLogin(String accessToken,HttpServletResponse response) throws JsonProcessingException {
-
+        log.info("accessToken = {}",accessToken);
         // 2. 토큰으로 카카오 API 호출
         KakaoUserInfo kakaoUserInfo = getKakaoUserInfo(accessToken);
 

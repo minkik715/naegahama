@@ -12,6 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +80,11 @@ public class AnswerService
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement9(1);
+        LocalDateTime deadLine = post.getDeadLine();
+        long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+        if(minutes <60){
+            user.addPoint(50);
+        }
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
