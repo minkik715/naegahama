@@ -12,6 +12,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Integer countByPost(Post post);
     List<Answer> findAllByUserOrderByModifiedAtDesc ( User user);
 
+    Long countByUserAndPost_CategoryAndStarGreaterThanEqual(User user,String category,Integer star);
     Optional<Answer> findByUserAndStar (User user, Long star);
 
 

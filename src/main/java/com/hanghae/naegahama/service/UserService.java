@@ -178,8 +178,39 @@ public class UserService {
 
     public MyBannerDto myBanner(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
+        int[] expert = new int[12];
+        Arrays.fill(expert, 0);
+        Long cook = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "cook", 4);
+        Long health = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "health", 4);
+        Long knowledge = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "knowledge", 4);
+        Long create = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "create", 4);
+        Long visit = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "visit", 4);
+        Long job = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "job", 4);
+        Long pet = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "pet", 4);
+        Long fashion = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "fashion", 4);
+        Long consult = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "consult", 4);
+        Long device = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "device", 4);
+        Long life = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "life", 4);
+        Long etc = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "etc", 4);
+        if(cook >= 5){expert[0] = 1;}
+        if(health >= 5){expert[1] = 1;}
+        if(knowledge >= 5){expert[2] = 1;}
+        if(create >= 5){expert[3] = 1;}
+        if(visit >= 5){expert[4] = 1;}
+        if(job >= 5){expert[5] = 1;}
+        if(pet >= 5){expert[6] = 1;}
+        if(fashion >= 5){expert[7] = 1;}
+        if(consult >= 5){expert[8] = 1;}
+        if(device >= 5){expert[9] = 1;}
+        if(life >= 5){expert[10] = 1;}
+        if(etc >= 5){expert[11] = 1;}
 
-        return new MyBannerDto(user);
+        int point = user.getPoint();
+        if(point <3000){
+             point = point % 1000;
+        }
+
+        return new MyBannerDto(user,expert,point);
     }
 
 

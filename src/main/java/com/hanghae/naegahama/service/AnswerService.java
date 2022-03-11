@@ -76,12 +76,17 @@ public class AnswerService
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        LocalDateTime deadLine = post.getDeadLine();
-        long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-        log.info("잔여시간차이 = {}",minutes);
-        if(minutes <60){
-            achievementUser.addPoint(50);
+
+        if(post.getAnswerList() !=null && post.getAnswerList().size() ==0){
+            LocalDateTime deadLine = post.getDeadLine();
+            long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+            log.info("잔여시간차이 = {}",minutes);
+            if(minutes <60){
+                achievementUser.addPoint(50);
+            }
         }
+
+
         achievementUser.getAchievement().setAchievement8(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
@@ -227,8 +232,8 @@ public class AnswerService
         achievementUser.getAchievement().setAchievement7(1);
 
         Integer addPoint = (starPostRequestDto.getStar()) * 100;
-
-        if( answerWriter.getCategory().equals( answer.getPost().getCategory()))
+        String category = answerWriter.getCategory();
+        if( category.equals( answer.getPost().getCategory()))
         {
             answerWriter.addPoint( addPoint + 50 );
         }
