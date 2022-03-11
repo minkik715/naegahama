@@ -83,6 +83,7 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Search> searchWord = new ArrayList<>();
 
+
     public User(String email, String nickName, String password, int point) {
         this.email = email;
         this.nickName = nickName;
