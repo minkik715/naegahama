@@ -1,8 +1,6 @@
 package com.hanghae.naegahama.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
-import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -23,6 +21,7 @@ import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
 import com.hanghae.naegahama.kakaologin.KakaoOAuth2;
 import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final KakaoOAuth2 kakaoOAuth2;
 
     //
@@ -80,7 +78,7 @@ public class UserService {
         throw new PasswordCheckFailException("비밀번호가 일치하지 않습니다.");
     }
 
-    public ResponseEntity<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) throws EmailNotFoundException {
+ /*   public ResponseEntity<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) throws EmailNotFoundException {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
@@ -89,9 +87,9 @@ public class UserService {
         );
         loginPassword(password, user);
         return getLoginResponseDtoResponseEntity(user);
-    }
+    }*/
 
-    @Transactional
+  /*  @Transactional
     public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException, JsonProcessingException {
         log.info("kakaoAccessToken ={}", kakaoAccessToken);
         KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
@@ -107,13 +105,13 @@ public class UserService {
             saveUser = user;
         }
         return getLoginResponseDtoResponseEntity(saveUser);
-    }
+    }*/
 
-    private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
+ /*   private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
         String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
         LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getId(),user.getUserStatus());
         return ResponseEntity.ok().body(loginResponseDto);
-    }
+    }*/
 
 
     private void loginPassword(String password, User user) {

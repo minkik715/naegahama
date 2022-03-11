@@ -39,14 +39,5 @@ public class Scheduler {
         }
     }
 
-    @Transactional
-    @Scheduled(cron = "*/15 * * * * *")
-    public void changeStatusShrots() {
-        List<AnswerVideo> answerFiles = answerVideoRepository.findAll();
-        for (AnswerVideo answerFile : answerFiles) {
-            if (answerFile.getStatus().equals(false)) {
-                answerFile.setStatus(true);
-            }
-        }
-    }
+
 }

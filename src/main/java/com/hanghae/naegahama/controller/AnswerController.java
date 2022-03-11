@@ -2,17 +2,13 @@
 package com.hanghae.naegahama.controller;
 
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.answer.*;
-import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api")

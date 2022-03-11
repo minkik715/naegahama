@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.config.jwt;
 
 import lombok.RequiredArgsConstructor;
@@ -46,4 +47,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 에러 메세지 줄 때 상태 코드 구체적으로 정해서 줘야 그게 프론트한테 더 좋을듯 하다
     }
-}
+}*/

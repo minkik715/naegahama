@@ -1,8 +1,8 @@
 package com.hanghae.naegahama.controller;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.comment.CommentModifyRequestDto;
 import com.hanghae.naegahama.dto.comment.CommentRequestDto;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

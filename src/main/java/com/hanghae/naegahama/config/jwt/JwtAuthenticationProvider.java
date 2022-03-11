@@ -1,6 +1,6 @@
+/*
 package com.hanghae.naegahama.config.jwt;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImplService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -79,4 +79,4 @@ public class JwtAuthenticationProvider {
             return false;
         }
     }
-}
+}*/

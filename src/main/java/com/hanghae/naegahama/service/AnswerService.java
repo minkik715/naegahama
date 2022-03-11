@@ -1,10 +1,10 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

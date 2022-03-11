@@ -1,12 +1,12 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
 import com.hanghae.naegahama.handler.ex.PostNotFoundException;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

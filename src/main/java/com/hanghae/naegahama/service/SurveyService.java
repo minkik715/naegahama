@@ -1,6 +1,6 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
@@ -9,6 +9,7 @@ import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

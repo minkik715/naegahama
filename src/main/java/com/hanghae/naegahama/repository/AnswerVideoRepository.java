@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface AnswerVideoRepository extends JpaRepository<AnswerVideo,Long> {
     void deleteByAnswer(Answer answer);
-    List<AnswerVideo> findAllByStatusAndUrlEndingWithOrUrlEndingWith(Boolean bool, String ext, String ext2);
+    List<AnswerVideo> findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc( String ext, String ext2);
 
     List<AnswerVideo> findAllByAnswerOrderByCreatedAt(Answer answer);
 

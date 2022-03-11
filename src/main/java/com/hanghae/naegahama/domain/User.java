@@ -55,6 +55,10 @@ public class User extends Timestamped{
     @Column
     private String userStatus;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
 
     @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
@@ -86,7 +90,6 @@ public class User extends Timestamped{
         this.point = point;
         this.hippoLevel = 1;
         this.userStatus = "true";
-
     }
 
     public User(SignUpRequestDto signUpRequestDto, String password) {
@@ -104,6 +107,14 @@ public class User extends Timestamped{
         this.kakaoId = kakaoUserInfo.getId();
         this.hippoLevel = 1;
         this.userStatus = "true";
+    }
+
+
+    public User(String encodedPassword, String email, UserRoleEnum role, Long kakaoId) {
+        this.password = encodedPassword;
+        this.email = email;
+        this.role = role;
+        this.kakaoId = kakaoId;
     }
 
     @Transactional

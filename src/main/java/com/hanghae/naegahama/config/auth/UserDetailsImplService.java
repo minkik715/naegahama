@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.config.auth;
 
 import com.hanghae.naegahama.domain.User;
@@ -41,4 +42,4 @@ public class UserDetailsImplService implements UserDetailsService {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-}
+}*/
