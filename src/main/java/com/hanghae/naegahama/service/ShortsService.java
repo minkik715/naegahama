@@ -44,24 +44,26 @@ public class ShortsService {
     }*/
 
     public ResponseEntity<?> getOneShorts() {
-        List<AnswerVideo> mp4File = answerVideoRepository.findAllByStatusAndUrlEndingWithOrUrlEndingWith(true,"mp4", "short");
+        List<AnswerVideo> mp4File = answerVideoRepository.findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc("mp4", "short");
 
         int size = mp4File.size();
         if(size == 0){
             throw new AnswerFileNotFoundException("동영상이 존재하지 않습니다.");
         }
+        List<ShortsResponseDto> shortsResponseDtoList = new ArrayList<>();
         int randomNum = ((int) (Math.random() * size));
-
-            AnswerVideo findAnswerFile = mp4File.get(randomNum);
-            findAnswerFile.setStatus(false);
-            Answer answer = findAnswerFile.getAnswer();
+        for (AnswerVideo answerVideo : mp4File) {
+            Answer answer = answerVideo.getAnswer();
+            Long postId = answer.getPost().getId();
             User user = answer.getUser();
-            String url = findAnswerFile.getUrl();
+            String url = answerVideo.getUrl();
             if(url.substring(url.lastIndexOf(".")+1).equals("mp4")){
                 url = url.replace("mp4", "short");
             }
-        ShortsResponseDto shortsResponseDto =(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId()));
-        return ResponseEntity.ok().body(shortsResponseDto);
+            shortsResponseDtoList.add(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId(),postId));
+        }
+
+        return ResponseEntity.ok().body(shortsResponseDtoList);
 
     }
 }

@@ -1,9 +1,7 @@
-/*
-package com.hanghae.naegahama.config.auth;
+package com.hanghae.naegahama.security;
 
 import com.hanghae.naegahama.domain.User;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import com.hanghae.naegahama.domain.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,22 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-//@RequiredArgsConstructor
-@Getter
-@Slf4j
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-
-        SimpleGrantedAuthority simpleAuthority = new SimpleGrantedAuthority("USER");
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleAuthority);
-        return authorities;
-    }
 
     public UserDetailsImpl(User user) {
         this.user = user;
@@ -43,8 +28,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
-        //user.getUserEmail();
+        return user.getEmail();
     }
 
     @Override
@@ -66,4 +50,16 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-}*/
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        UserRoleEnum role = user.getRole();
+        String authority = role.getAuthority();
+
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleGrantedAuthority);
+
+        return authorities;
+    }
+}

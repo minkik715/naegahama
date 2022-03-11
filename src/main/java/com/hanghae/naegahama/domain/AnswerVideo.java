@@ -23,11 +23,7 @@ public class AnswerVideo extends Timestamped{
         this.url = url;
         this.answer = answer;
     }
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 
-    private Boolean status;
 
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
@@ -41,6 +37,5 @@ public class AnswerVideo extends Timestamped{
     public AnswerVideo(String url)
     {
         this.url = url;
-        this.status = true;
     }
 }

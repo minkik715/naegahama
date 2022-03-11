@@ -1,8 +1,8 @@
 package com.hanghae.naegahama.controller;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PutRequestDto;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

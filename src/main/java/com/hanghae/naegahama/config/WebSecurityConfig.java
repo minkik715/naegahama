@@ -1,7 +1,15 @@
-package com.hanghae.naegahama.config;
+
+/*package com.hanghae.naegahama.config;
 
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationFilter;
 import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
+import com.hanghae.naegahama.security.FilterSkipMatcher;
+import com.hanghae.naegahama.security.FormLoginSuccessHandler;
+import com.hanghae.naegahama.security.filter.FormLoginFilter;
+import com.hanghae.naegahama.security.filter.JwtAuthFilter;
+import com.hanghae.naegahama.security.jwt.HeaderTokenExtractor;
+import com.hanghae.naegahama.security.provider.FormLoginAuthProvider;
+import com.hanghae.naegahama.security.provider.JWTAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,4 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-}
+}*/
+
+
+

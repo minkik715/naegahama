@@ -1,6 +1,6 @@
 package com.hanghae.naegahama.controller;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.service.SurveyService;

@@ -40,7 +40,12 @@ public class CommentService {
         Long parentCommentId = commentRequestDto.getParentCommentId();
         Comment comment = null;
         if(parentCommentId == null) {
-            comment = new Comment(commentContent, findAnswer, user,commentRequestDto.getTimestamp());
+            String timestamp = commentRequestDto.getTimestamp();
+            if(timestamp !=null){
+                String[] split = timestamp.split(":");
+
+            }
+            comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
         }else{
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
