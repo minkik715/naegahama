@@ -91,8 +91,7 @@ public class Post extends Timestamped implements Comparable<Post> {
         this.content = postRequestDto.getContent();
         this.category = postRequestDto.getCategory();
         this.level = postRequestDto.getLevel();
-//        this.status = "true";
-
+        this.status = "true";
     }
 
     public void UpdatePost(PutRequestDto postRequestDto)

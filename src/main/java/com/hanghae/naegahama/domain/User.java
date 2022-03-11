@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
-import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
+import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,10 +101,10 @@ public class User extends Timestamped{
 
 
     }
-    public User(KakaoUserInfo kakaoUserInfo) {
-        this.email = kakaoUserInfo.getEmail();
-        this.nickName = kakaoUserInfo.getNickname();
-        this.kakaoId = kakaoUserInfo.getId();
+    public User(KakaoUserInfoDto kakaoUserInfoDto) {
+        this.email = kakaoUserInfoDto.getEmail();
+        this.nickName = kakaoUserInfoDto.getNickname();
+        this.kakaoId = kakaoUserInfoDto.getId();
         this.hippoLevel = 1;
         this.userStatus = "true";
     }
