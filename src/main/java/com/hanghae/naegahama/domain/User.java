@@ -133,9 +133,23 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Integer answerStar)
+    public void addPoint(Integer point)
     {
-        this.point += answerStar*100;
+        this.point += point;
+
+        // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
+        if (this.hippoLevel != 3 )
+        {
+            if (this.point >= 2000)
+            {
+                this.hippoLevel = 3;
+            }
+            else if ( this.point >= 1000 && this.hippoLevel !=2)
+            {
+                this.hippoLevel = 2;
+            }
+        }
+
     }
 
     public void setAchievement(Achievement achievement)

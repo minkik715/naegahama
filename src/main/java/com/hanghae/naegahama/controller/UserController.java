@@ -4,11 +4,8 @@ package com.hanghae.naegahama.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
 import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
-import com.hanghae.naegahama.dto.login.LoginRequestDto;
-import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
-import com.hanghae.naegahama.dto.MyPage.MyPostDto;
+import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.signup.NickNameDuplicateCheckDto;
-import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.handler.ex.ErrorResponse;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -20,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
@@ -93,5 +89,15 @@ public class UserController {
     public ResponseEntity<ErrorResponse> error(){
         return new ResponseEntity<>(new ErrorResponse("400", "로그인 정보가 없습니다."), HttpStatus.BAD_REQUEST);
     }
+
+
+    @GetMapping("/mycount")
+    public MyCountDto mycount(@AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return userService.mycount(userDetails);
+    }
+
+
+
 
 }
