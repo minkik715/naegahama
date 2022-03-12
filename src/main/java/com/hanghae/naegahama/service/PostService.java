@@ -433,7 +433,7 @@ public class PostService {
 
     // Post 작성 및 저장
     @Transactional
-    private void PostWrite(PostRequestDto postRequestDto, User user)
+    void PostWrite(PostRequestDto postRequestDto, User user)
     {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
 
@@ -461,7 +461,7 @@ public class PostService {
     }
 
     @Transactional
-    private void PostWriteAddPoint(User user)
+    void PostWriteAddPoint(User user)
     {
         Long postCount = postRepository.countByUser(user);
         if (postCount == 3 || postCount == 6)

@@ -8,6 +8,7 @@ import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -30,9 +31,9 @@ public class AnswerController
 
     @ResponseBody
     @GetMapping("/answer/{postId}")
-    public List<AnswerGetResponseDto> answerList(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public List<AnswerGetResponseDto> answerList(@PathVariable Long postId)
     {
-        return answerService.answerList(postId, userDetails);
+        return answerService.answerList(postId);
     }
 
 
@@ -57,9 +58,9 @@ public class AnswerController
     }
 
     @GetMapping("/answer/detail/{answerId}")
-    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails )
+    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId )
     {
-        return answerService.answerDetail(answerId,userDetails);
+        return answerService.answerDetail(answerId);
     }
 
     @PostMapping("/star/{answerId}")
