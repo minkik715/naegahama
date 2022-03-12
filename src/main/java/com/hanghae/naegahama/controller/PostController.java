@@ -27,7 +27,6 @@ public class PostController {
 
     // 요청글 전체조회
     @GetMapping("/api/post")
-    @ExeTimer
     public ResponseEntity<?> getPost() {return ResponseEntity.ok().body(postService.getPost());
     }
 
