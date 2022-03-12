@@ -1,6 +1,7 @@
 
 package com.hanghae.naegahama.service;
 
+//import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
@@ -30,6 +31,8 @@ public class CommentService {
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+//    private final AlarmService alarmService;
+//    private final MessageRepository messageRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -63,6 +66,10 @@ public class CommentService {
         achievementUser.getAchievement().setAchievement4(1);
 
 
+
+//        Message message = new Message(findAnswer.getUser(),findAnswer.getTitle()+"에 댓글이 달렸습니다.");
+//        Message save1 = messageRepository.save(message);
+//        alarmService.alarmByMessage(new MessageDto(save1));
         return ResponseEntity.ok().body(commentResponseDto);
 
 
