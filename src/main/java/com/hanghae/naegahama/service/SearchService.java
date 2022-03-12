@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
@@ -10,6 +11,7 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,11 +113,18 @@ public class SearchService {
     }
 }
 
-
-//    //최근검색어 순위
-//    public List<SearchAnswerRequestDto> SearchList() {
-//        searchRepository.여기에서 가장 많이 검색된 순위 5개? 정도 꺼내서 보여주기.
 //
+//    //검색어 삭제
+//    public ResponseEntity deleteSearch(Long searchId, UserDetailsImpl userDetails) {
+//        User user = userDetails.getUser();
+//        searchRepository.deleteByIdAndUser(searchId, user);
+//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+//    }
+//
+//    //검색어 전체삭제
+//    public ResponseEntity<?> deleteAllSearch(UserDetailsImpl userDetails) {
+//        User user = userDetails.getUser();
+//        searchRepository.deleteByUser(user);
+//        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+//    }
 //}
-
-
