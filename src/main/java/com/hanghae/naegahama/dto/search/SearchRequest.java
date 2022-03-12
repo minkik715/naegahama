@@ -14,17 +14,14 @@ public class SearchRequest {
     private String content;
     private String file;
     private LocalDateTime modifiedAt;
-
+    private String category;
     public SearchRequest(Long id, String title, String content,
-                         LocalDateTime modifiedAt, String file) {
+                         LocalDateTime modifiedAt, String file, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.file =file;
         this.modifiedAt = modifiedAt;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
+        this.category = category;
     }
 }
