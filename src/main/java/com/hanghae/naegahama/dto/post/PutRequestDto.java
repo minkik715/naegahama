@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class PutRequestDto
 {
+    @NotBlank(message = "내용은 필수입니다.")
     private String content;
     private List<String> file;
 }

@@ -94,7 +94,7 @@ public class AnswerService
 
 
     // 요청 글에 달린 answerList 조회
-    public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public List<AnswerGetResponseDto> answerList(Long postId)
     {
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
         List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
@@ -168,7 +168,7 @@ public class AnswerService
 
 
     // 답변글 상세 조회
-    public AnswerDetailGetResponseDto answerDetail(Long answerId, UserDetailsImpl userDetails)
+    public AnswerDetailGetResponseDto answerDetail(Long answerId)
     {
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));

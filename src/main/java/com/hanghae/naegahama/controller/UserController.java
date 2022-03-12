@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -29,16 +30,7 @@ public class UserController {
 
     private final UserService userService;
     private final KakaoUserService kakaoUserService;
-    //날릴예정
-/*    @PostMapping("/user/signup")
-    public ResponseEntity<?> signUp(@RequestBody @Validated SignUpRequestDto signUpRequestDto, HttpServletResponse response){
-        return(login(userService.signUp(signUpRequestDto), response));
-    }*/
-    //날릴예정
- /*   @PostMapping("/user/login")
-    public ResponseEntity<?> login(@RequestBody @Validated LoginRequestDto loginRequestDto,HttpServletResponse httpServletResponse){
-        return userService.login(loginRequestDto,httpServletResponse);
-    }*/
+
 
     @PostMapping("/user/nickname")
     public ResponseEntity<?> emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){

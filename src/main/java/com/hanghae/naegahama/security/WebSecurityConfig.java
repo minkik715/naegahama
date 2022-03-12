@@ -115,14 +115,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         List<String> skipPathList = new ArrayList<>();
 
 
+        //error
+        skipPathList.add("GET,/error");
+
         // h2-console 허용
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
-        // 회원 관리 API 허용
-        skipPathList.add("GET,/api/**");
-        skipPathList.add("POST,/api/user/**");
+        //로그인
+        skipPathList.add("POST,/api/user/kakaoLogin");
+        skipPathList.add("POST,/api/user/nickname");
+
+        //요청글
+        skipPathList.add("GET,/api/post/**");
 
 
+        //답변글
+        skipPathList.add("GET,/api/answer/**");
+
+        //댓글
+        skipPathList.add("GET,/api/comment/**");
+
+        //etc
+        skipPathList.add("GET,/api/upload");
+        skipPathList.add("GET,/api/rank");
+        skipPathList.add("GET,/api/postsearch/**");
+        skipPathList.add("GET,/api/answersearch/**");
+        skipPathList.add("GET,/api/shorts");
+        skipPathList.add("GET,/api/survey/{hippoName}");
 
         skipPathList.add("GET,/favicon.ico");
 
