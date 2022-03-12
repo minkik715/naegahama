@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.dto.post;
 
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 

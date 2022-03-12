@@ -8,13 +8,11 @@
       <jdbc-url>jdbc:mysql://hama.cq9ifvpof03k.ap-northeast-2.rds.amazonaws.com:3306/naegahama</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="naegahama.main/Hibernate" uuid="b3dd23f1-7452-49ac-8496-bc784649cf78">
-      <driver-ref>h2.unified</driver-ref>
+    <data-source source="LOCAL" name="hippo-database" uuid="54030148-ad79-4f36-b2dc-589a7eb21836">
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>Hibernate</remarks>
-      <jdbc-driver>org.h2.Driver</jdbc-driver>
-      <jdbc-url>jdbc:h2:mem:testdb</jdbc-url>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://hippo-database.cmrmeuo3816y.ap-northeast-2.rds.amazonaws.com:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

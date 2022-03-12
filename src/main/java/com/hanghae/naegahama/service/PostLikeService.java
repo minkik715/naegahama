@@ -35,14 +35,19 @@ public class PostLikeService {
                 ()->new IllegalArgumentException("게시글이 없습니다.")
         );
 
+        User postWriter = post.getUser();
+
         PostLike findPostLike = postLikeRepository.findByUserAndPost(user,post).orElse(null);
         log.info("userId ={}", user.getId());
         if(findPostLike == null){
             PostLikeRequestDto requestDto = new PostLikeRequestDto(user, post);
             PostLike postLike = new PostLike(requestDto);
             postLikeRepository.save(postLike);
-        } else {
+            postWriter.addPoint(5);
+        } else
+        {
             postLikeRepository.deleteById(findPostLike.getId());
+            postWriter.addPoint(-5);
         }
         return new PostLikeResponseDto(postId, postLikeRepository.countByPost(post));
     }

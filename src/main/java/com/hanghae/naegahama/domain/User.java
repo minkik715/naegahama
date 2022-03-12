@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
-import com.hanghae.naegahama.kakaologin.KakaoUserInfo;
+import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +55,10 @@ public class User extends Timestamped{
     @Column
     private String userStatus;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
 
     @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
@@ -79,6 +83,7 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Search> searchWord = new ArrayList<>();
 
+
     public User(String email, String nickName, String password, int point) {
         this.email = email;
         this.nickName = nickName;
@@ -86,7 +91,6 @@ public class User extends Timestamped{
         this.point = point;
         this.hippoLevel = 1;
         this.userStatus = "true";
-
     }
 
     public User(SignUpRequestDto signUpRequestDto, String password) {
@@ -98,12 +102,20 @@ public class User extends Timestamped{
 
 
     }
-    public User(KakaoUserInfo kakaoUserInfo) {
-        this.email = kakaoUserInfo.getEmail();
-        this.nickName = kakaoUserInfo.getNickname();
-        this.kakaoId = kakaoUserInfo.getId();
+    public User(KakaoUserInfoDto kakaoUserInfoDto) {
+        this.email = kakaoUserInfoDto.getEmail();
+        this.nickName = kakaoUserInfoDto.getNickname();
+        this.kakaoId = kakaoUserInfoDto.getId();
         this.hippoLevel = 1;
         this.userStatus = "true";
+    }
+
+
+    public User(String encodedPassword, String email, UserRoleEnum role, Long kakaoId) {
+        this.password = encodedPassword;
+        this.email = email;
+        this.role = role;
+        this.kakaoId = kakaoId;
     }
 
     @Transactional
@@ -122,9 +134,23 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Integer answerStar)
+    public void addPoint(Integer point)
     {
-        this.point += answerStar*100;
+        this.point += point;
+
+        // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
+        if (this.hippoLevel != 3 )
+        {
+            if (this.point >= 2000)
+            {
+                this.hippoLevel = 3;
+            }
+            else if ( this.point >= 1000 && this.hippoLevel !=2)
+            {
+                this.hippoLevel = 2;
+            }
+        }
+
     }
 
     public void setAchievement(Achievement achievement)

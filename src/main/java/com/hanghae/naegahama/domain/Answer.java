@@ -36,8 +36,6 @@ public class Answer extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @Column
-    private String state;
 
 
     @JsonManagedReference
@@ -76,7 +74,7 @@ public class Answer extends Timestamped {
 
 
 
-    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user, String state)
+    public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user)
     {
 
         this.title = answerPostRequestDto.getTitle();
@@ -84,7 +82,6 @@ public class Answer extends Timestamped {
         this.post = post;
         this.user = user;
         this.star = 0;
-        this.state = state;
     }
 
 

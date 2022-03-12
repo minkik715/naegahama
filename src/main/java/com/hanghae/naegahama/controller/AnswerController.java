@@ -2,17 +2,13 @@
 package com.hanghae.naegahama.controller;
 
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.answer.*;
-import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -24,20 +20,13 @@ public class AnswerController
 
     // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite (@RequestBody AnswerPostRequestDto answerPostRequestDto,
+    public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerPostRequestDto answerPostRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
 //        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
-    // 요청글 임시 저장
-    @PostMapping("/answer/temporary/{postId}")
-    public ResponseEntity<?> temporaryAnswer(@RequestBody AnswerPostRequestDto answerPostRequestDto,
-           @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
-        return answerService.temporaryAnswer(answerPostRequestDto,postId,userDetails.getUser());
-    }
 
     @ResponseBody
     @GetMapping("/answer/{postId}")
@@ -47,22 +36,9 @@ public class AnswerController
     }
 
 
-
-    @PostMapping("/answer/file")
-    public List<String> fileUpload(@RequestPart(value = "file", required = false) List<MultipartFile> multipartFile) throws IOException
-    {
-        return answerService.fileTest(multipartFile);
-    }
-
-
-//    @PutMapping("/{answerId}")
-//    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
-//    {
-//
-//    }
     @PutMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                           @RequestBody AnswerPutRequestDto answerPutRequestDto)
+                                           @RequestBody @Validated AnswerPutRequestDto answerPutRequestDto)
     {
         return answerService.answerUpdate(answerId, userDetails, answerPutRequestDto);
     }
@@ -87,7 +63,7 @@ public class AnswerController
     }
 
     @PostMapping("/star/{answerId}")
-    public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody StarPostRequestDto starPostRequestDto)
+    public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);
     }

@@ -18,12 +18,21 @@ public class MyBannerDto
 
     private int hippolv;
 
-    public MyBannerDto(User user)
+    private String category;
+
+    private int[] expert = new int[12];
+
+    private String imgUrl;
+
+    public MyBannerDto(User user,int[] expert,int point)
     {
         this.nickname = user.getNickName();
         this.email = user.getEmail();
         this.hippoName = user.getHippoName();
-        this.point = user.getPoint();
+        this.point =
         this.hippolv = user.getHippoLevel();
+        this.category = user.getCategory();
+        this.imgUrl = null;
+        this.expert = expert;
     }
 }

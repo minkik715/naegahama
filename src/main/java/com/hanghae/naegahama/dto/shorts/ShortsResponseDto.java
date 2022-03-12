@@ -11,12 +11,14 @@ public class ShortsResponseDto {
     private String nickname;
     private String profileUrl;
     private Long answerId;
+    private Long postId;
 
-    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId) {
+    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId) {
         this.videoUrl = videoUrl;
         this.title = title;
         this.nickname = nickname;
         this.profileUrl = profileUrl;
         this.answerId = answerId;
+        this.postId = postId;
     }
 }
