@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Post extends Timestamped implements Comparable<Post> {
     @Column(nullable = false)
     private String title;
 
+    @NotNull
     @Column(nullable = false, length = 10000)
     private String content;
 

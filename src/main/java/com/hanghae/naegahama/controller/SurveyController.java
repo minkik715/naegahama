@@ -17,7 +17,7 @@ public class SurveyController {
 
     //설문조사 제출
     @PostMapping("/api/survey")
-    public ResponseEntity<?> createHippo(@RequestBody SurveyRequestDto surveyRequestDto,
+    public ResponseEntity<?> createHippo(@RequestBody @Validated SurveyRequestDto surveyRequestDto,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         surveyService.createHippo(surveyRequestDto, userDetails.getUser());

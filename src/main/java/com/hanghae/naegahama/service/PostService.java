@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -21,7 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -31,6 +31,7 @@ public class PostService {
     private final PostFileRepository postFileRepository;
 
     //요청글 작성
+    @Transactional
     public ResponseEntity<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails)
     {
         // 로그인 예외 처리 + json 데이터 예외처리
@@ -365,6 +366,7 @@ public class PostService {
         return timeSet;
     }
 
+    @Transactional
     public ResponseEntity<?> finishPost(Long postId, User user) {
         Post findPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("존재하지 않는 글 입니다.")
@@ -430,6 +432,7 @@ public class PostService {
 
 
     // Post 작성 및 저장
+    @Transactional
     private void PostWrite(PostRequestDto postRequestDto, User user)
     {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
@@ -457,7 +460,7 @@ public class PostService {
         }
     }
 
-
+    @Transactional
     private void PostWriteAddPoint(User user)
     {
         Long postCount = postRepository.countByUser(user);

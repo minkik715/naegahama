@@ -21,27 +21,6 @@ import java.util.*;
 public class ShortsService {
 
     private final AnswerVideoRepository answerVideoRepository;
- /*   public ResponseEntity<?> getThreeShorts() {
-        List<AnswerFile> mp4File = answerFileRepository.findAllByUrlEndingWith("mp4");
-        long size = (long)mp4File.size();
-        HashSet<Long> randomSet = new HashSet<>();
-        while(randomSet.size() != 3){
-            randomSet.add((long) (Math.random() * size));
-        }
-        ArrayList<Long> arrayList = new ArrayList<>(randomSet);
-
-        ArrayList<ShortsResponseDto> shortsResponseListDto = new ArrayList<>();
-
-        for (Long num : arrayList) {
-            AnswerFile findAnswerFile = answerFileRepository.findById(num).orElseThrow(
-                    () -> new AnswerNotFoundException("존재하지않는 답변글입니다.")
-            );
-            Answer answer = findAnswerFile.getAnswer();
-            User user = answer.getUser();
-            shortsResponseListDto.add(new ShortsResponseDto(findAnswerFile.getUrl(),answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId()));
-        }
-        return ResponseEntity.ok().body(shortsResponseListDto);
-    }*/
 
     public ResponseEntity<?> getOneShorts() {
         List<AnswerVideo> mp4File = answerVideoRepository.findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc("mp4", "short");
@@ -51,7 +30,6 @@ public class ShortsService {
             throw new AnswerFileNotFoundException("동영상이 존재하지 않습니다.");
         }
         List<ShortsResponseDto> shortsResponseDtoList = new ArrayList<>();
-        int randomNum = ((int) (Math.random() * size));
         for (AnswerVideo answerVideo : mp4File) {
             Answer answer = answerVideo.getAnswer();
             Long postId = answer.getPost().getId();
