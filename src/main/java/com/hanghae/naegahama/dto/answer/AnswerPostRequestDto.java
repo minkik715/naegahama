@@ -9,9 +9,13 @@ import java.util.List;
 @Setter
 public class AnswerPostRequestDto
 {
+    
     private String title;
+
     private String content;
+
     private List<String> file;
+
     private String video;
 }
 

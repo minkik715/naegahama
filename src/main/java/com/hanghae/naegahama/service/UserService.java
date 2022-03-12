@@ -14,6 +14,7 @@ import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
+import com.hanghae.naegahama.initial.Category;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -180,7 +181,14 @@ public class UserService {
         User user = userDetails.getUser();
         int[] expert = new int[12];
         Arrays.fill(expert, 0);
-        Long cook = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "cook", 4);
+        int i =0;
+        for (String cate : Category.category) {
+            if(answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, cate, 4) >=5){
+                expert[i] = 1;
+            }
+        }
+
+       /* Long cook = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "cook", 4);
         Long health = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "health", 4);
         Long knowledge = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "knowledge", 4);
         Long create = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "create", 4);
@@ -204,7 +212,7 @@ public class UserService {
         if(device >= 5){expert[9] = 1;}
         if(life >= 5){expert[10] = 1;}
         if(etc >= 5){expert[11] = 1;}
-
+*/
         int point = user.getPoint();
         if(point <3000){
              point = point % 1000;

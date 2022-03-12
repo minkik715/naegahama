@@ -20,7 +20,7 @@ public class AnswerController
 
     // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite (@RequestBody AnswerPostRequestDto answerPostRequestDto,
+    public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerPostRequestDto answerPostRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
@@ -38,7 +38,7 @@ public class AnswerController
 
     @PutMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                           @RequestBody AnswerPutRequestDto answerPutRequestDto)
+                                           @RequestBody @Validated AnswerPutRequestDto answerPutRequestDto)
     {
         return answerService.answerUpdate(answerId, userDetails, answerPutRequestDto);
     }
@@ -63,7 +63,7 @@ public class AnswerController
     }
 
     @PostMapping("/star/{answerId}")
-    public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody StarPostRequestDto starPostRequestDto)
+    public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);
     }

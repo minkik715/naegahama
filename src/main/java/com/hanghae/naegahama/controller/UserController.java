@@ -31,28 +31,28 @@ public class UserController {
     private final KakaoUserService kakaoUserService;
     //날릴예정
 /*    @PostMapping("/user/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto, HttpServletResponse response){
+    public ResponseEntity<?> signUp(@RequestBody @Validated SignUpRequestDto signUpRequestDto, HttpServletResponse response){
         return(login(userService.signUp(signUpRequestDto), response));
     }*/
     //날릴예정
  /*   @PostMapping("/user/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto,HttpServletResponse httpServletResponse){
+    public ResponseEntity<?> login(@RequestBody @Validated LoginRequestDto loginRequestDto,HttpServletResponse httpServletResponse){
         return userService.login(loginRequestDto,httpServletResponse);
     }*/
 
     @PostMapping("/user/nickname")
-    public ResponseEntity<?> emailCheck(@RequestBody NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
+    public ResponseEntity<?> emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
         return userService.nicknameCheck(nickNameDuplicateCheckDto.getNickname());
     }
 
     @PostMapping("/user/kakaoLogin")
-    public ResponseEntity<?> login(@RequestBody Map<String, Object> param,HttpServletResponse response) throws JsonProcessingException {
+    public ResponseEntity<?> login(@RequestBody @Validated Map<String, Object> param,HttpServletResponse response) throws JsonProcessingException {
 
          return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(),response);
     }
 
     @PostMapping("/userinfo")
-    public ResponseEntity<?> setUserInfo(@RequestBody UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<?> setUserInfo(@RequestBody @Validated UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.setUserInfo(userDetails.getUser(),userInfoRequestDto);
     }
     @GetMapping("/mypost")

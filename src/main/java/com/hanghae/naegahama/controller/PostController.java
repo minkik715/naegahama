@@ -4,11 +4,13 @@ import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.dto.post.PutRequestDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.PostService;
+import com.hanghae.naegahama.timetest.ExeTimer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
+
 @RequiredArgsConstructor
 @RestController
 public class PostController {
@@ -17,7 +19,7 @@ public class PostController {
 
     // 요청글 작성
     @PostMapping("/api/post")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto postRequestDto,
+    public ResponseEntity<?> createPost(@RequestBody @Validated PostRequestDto postRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return postService.createPost(postRequestDto,userDetails);
@@ -25,8 +27,8 @@ public class PostController {
 
     // 요청글 전체조회
     @GetMapping("/api/post")
-    public ResponseEntity<?> getPost() {
-        return ResponseEntity.ok().body(postService.getPost());
+    @ExeTimer
+    public ResponseEntity<?> getPost() {return ResponseEntity.ok().body(postService.getPost());
     }
 
     //카테고리
@@ -37,7 +39,7 @@ public class PostController {
 
     // 요청글 수정
     @PutMapping("/api/post/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PutRequestDto putRequestDto,
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody @Validated PutRequestDto putRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return postService.updatePost(postId, putRequestDto, userDetails);
