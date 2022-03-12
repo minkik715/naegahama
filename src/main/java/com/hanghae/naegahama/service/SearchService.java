@@ -152,5 +152,5 @@ public class SearchService {
         User user = userDetails.getUser();
         searchRepository.deleteByUser(user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
-    }sdfsdfsdfsdfsdf
+    }
 }
