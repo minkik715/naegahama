@@ -426,7 +426,7 @@ public class PostService {
     private User GetUser(UserDetailsImpl userDetails)
     {
         return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                () -> new LoginUserNotFoundException("업적 달성 유저를 찾을 수 없습니다."));
+                () -> new LoginUserNotFoundException("유저를 찾을 수 없습니다."));
     }
 
 

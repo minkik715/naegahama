@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Hippo-database" uuid="0da71f8f-ff26-42bd-9620-02efcce2eaea">
+    <data-source source="LOCAL" name="hippo-database" uuid="8efaba86-eb60-446e-b56e-afc9bcdb9b5f">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

@@ -47,7 +47,12 @@ public class KakaoUserService {
         KakaoUserInfoDto kakaoUserInfoDto;
         if(accessToken.equals("12345")){
              kakaoUserInfoDto = new KakaoUserInfoDto(123456L,"123",UUID.randomUUID().toString());
-        }else {
+        }
+        else if (accessToken.equals("pjg"))
+        {
+            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG",UUID.randomUUID().toString());
+        }
+        else {
              kakaoUserInfoDto = getKakaoUserInfo(accessToken);
         }
         // 3. 필요시에 회원가입
