@@ -2,6 +2,7 @@ package com.hanghae.naegahama.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -20,57 +22,96 @@ import java.util.Optional;
 public class S3Uploader {
 
     private final AmazonS3Client amazonS3Client;
-    private final String imageDirName = "image";
-
+    private final VideoEncode videoEncode;
     @Value("${cloud.aws.s3.bucket}")
-    public String bucket;  // S3 버킷 이름
+    public String naegahama;
 
-    public String upload(MultipartFile multipartFile, String convertedFileName) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+    public String upload(MultipartFile multipartFile, String dirName, Boolean isVideo) throws IOException{
+        File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
+        if(isVideo){
+            File convertFile = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
+            String uuid = UUID.randomUUID().toString();
 
-        return upload(uploadFile, convertedFileName);
+            // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                    fos.write(multipartFile.getBytes());
+                }
+            }
+            log.info("ok");
+            videoEncode.videoEncode(convertFile.getAbsolutePath(),System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
+            videoEncode.cutVideo(convertFile.getAbsolutePath(), System.getProperty("user.dir") + "/shorts" + multipartFile.getOriginalFilename());
+            File file = new File(System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
+            log.info("긴 동영상 로컬 성공");
+            log.info("파일저장장소 = {}",file.getAbsolutePath());
+            removeNewFile(uploadFile);
+            if(videoEncode.getVideoLength(file.getAbsolutePath()) <15){
+                return upload(file, dirName,true,uuid);
+            }
+            File shortFile = new File(System.getProperty("user.dir") + "/shorts" + multipartFile.getOriginalFilename());
+            log.info("쇼츠 동영상 로컬 성공");
+            log.info("파일저장장소 = {}",shortFile.getAbsolutePath());
+
+
+
+            upload(shortFile,dirName,true,uuid);
+
+
+            return upload(file, dirName,false,uuid);
+
+
+        }else {
+            return upload(uploadFile, dirName,false,UUID.randomUUID().toString());
+        }
     }
-
     // S3로 파일 업로드하기
-    private String upload(File uploadFile, String convertedFileName) {
-        String fileName = imageDirName + "/" + convertedFileName;   // S3에 저장된 파일 이름
-        System.out.println("작성" + fileName);
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
-        removeNewFile(uploadFile);
-        return uploadImageUrl;
+    private String upload(File uploadFile, String dirName, Boolean isShort,String uuid) {
+        if(isShort){
+            String fileName = dirName + "/" + uuid +".short";   // S3에 저장된 파일 이름
+            return putS3(uploadFile, fileName);
+        }
+        String fileName = dirName + "/" +uuid +"."+uploadFile.getName().substring(uploadFile.getName().lastIndexOf(".")+1);   // S3에 저장된 파일 이름
+        return putS3(uploadFile, fileName);
     }
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        amazonS3Client.putObject(new PutObjectRequest(naegahama, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        removeNewFile(uploadFile);
+        return amazonS3Client.getUrl(naegahama, fileName).toString();
     }
 
-    // S3로 파일 삭제
-    public void deleteFile(String deleteFile) {
-        amazonS3Client.deleteObject(bucket, deleteFile);
+    // S3로 삭제
+    public void deleteS3( String fileName)
+    {
+
+        Boolean isExistObject = amazonS3Client.doesObjectExist(naegahama,fileName);
+        if (isExistObject)
+        {
+            amazonS3Client.deleteObject(naegahama,fileName);
+        }
+        else{
+            System.out.println("삭제할 s3 파일 존재하지 않음");
+        }
     }
 
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("local File delete success");
-            return;
-        }
-        log.info("local File delete fail");
+        targetFile.delete();
+        log.info("{} delete success", targetFile.getName());
     }
 
-    // 로컬에 파일 업로드 하기
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+    private Optional<File> convert(MultipartFile multipartFile) throws IOException
+    {
+        File convertFile = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
+        // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+        if (convertFile.createNewFile())
+        {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
-                fos.write(file.getBytes());
+                fos.write(multipartFile.getBytes());
             }
             return Optional.of(convertFile);
         }
-
         return Optional.empty();
     }
 }
