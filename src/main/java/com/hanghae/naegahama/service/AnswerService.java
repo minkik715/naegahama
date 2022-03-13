@@ -37,7 +37,7 @@ public class AnswerService
     {
         Post post = postRepository.findPostById(postId);
 
-        if(post.getStatus().equals("false"))
+        if(post.getStatus().equals("closed"))
         {
             return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
         }
