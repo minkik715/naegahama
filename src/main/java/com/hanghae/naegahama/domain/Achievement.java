@@ -33,7 +33,7 @@ public class Achievement extends Timestamped
     @Column
     private int achievement7;
     @Column
-    private int achievement8;
+    private int firstAnswerWrite;
 
 
     @OneToOne ( mappedBy = "achievement") // user entity의 achievement 변수에 종속 당하겠다.
@@ -48,7 +48,7 @@ public class Achievement extends Timestamped
         this.achievement5 = 0;
         this.achievement6 = 0;
         this.achievement7 = 0;
-        this.achievement8 = 0;
+        this.firstAnswerWrite = 0;
         this.user = user;
         user.setAchievement(this);
     }

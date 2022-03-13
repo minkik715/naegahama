@@ -33,7 +33,7 @@ public class AnswerService
 
     // 답변글 작성
     @Transactional
-    public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
+    public ResponseEntity<?> answerWrite(AnswerRequestDto answerRequestDto, Long postId, User user)
     {
         Post post = postRepository.findPostById(postId);
 
@@ -43,43 +43,32 @@ public class AnswerService
         }
 
         //저장된 Answer을 꺼내와서
-        Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user));
+        Answer anwser = answerRepository.save(new Answer(answerRequestDto,post,user));
 
-        for ( String url : answerPostRequestDto.getFile())
-        {
-            // 이미지 파일 url로 answerFile 객체 생성
-            AnswerFile fileUrl = new AnswerFile(url);
+        AnswerWriting(anwser,answerRequestDto);
 
-            // answerFile saveanswer를 연관관계 설정
-            fileUrl.setAnswer(saveAnwser);
-
-            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
-            AnswerFile saveFile = answerFileRepository.save(fileUrl);
-
-            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
-            saveAnwser.getFileList().add(saveFile);
-        }
-
-        AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
-        videoUrl.setAnswer(saveAnwser);
-
-        //빠뜨리신 재균님?
-        answerVideoRepository.save(videoUrl);
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
 
-        if(post.getAnswerList() !=null && post.getAnswerList().size() ==0){
+
+
+        if(post.getAnswerList() !=null && post.getAnswerList().size() == 0)
+        {
             LocalDateTime deadLine = post.getDeadLine();
             long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
             log.info("잔여시간차이 = {}",minutes);
-            if(minutes <60){
+            if(minutes <60)
+            {
                 achievementUser.addPoint(50);
             }
         }
 
+        if ( user.getAchievement().getFirstAnswerWrite() == 0)
+        {
+            achievementUser.getAchievement().setFirstAnswerWrite(1);
+        }
 
-        achievementUser.getAchievement().setAchievement8(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -106,7 +95,7 @@ public class AnswerService
 
 
     // 응답글 수정
-    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
+    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerRequestDto answerRequestDto )
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
@@ -115,30 +104,13 @@ public class AnswerService
             return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 수정할 수 없습니다.");
         }
 
-        answer.Update(answerPutRequestDto);
+        answer.Update(answerRequestDto);
 
         // 기존에 있던 포스트파일 제거
         answerFileRepository.deleteByAnswer(answer);
         answerVideoRepository.deleteByAnswer(answer);
 
-        // 새로운 이미지 파일 url 배열로 for 반복문을 실행
-        for (String url : answerPutRequestDto.getFile()) {
-            // 이미지 파일 url로 postFile 객체 생성
-            AnswerFile fileUrl = new AnswerFile(url);
-
-            // postFile에 savePost를 연관관계 설정
-            fileUrl.setAnswer(answer);
-
-            // 이미지 파일 url 1개에 해당되는 postFile을 DB에 저장
-            AnswerFile saveFile = answerFileRepository.save(fileUrl);
-
-            // 저장된 postFile을 저장된 post에 한개씩 추가함
-            answer.getFileList().add(saveFile);
-        }
-
-        AnswerVideo videoUrl = new AnswerVideo(answerPutRequestDto.getVideo());
-        videoUrl.setAnswer(answer);
-        answerVideoRepository.save(videoUrl);
+        AnswerWriting(answer,answerRequestDto);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -238,5 +210,34 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
+
+
+    void AnswerWriting(Answer answer, AnswerRequestDto answerRequestDto)
+    {
+        for ( String url : answerRequestDto.getFile())
+        {
+            // 이미지 파일 url로 answerFile 객체 생성
+            AnswerFile fileUrl = new AnswerFile(url);
+
+            // answerFile saveanswer를 연관관계 설정
+            fileUrl.setAnswer(answer);
+
+            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
+            AnswerFile saveFile = answerFileRepository.save(fileUrl);
+
+            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
+            answer.getFileList().add(saveFile);
+        }
+
+        AnswerVideo videoUrl = new AnswerVideo(answerRequestDto.getVideo());
+        videoUrl.setAnswer(answer);
+
+        //빠뜨리신 재균님?
+        answerVideoRepository.save(videoUrl);
+    }
+
+
+
+
 
 }

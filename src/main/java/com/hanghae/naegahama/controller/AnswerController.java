@@ -19,10 +19,10 @@ public class AnswerController
 
     // 답변글 작성
     @PostMapping("/answer/{postId}")
-    public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerPostRequestDto answerPostRequestDto,
+    public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerRequestDto answerRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
+        return answerService.answerWrite(answerRequestDto,postId, userDetails.getUser());
     }
 
 
@@ -36,9 +36,9 @@ public class AnswerController
 
     @PutMapping("/answer/{answerId}")
     public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                           @RequestBody @Validated AnswerPutRequestDto answerPutRequestDto)
+                                           @RequestBody @Validated AnswerRequestDto answerRequestDto)
     {
-        return answerService.answerUpdate(answerId, userDetails, answerPutRequestDto);
+        return answerService.answerUpdate(answerId, userDetails, answerRequestDto);
     }
 
 //    // 임시 저장 글 리스트 불러오기
