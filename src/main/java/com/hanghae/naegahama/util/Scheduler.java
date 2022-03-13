@@ -32,8 +32,8 @@ public class Scheduler {
         List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
             if (post.getDeadLine() != null) {
-                if (post.getStatus().equals("true") && post.getDeadLine().isBefore(LocalDateTime.now())) {
-                    post.setStatus("false");
+                if (post.getStatus().equals("open") && post.getDeadLine().isBefore(LocalDateTime.now())) {
+                    post.setStatus("closed");
                 }
             }
         }
