@@ -1,7 +1,6 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
-import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
@@ -10,8 +9,6 @@ import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,10 +36,12 @@ public class SearchService {
     //검색키워드 유저정보에 저장.
     public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
         log.info("searchWord = {}", searchWord);
+
+
         if (!(userDetails == null)) {
             User user = userDetails.getUser();
-            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) ;
-            {
+            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) {
+
                 Search search = new Search(searchWord, user);
                 searchRepository.save(search);
             }
@@ -54,7 +53,9 @@ public class SearchService {
 
         Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
         if (posts.size() == 0) {
-            throw new PostNotFoundException("글이 존재하지 않습니다");
+
+            return new SearchPostRequest(searchRequests, answerCount);
+
         }
         for (Post post : posts) {
             String file = null;
