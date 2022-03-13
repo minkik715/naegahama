@@ -15,14 +15,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByUserHippoName(String hippoName);
 //    List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);
 
-    // 해당 계정이 작성한 임시작성글 불러오기
-    List<Post> findAllByUserAndState(User user, String state);
 
     // 작성 완료된 모든 글 불러오기
-    List<Post> findAllByStateOrderByCreatedAtDesc(String state);
+    List<Post> findAllByOrderByCreatedAtDesc();
 
     // 작성 완료된 글 카테고리 분야로 보기.
-    List<Post> findAllByCategoryAndStateOrderByCreatedAtDesc(String category, String state);    // 최신순
+    List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);    // 최신순
+
+    Long countByUser(User user);
 
 //    List<Post> findAllByCategoryAndStateOrderByTimeSet(String category, String state);          // 잔여시간 순
 //    // 좋아요 순
@@ -33,4 +33,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Post findPostById(Long id);
     Integer countByContentContainingOrTitleContaining(String searchWord, String searchWord2);
+
 }

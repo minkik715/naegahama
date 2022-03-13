@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class MyAchievementDto
 {
-    private int[] achievement = new int[9];
+    private int[] achievement = new int[8];
 }

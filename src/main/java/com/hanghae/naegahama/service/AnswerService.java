@@ -1,10 +1,10 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 @Service
 @Slf4j
@@ -38,9 +36,6 @@ public class AnswerService
 
     private final S3Uploader s3Uploader;
 
-    private final String publishing = "작성완료";
-    private final String temporary = "임시저장";
-
 
     // 답변글 작성
     @Transactional
@@ -56,7 +51,7 @@ public class AnswerService
        // Answer answer = new Answer(answerPostRequestDto,post,user, publishing);
 
         //저장된 Answer을 꺼내와서
-        Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user, publishing));
+        Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user));
 
         for ( String url : answerPostRequestDto.getFile())
         {
@@ -75,77 +70,31 @@ public class AnswerService
 
         AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
         videoUrl.setAnswer(saveAnwser);
-        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
 
-        // 임시 작성중이던 모든 글 삭제
-        List<Answer> deleteList = answerRepository.findAllByUserAndState(user, temporary);
-
-        for ( Answer deleteAnswer : deleteList)
-        {
-            answerFileRepository.deleteByAnswer(deleteAnswer);
-            answerRepository.deleteById(deleteAnswer.getId());
-        }
-
+        //빠뜨리신 재균님?
+        answerVideoRepository.save(videoUrl);
         // 최초 요청글 작성시 업적 5 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement9(1);
+
+        if(post.getAnswerList() !=null && post.getAnswerList().size() ==0){
+            LocalDateTime deadLine = post.getDeadLine();
+            long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+            log.info("잔여시간차이 = {}",minutes);
+            if(minutes <60){
+                achievementUser.addPoint(50);
+            }
+        }
+
+
+        achievementUser.getAchievement().setAchievement8(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    // 답변글 임시 작성
-    public ResponseEntity<?> temporaryAnswer(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
-    {
-        //answer와 연결된 post를 찾고
-        Post post = postRepository.findPostById(postId);
-
-        //filelist가 빈 Answer를 미리 하나 만들어두고
-        Answer answer = new Answer(answerPostRequestDto,post,user, temporary);
-
-        //저장된 Answer을 꺼내와서
-        Answer saveAnwser = answerRepository.save(answer);
-
-        for ( String url : answerPostRequestDto.getFile())
-        {
-            // 이미지 파일 url로 answerFile 객체 생성
-            AnswerFile fileUrl = new AnswerFile(url);
-
-            // answerFile saveanswer를 연관관계 설정
-            fileUrl.setAnswer(saveAnwser);
-
-            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
-            AnswerFile saveFile = answerFileRepository.save(fileUrl);
-
-            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
-            saveAnwser.getFileList().add(saveFile);
-        }
-
-        AnswerVideo videoUrl = new AnswerVideo(answerPostRequestDto.getVideo());
-        videoUrl.setAnswer(saveAnwser);
-        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
-
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
-    }
-
-
-    public List<String> fileTest(List<MultipartFile> multipartFile) throws IOException
-    {
-        List<String> urlList = new ArrayList<>();
-
-        for ( MultipartFile file : multipartFile)
-        {
-
-            String url = s3Uploader.upload(file, "static");
-            urlList.add(url);
-            log.info(url);
-        }
-
-         return urlList;
-    }
 
     // 요청 글에 달린 answerList 조회
-    public List<AnswerGetResponseDto> answerList(Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public List<AnswerGetResponseDto> answerList(Long postId)
     {
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
         List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
@@ -197,7 +146,7 @@ public class AnswerService
 
         AnswerVideo videoUrl = new AnswerVideo(answerPutRequestDto.getVideo());
         videoUrl.setAnswer(answer);
-        AnswerVideo saveVideo = answerVideoRepository.save(videoUrl);
+        answerVideoRepository.save(videoUrl);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -219,7 +168,7 @@ public class AnswerService
 
 
     // 답변글 상세 조회
-    public AnswerDetailGetResponseDto answerDetail(Long answerId, UserDetailsImpl userDetails)
+    public AnswerDetailGetResponseDto answerDetail(Long answerId)
     {
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
@@ -243,9 +192,6 @@ public class AnswerService
 
 //        AnswerVideo answerVideo = answerVideoRepository.findByAnswer(answer).orElseThrow(
 //                () -> new IllegalArgumentException("비디오가 존재하지 않습니다."));
-
-
-
 
 
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList, answer.getPost().getCategory());
@@ -280,22 +226,25 @@ public class AnswerService
             answerWriter.getAchievement().setAchievement2(1);
         }
 
-//        // 최초 평가시 업적 7 획득
-//        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
-//                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-//        achievementUser.getAchievement().setAchievement7(1);
+        // 최초 평가시 업적 7 획득
+        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement7(1);
 
+        Integer addPoint = (starPostRequestDto.getStar()) * 100;
+        String category = answerWriter.getCategory();
+        if( category.equals( answer.getPost().getCategory()))
+        {
+            answerWriter.addPoint( addPoint + 50 );
+        }
+        else
+        {
+            answerWriter.addPoint( addPoint );
+        }
 
-
-        answerWriter.addPoint(starPostRequestDto.getStar());
 
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-
-//    public ResponseEntity<?> temporaryLoad(UserDetailsImpl userDetails)
-//    {
-//
-//    }
 }

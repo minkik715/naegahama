@@ -26,6 +26,8 @@ public class AnswerLikeService {
                 ()->new IllegalArgumentException("답변글이 없습니다.")
         );
 
+        User answerWriter = answer.getUser();
+
         //오 좋은 거 배우고 갑니다.
         AnswerLike findAnswerLike = answerLikeRepository.findByUserAndAnswer(user,answer).orElse(null);
 
@@ -33,8 +35,10 @@ public class AnswerLikeService {
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
             answerLikeRepository.save(answerLike);
+            answerWriter.addPoint(5);
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
+            answerWriter.addPoint(-5);
         }
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
     }

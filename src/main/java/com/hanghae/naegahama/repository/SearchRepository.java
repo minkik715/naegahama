@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public interface SearchRepository extends JpaRepository<Search, Long> {
+
     List<Search> findAllByUserOrderByCreatedAtDesc(User user);
     Search findByUserOrderByCreatedAtDesc(User user);
     void deleteByUser(User user);

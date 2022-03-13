@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.initial;
 
 import com.hanghae.naegahama.domain.*;
@@ -10,6 +11,9 @@ import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +41,20 @@ public class InitialData implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
+
+
+        */
+/*
+        동영상은 파일 중에서도 사이즈가 크다 보니까 성능상의 이슈가 특히 중요하다고 느꼈다. 구현한 4가지 기능(압축, 썸네일, 크기, 재생시간 추출)의 작업 시간과 CPU 사용률을 대략적으로 살펴봤을 때, 특히 동영상 압축 작업이 가장 오래 걸리고 CPU 사용률이 높게 치솟았다. 이러한 점들 때문에 실제 서비스를 운영하는 환경에서는 동영상을 처리하는 별도의 서버를 두는 것도 고려해볼 수 있을 거 같다.
+
+그리고 ffmpeg과 같은 멀티미디어를 따로 설치해야 하기 때문에, AWS를 사용한다면 EC2에 별도로 ffmpeg을 설치해 AMI로 구성할지 등에 대한 고민도 필요할 거 같다.
+
+지난번 Animated GIF 썸네일 생성하기에 이어서 이번에 동영상 파일 처리를 위한 작업을 진행했는데 ffmpeg을 설치하는 것부터 시작해서 많은 삽질을 한 거 같다...
+
+그래도 원하는 결과물을 만들어낼 수 있어서 뿌듯했고 그 과정에서 동영상 처리를 위해 주의할 점을 계속적으로 고민해볼 수 있는 좋은 기회였다.
+         *//*
+
+
         //유저만들기
         List<User> userList = new ArrayList<>();
         userList.add(new User("aaa@gmail.com", "aaa", passwordEncoder.encode("123456"), 1000));
@@ -52,30 +70,30 @@ public class InitialData implements ApplicationRunner {
 
         //요청글 만들기
         List<Post> PostList = new ArrayList<>();
-        PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0),"작성완료",1));
-        PostList.add(new Post("치킨먹어주실분", "황금올리브로 야무지게 먹어주세요!", "cook","중", userList.get(0),"작성완료",2));
-        PostList.add(new Post("자전거대신타주실분", "한강 공원 한바퀴만 돌아주세요!", "health","상", userList.get(1),"작성완료",3));
-        PostList.add(new Post("푸시업해주실분", "저대신 푸시업 20개만 해주세요!", "health","하", userList.get(1),"작성완료",4));
-        PostList.add(new Post("코딩해주실분!", "저대신 코딩좀 해주세요..", "knowledge","중", userList.get(2),"작성완료",1));
-        PostList.add(new Post("숙제풀어주실분", "숙제좀 저대신 해주세요!", "knowledge","상", userList.get(2),"작성완료",6));
-        PostList.add(new Post("레고 만들어주실분", "거북선 만들기 어렵네요", "create","하", userList.get(3),"작성완료",7));
-        PostList.add(new Post("음 음", "음 음", "create","중", userList.get(3),"작성완료",8));
-        PostList.add(new Post("한강가주실분!", "한강가주실분", "visit","상", userList.get(4),"작성완료",9));
-        PostList.add(new Post("제주도 바다 보여주세요!", "제주도 바다 보여주세요!", "visit","하", userList.get(4),"작성완료",10));
-        PostList.add(new Post("개발자 브이로그 보고싶어요!", "개발자 브이로그 보고싶어요", "job","중", userList.get(5),"작성완료",1));
-        PostList.add(new Post("백수브이로그 궁금해요", "백수브이로그 궁금해요", "job","상", userList.get(5),"작성완료",12));
-        PostList.add(new Post("고양이사진 보여주세요", "고양이사진 보여주세요", "pet","하", userList.get(6),"작성완료",13));
-        PostList.add(new Post("강아지사진 보여주세요", "신라면으로 야무지게 먹어주세요!", "pet","중", userList.get(6),"작성완료",14));
-        PostList.add(new Post("오늘 패션 짜주세요!", "오늘 패션 짜주세요!", "fashion","상", userList.get(5),"작성완료",15));
-        PostList.add(new Post("이 옷 있으신분 착용샷 보여주세요!", "이 옷 있으신분 착용샷 보여주세요!", "fashion","하", userList.get(5),"작성완료",16));
-        PostList.add(new Post("cosult1", "cosult1content", "consult","중", userList.get(4),"작성완료",1));
-        PostList.add(new Post("cosult2", "cosult2content", "consult","상", userList.get(4),"작성완료",5));
-        PostList.add(new Post("맥북 신상 후기", "맥북 신상 후기", "device","하", userList.get(3),"작성완료",4));
-        PostList.add(new Post("세탁히 신상 후기", "세탁히 신상 후기", "device","중", userList.get(3),"작성완료",3));
-        PostList.add(new Post("life1", "life1content", "life","상", userList.get(2),"작성완료",1));
-        PostList.add(new Post("life2", "life2content", "life","하", userList.get(2),"작성완료",7));
-        PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1),"작성완료",9));
-        PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1),"작성완료",1));
+        PostList.add(new Post("라면먹어주실분", "신라면으로 야무지게 먹어주세요!", "cook","하", userList.get(0),1));
+        PostList.add(new Post("치킨먹어주실분", "황금올리브로 야무지게 먹어주세요!", "cook","중", userList.get(0),2));
+        PostList.add(new Post("자전거대신타주실분", "한강 공원 한바퀴만 돌아주세요!", "health","상", userList.get(1),3));
+        PostList.add(new Post("푸시업해주실분", "저대신 푸시업 20개만 해주세요!", "health","하", userList.get(1),4));
+        PostList.add(new Post("코딩해주실분!", "저대신 코딩좀 해주세요..", "knowledge","중", userList.get(2),1));
+        PostList.add(new Post("숙제풀어주실분", "숙제좀 저대신 해주세요!", "knowledge","상", userList.get(2),6));
+        PostList.add(new Post("레고 만들어주실분", "거북선 만들기 어렵네요", "create","하", userList.get(3),7));
+        PostList.add(new Post("음 음", "음 음", "create","중", userList.get(3),8));
+        PostList.add(new Post("한강가주실분!", "한강가주실분", "visit","상", userList.get(4),9));
+        PostList.add(new Post("제주도 바다 보여주세요!", "제주도 바다 보여주세요!", "visit","하", userList.get(4),10));
+        PostList.add(new Post("개발자 브이로그 보고싶어요!", "개발자 브이로그 보고싶어요", "job","중", userList.get(5),1));
+        PostList.add(new Post("백수브이로그 궁금해요", "백수브이로그 궁금해요", "job","상", userList.get(5),12));
+        PostList.add(new Post("고양이사진 보여주세요", "고양이사진 보여주세요", "pet","하", userList.get(6),13));
+        PostList.add(new Post("강아지사진 보여주세요", "신라면으로 야무지게 먹어주세요!", "pet","중", userList.get(6),14));
+        PostList.add(new Post("오늘 패션 짜주세요!", "오늘 패션 짜주세요!", "fashion","상", userList.get(5),15));
+        PostList.add(new Post("이 옷 있으신분 착용샷 보여주세요!", "이 옷 있으신분 착용샷 보여주세요!", "fashion","하", userList.get(5),16));
+        PostList.add(new Post("cosult1", "cosult1content", "consult","중", userList.get(4),1));
+        PostList.add(new Post("cosult2", "cosult2content", "consult","상", userList.get(4),5));
+        PostList.add(new Post("맥북 신상 후기", "맥북 신상 후기", "device","하", userList.get(3),4));
+        PostList.add(new Post("세탁히 신상 후기", "세탁히 신상 후기", "device","중", userList.get(3),3));
+        PostList.add(new Post("life1", "life1content", "life","상", userList.get(2),1));
+        PostList.add(new Post("life2", "life2content", "life","하", userList.get(2),7));
+        PostList.add(new Post("etc1", "etc1content", "etc","중", userList.get(1),9));
+        PostList.add(new Post("etc2", "etc1content", "etc","상", userList.get(1),1));
         postRepository.saveAll(PostList);
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/7353f438-b3ad-41c7-84fd-109a6f299f1412345.jpg", PostList.get(0))));
         PostList.get(0).getFileList().add(postFileRepository.save(new PostFile("https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/247cf91e-ce0e-41af-b873-5cd12637193c12345.jpg", PostList.get(0))));
@@ -88,10 +106,10 @@ public class InitialData implements ApplicationRunner {
 
 
         List<Answer> answerList = new ArrayList<>();
-  /*      answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
+        answerList.add(new Answer("먹어드립니다.","내공 냠냠",PostList.get(1),userList.get(1)));
         answerList.add(new Answer("한강 갔습니다.","평점 말고 코딩 대신 해주면 안되나요?",PostList.get(0),userList.get(0)));
         answerList.add(new Answer("라면 후기","내공 냠냠",PostList.get(0),userList.get(2)));
-        answerRepository.saveAll(answerList);*/
+        answerRepository.saveAll(answerList);
         answerList.add(answerRepository.save(new Answer("제가 신라면 잘먹습니다", 0,"라면중에는 신라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(3))));
         answerList.add(answerRepository.save(new Answer("제가 너구리 잘먹습니다", 0,"라면중에는 너구리가 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(4))));
         answerList.add(answerRepository.save(new Answer("제가 진라면 잘먹습니다", 0,"라면중에는 진라면이 쵝오죠 제가 대신 먹어드릴게요" ,PostList.get(0),userList.get(5))));
@@ -127,4 +145,4 @@ public class InitialData implements ApplicationRunner {
 
     }
 
-}
+}*/

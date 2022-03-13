@@ -1,12 +1,13 @@
 package com.hanghae.naegahama.controller;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.comment.CommentModifyRequestDto;
 import com.hanghae.naegahama.dto.comment.CommentRequestDto;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/comment")
@@ -18,13 +19,13 @@ public class CommentController {
 
     @PostMapping("/{answerId}")
     public ResponseEntity<?> writeComment(@PathVariable Long answerId,
-                                          @RequestBody CommentRequestDto commentRequestDto,
+                                          @RequestBody @Validated CommentRequestDto commentRequestDto,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
         return commentService.writeComment(answerId, commentRequestDto,userDetails.getUser());
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<?> modifyComment(@PathVariable Long commentId, @RequestBody CommentModifyRequestDto commentModifyRequestDto){
+    public ResponseEntity<?> modifyComment(@PathVariable Long commentId, @RequestBody @Validated CommentModifyRequestDto commentModifyRequestDto){
         return commentService.modifyComment(commentId,commentModifyRequestDto);
     }
 
