@@ -138,7 +138,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(AnswerStarExistException.class)
+    public ResponseEntity<ErrorResponse> AnswerStarExistException(AnswerStarExistException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage())
                 , HttpStatus.BAD_REQUEST);

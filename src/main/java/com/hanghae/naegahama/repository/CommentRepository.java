@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Long countByAnswer(Answer answer);
+    int countByAnswer(Answer answer);
 
     List<Comment> findAllByAnswer(Answer answer);
 

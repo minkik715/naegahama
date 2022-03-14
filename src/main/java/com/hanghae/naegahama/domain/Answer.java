@@ -88,7 +88,6 @@ public class Answer extends Timestamped {
     {
         this.title = answerPutRequestDto.getTitle();
         this.content = answerPutRequestDto.getContent();
-
     }
 
     public Answer(String title, String content, Post post, User user) {

@@ -21,13 +21,13 @@ public class AnswerGetResponseDto
 
     private LocalDateTime modifiedAt;
 
-    private Long answerLikeCount;
+    private int answerLikeCount;
 
-    private Long commentCount;
+    private int commentCount;
 
     private int imageCount;
 
-    public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
+    public AnswerGetResponseDto(Answer answer, int commentCount, int likeCount,int imageCount)
     {
         this.answerId = answer.getId();
         this.answerWriter = answer.getUser().getNickName();

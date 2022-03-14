@@ -134,7 +134,7 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Integer point)
+    public void addPoint(int point)
     {
         this.point += point;
 

@@ -3,7 +3,6 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
-import com.hanghae.naegahama.dto.post.PostRequestDto;
 import com.hanghae.naegahama.handler.ex.*;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -46,7 +45,6 @@ public class AnswerService
             throw new AnswerWritePostClosedException("닫힌 글입니다.");
         }
 
-        //저장된 Answer을 꺼내와서
         Answer anwser = answerRepository.save(new Answer(answerRequestDto,post,user));
         AnswerFileSave(anwser,answerRequestDto);
 
@@ -67,15 +65,14 @@ public class AnswerService
 
         for ( Answer answer : answerList)
         {
-            Long commentCount = commentRepository.countByAnswer(answer);
-            Long likeCount = answerLikeRepository.countByAnswer(answer);
+            int commentCount = commentRepository.countByAnswer(answer);
+            int likeCount = answerLikeRepository.countByAnswer(answer);
             int imageCount = answer.getFileList().size();
             AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer,commentCount,likeCount,imageCount);
             answerGetResponseDtoList.add(answerGetResponseDto);
         }
 
         return answerGetResponseDtoList;
-
     }
 
 
@@ -83,15 +80,21 @@ public class AnswerService
     public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerRequestDto answerRequestDto )
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+                () -> new AnswerNotFoundException("해당 답글은 존재하지 않습니다."));
         Post post = postRepository.findPostById(answer.getPost().getId());
-        if(post.getStatus().equals("false")){
-            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 수정할 수 없습니다.");
+
+        if(userDetails.getUser().getId().equals(answer.getUser().getId()))
+        {
+            throw new UserNotFoundException("로그인한 유저가 작성자가 아닙니다.");
+        }
+
+        if(post.getStatus().equals("closed"))
+        {
+            throw new AnswerWritePostClosedException("마감이 된 글에는 답변을 수정할 수 없습니다.");
         }
 
         answer.Update(answerRequestDto);
 
-        // 기존에 있던 포스트파일 제거
         answerFileRepository.deleteByAnswer(answer);
         answerVideoRepository.deleteByAnswer(answer);
 
@@ -103,13 +106,12 @@ public class AnswerService
     public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+                () -> new AnswerNotFoundException("해당 답글은 존재하지 않습니다."));
 
         answerLikeRepository.deleteByAnswer(answer);
         answerFileRepository.deleteByAnswer(answer);
         answerVideoRepository.deleteByAnswer(answer);
         commentRepository.deleteByAnswer(answer);
-
         answerRepository.deleteById(answerId);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
@@ -120,74 +122,64 @@ public class AnswerService
     public AnswerDetailGetResponseDto answerDetail(Long answerId)
     {
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+                () -> new AnswerNotFoundException("해당 답글은 존재하지 않습니다."));
 
-        Long likeCount = answerLikeRepository.countByAnswer(answer);
-        Long commentCount = commentRepository.countByAnswer(answer);
-
-        List<AnswerLike> likeList = answer.getLikeList();
-        List<Long> likeUserList = new ArrayList<>();
-
-        List<AnswerFile> findAnswerFileList = answerFileRepository.findAllByAnswerOrderByCreatedAt(answer);
+        int likeCount = answerLikeRepository.countByAnswer(answer);
+        int commentCount = commentRepository.countByAnswer(answer);
 
         List<String> fileList = new ArrayList<>();
+        List<AnswerFile> findAnswerFileList = answerFileRepository.findAllByAnswerOrderByCreatedAt(answer);
         for (AnswerFile answerFile : findAnswerFileList) {
             fileList.add(answerFile.getUrl());
         }
+
+        List<Long> likeUserList = new ArrayList<>();
+        List<AnswerLike> likeList = answer.getLikeList();
         for ( AnswerLike likeUser : likeList)
         {
             likeUserList.add(likeUser.getUser().getId());
         }
 
-//        AnswerVideo answerVideo = answerVideoRepository.findByAnswer(answer).orElseThrow(
-//                () -> new IllegalArgumentException("비디오가 존재하지 않습니다."));
-
-
-        AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList, answer.getPost().getCategory());
-
-        return answerDetailGetResponseDto;
+        return new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList );
     }
 
-    @Transactional
+    // 작서자가
     public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
     {
-        User requestWriter = userDetails.getUser();
-
         Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+                () -> new AnswerNotFoundException("해당 답글은 존재하지 않습니다."));
+        User requestWriter = GetUser(userDetails);
+        User answerWriter = answer.getUser();
+
+        Achievement answerWriterAchievement = achievementRepository.findByUser(answerWriter);
+        Achievement requestWriterAchievement = achievementRepository.findByUser(requestWriter);
+        requestWriterAchievement.AddAchievement(7);
 
         if( answer.getStar() != 0 )
         {
-            throw new IllegalArgumentException("이미 평가한 답글입니다.");
+            throw new AnswerStarExistException("이미 평가한 답글입니다.");
         }
 
         answer.Star(starPostRequestDto);
-        User answerWriter = answer.getUser();
-
-
-
-        // 1점을 받을 시 업적 1 획득
         if ( starPostRequestDto.getStar() == 1)
         {
-            Achievement achievement = achievementRepository.findByUser(answerWriter);
-            achievement.AddAchievement(1);
+            answerWriterAchievement.AddAchievement(1);
         }
-        // 5점을 받을 시 업적 2 획득
         else if( starPostRequestDto.getStar() == 5)
         {
-            Achievement achievement = achievementRepository.findByUser(answerWriter);
-            achievement.AddAchievement(2);
+            answerWriterAchievement.AddAchievement(2);
         }
+        requestWriterAchievement.AddAchievement(7);
 
-        // 최초 평가시 업적 7 획득
-        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        Achievement achievement = achievementRepository.findByUser(achievementUser);
-        achievement.AddAchievement(7);
+        int addPoint = (starPostRequestDto.getStar()) * 100;
 
-        Integer addPoint = (starPostRequestDto.getStar()) * 100;
-        String category = answerWriter.getCategory();
-        if( category.equals( answer.getPost().getCategory()))
+        String category =  answer.getPost().getCategory();
+
+        if( category.equals( answerWriter.getCategory()))
+        {
+            answerWriter.addPoint( addPoint + 50 );
+        }
+        else if ( answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(answerWriter, category, 4) >= 5 )
         {
             answerWriter.addPoint( addPoint + 50 );
         }
@@ -196,12 +188,8 @@ public class AnswerService
             answerWriter.addPoint( addPoint );
         }
 
-
-
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
-
-
 
     // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
     private User GetUser(UserDetailsImpl userDetails)
@@ -234,23 +222,5 @@ public class AnswerService
             }
         }
     }
-
-
-    // Post 작성 json 데이터 예외처리
-    private void AnswerWriteException(AnswerRequestDto answerRequestDto)
-    {
-        // 전달받은 json 데이터에서 전달받은 제목값이 null이라면 예외처리
-        if (answerRequestDto.getTitle().equals(""))
-        {
-            throw new PostWriteTitleNullException("제목이 입력되지 않았습니다.");
-        }
-
-
-
-
-
-    }
-
-
 
 }
