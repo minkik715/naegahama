@@ -162,8 +162,8 @@ public class UserService {
         myAchievementDto.getAchievement()[4] = achievement.getAchievement5();
         myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
         myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
-        myAchievementDto.getAchievement()[7] = achievement.getFirstAnswerWrite();
-
+//        myAchievementDto.getAchievement()[7] = achievement.getFirstAnswerWrite();
+        myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
 
         // 업적 1 : answerService.answerStar      [ 최초 answer 글 1점 획득 ]
         // 업적 2 : answerService.answerStar      [ 최초 answer 글 5점 획득 ]

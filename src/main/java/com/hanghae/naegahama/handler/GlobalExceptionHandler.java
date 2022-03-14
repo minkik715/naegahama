@@ -128,6 +128,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AnswerWritePostClosedException.class)
+    public ResponseEntity<ErrorResponse> AnswerWritePostClosedException(AnswerWritePostClosedException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AnswerWriteTitleNullException.class)
+    public ResponseEntity<ErrorResponse> AnswerWriteTitleNullException(AnswerWriteTitleNullException e) {
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage())

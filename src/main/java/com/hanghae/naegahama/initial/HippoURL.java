@@ -68,8 +68,7 @@ public class HippoURL
         {
             return basicHippoURL;
         }
-
-        if(hippoName.equals(hippoType1))
+        else if(hippoName.equals(hippoType1))
         {
             return HippoIndex(effortHippoUrl, hippoLv);
         }

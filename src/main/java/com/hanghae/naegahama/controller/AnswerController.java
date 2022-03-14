@@ -17,7 +17,7 @@ public class AnswerController
 {
     private final AnswerService answerService;
 
-    // 답변글 작성
+    // 해당 요청글에 답변글 작성
     @PostMapping("/answer/{postId}")
     public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerRequestDto answerRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
@@ -25,7 +25,7 @@ public class AnswerController
         return answerService.answerWrite(answerRequestDto,postId, userDetails);
     }
 
-
+    // 해당 요청글에 달린 답변글 목록 조회
     @ResponseBody
     @GetMapping("/answer/{postId}")
     public List<AnswerGetResponseDto> answerList(@PathVariable Long postId)

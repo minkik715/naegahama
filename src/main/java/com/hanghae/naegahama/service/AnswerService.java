@@ -3,7 +3,8 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
-import com.hanghae.naegahama.handler.ex.LoginUserNotFoundException;
+import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.handler.ex.*;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class AnswerService
 
         if(post.getStatus().equals("closed"))
         {
-            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
+            throw new AnswerWritePostClosedException("닫힌 글입니다.");
         }
 
         //저장된 Answer을 꺼내와서
@@ -53,7 +54,6 @@ public class AnswerService
 
         Achievement achievement = achievementRepository.findByUser(user);
         achievement.AddAchievement(8);
-
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -236,7 +236,20 @@ public class AnswerService
     }
 
 
+    // Post 작성 json 데이터 예외처리
+    private void AnswerWriteException(AnswerRequestDto answerRequestDto)
+    {
+        // 전달받은 json 데이터에서 전달받은 제목값이 null이라면 예외처리
+        if (answerRequestDto.getTitle().equals(""))
+        {
+            throw new PostWriteTitleNullException("제목이 입력되지 않았습니다.");
+        }
 
+
+
+
+
+    }
 
 
 
