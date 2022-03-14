@@ -30,9 +30,7 @@ public class AnswerFile extends Timestamped{
     @ManyToOne
     private Answer answer;
 
-    public AnswerFile(String url) {
-        this.url = url;
-    }
+
 
 
     public void setAnswer(Answer answer) {

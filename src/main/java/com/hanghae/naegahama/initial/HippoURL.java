@@ -64,6 +64,11 @@ public class HippoURL
 
     public static String name(String hippoName, Integer hippoLv)
     {
+        if ( hippoName == null)
+        {
+            return basicHippoURL;
+        }
+
         if(hippoName.equals(hippoType1))
         {
             return HippoIndex(effortHippoUrl, hippoLv);

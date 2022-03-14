@@ -3,6 +3,7 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
+import com.hanghae.naegahama.handler.ex.LoginUserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,14 @@ public class AnswerService
     private final UserRepository userRepository;
 
     private final AnswerVideoRepository answerVideoRepository;
+    private final AchievementRepository achievementRepository;
 
 
     // 답변글 작성
     @Transactional
-    public ResponseEntity<?> answerWrite(AnswerRequestDto answerRequestDto, Long postId, User user)
+    public ResponseEntity<?> answerWrite(AnswerRequestDto answerRequestDto, Long postId, UserDetailsImpl userDetails)
     {
+        User user = GetUser(userDetails);
         Post post = postRepository.findPostById(postId);
 
         if(post.getStatus().equals("closed"))
@@ -44,30 +47,12 @@ public class AnswerService
 
         //저장된 Answer을 꺼내와서
         Answer anwser = answerRepository.save(new Answer(answerRequestDto,post,user));
+        AnswerFileSave(anwser,answerRequestDto);
 
-        AnswerWriting(anwser,answerRequestDto);
+        AnswerWritingExtraPoint(user,post);
 
-        // 최초 요청글 작성시 업적 5 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-
-
-
-        if(post.getAnswerList() !=null && post.getAnswerList().size() == 0)
-        {
-            LocalDateTime deadLine = post.getDeadLine();
-            long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-            log.info("잔여시간차이 = {}",minutes);
-            if(minutes <60)
-            {
-                achievementUser.addPoint(50);
-            }
-        }
-
-        if ( user.getAchievement().getFirstAnswerWrite() == 0)
-        {
-            achievementUser.getAchievement().setFirstAnswerWrite(1);
-        }
+        Achievement achievement = achievementRepository.findByUser(user);
+        achievement.AddAchievement(8);
 
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
@@ -110,7 +95,7 @@ public class AnswerService
         answerFileRepository.deleteByAnswer(answer);
         answerVideoRepository.deleteByAnswer(answer);
 
-        AnswerWriting(answer,answerRequestDto);
+        AnswerFileSave(answer,answerRequestDto);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -179,21 +164,26 @@ public class AnswerService
         answer.Star(starPostRequestDto);
         User answerWriter = answer.getUser();
 
+
+
         // 1점을 받을 시 업적 1 획득
         if ( starPostRequestDto.getStar() == 1)
         {
-            answerWriter.getAchievement().setAchievement1(1);
+            Achievement achievement = achievementRepository.findByUser(answerWriter);
+            achievement.AddAchievement(1);
         }
         // 5점을 받을 시 업적 2 획득
         else if( starPostRequestDto.getStar() == 5)
         {
-            answerWriter.getAchievement().setAchievement2(1);
+            Achievement achievement = achievementRepository.findByUser(answerWriter);
+            achievement.AddAchievement(2);
         }
 
         // 최초 평가시 업적 7 획득
         User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement7(1);
+        Achievement achievement = achievementRepository.findByUser(achievementUser);
+        achievement.AddAchievement(7);
 
         Integer addPoint = (starPostRequestDto.getStar()) * 100;
         String category = answerWriter.getCategory();
@@ -212,29 +202,39 @@ public class AnswerService
     }
 
 
-    void AnswerWriting(Answer answer, AnswerRequestDto answerRequestDto)
+
+    // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
+    private User GetUser(UserDetailsImpl userDetails)
+    {
+        return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new LoginUserNotFoundException("유저를 찾을 수 없습니다."));
+    }
+
+    private void AnswerFileSave(Answer answer, AnswerRequestDto answerRequestDto)
     {
         for ( String url : answerRequestDto.getFile())
         {
-            // 이미지 파일 url로 answerFile 객체 생성
-            AnswerFile fileUrl = new AnswerFile(url);
-
-            // answerFile saveanswer를 연관관계 설정
-            fileUrl.setAnswer(answer);
-
-            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
-            AnswerFile saveFile = answerFileRepository.save(fileUrl);
-
-            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
+            AnswerFile saveFile = answerFileRepository.save(new AnswerFile(url, answer));
             answer.getFileList().add(saveFile);
         }
-
-        AnswerVideo videoUrl = new AnswerVideo(answerRequestDto.getVideo());
-        videoUrl.setAnswer(answer);
-
-        //빠뜨리신 재균님?
-        answerVideoRepository.save(videoUrl);
+        answerVideoRepository.save(new AnswerVideo(answerRequestDto.getVideo(), answer));
     }
+
+    private void AnswerWritingExtraPoint(User user, Post post)
+    {
+        if(post.getAnswerList() !=null && post.getAnswerList().size() == 0)
+        {
+            LocalDateTime deadLine = post.getDeadLine();
+            long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+
+            log.info("잔여시간차이 = {}",minutes);
+            if(minutes <60)
+            {
+                user.addPoint(50);
+            }
+        }
+    }
+
 
 
 

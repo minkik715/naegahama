@@ -22,7 +22,7 @@ public class AnswerController
     public ResponseEntity<?> answerWrite (@RequestBody @Validated AnswerRequestDto answerRequestDto,
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
-        return answerService.answerWrite(answerRequestDto,postId, userDetails.getUser());
+        return answerService.answerWrite(answerRequestDto,postId, userDetails);
     }
 
 

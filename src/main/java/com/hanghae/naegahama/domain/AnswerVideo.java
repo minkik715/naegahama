@@ -24,18 +24,10 @@ public class AnswerVideo extends Timestamped{
         this.answer = answer;
     }
 
-
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
     @OneToOne
     private Answer answer;
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-    }
 
-    public AnswerVideo(String url)
-    {
-        this.url = url;
-    }
 }

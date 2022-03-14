@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.domain.Achievement;
+import com.hanghae.naegahama.repository.AchievementRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
@@ -26,6 +28,7 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final AchievementRepository achievementRepository;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -102,7 +105,8 @@ public class SurveyService {
         // 최초 평가시 업적 6 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement6(1);
+        Achievement achievement = achievementRepository.findByUser(achievementUser);
+        achievement.AddAchievement(2);
 
 
         userRepository.save(user);

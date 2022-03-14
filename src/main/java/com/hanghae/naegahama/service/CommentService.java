@@ -2,6 +2,7 @@
 package com.hanghae.naegahama.service;
 
 //import com.hanghae.naegahama.alarm.*;
+import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
@@ -9,6 +10,7 @@ import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
 import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
+import com.hanghae.naegahama.repository.AchievementRepository;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
@@ -33,6 +35,7 @@ public class CommentService {
     private final UserRepository userRepository;
 //    private final AlarmService alarmService;
 //    private final MessageRepository messageRepository;
+    private final AchievementRepository achievementRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -63,7 +66,9 @@ public class CommentService {
         // 최초 평가시 업적 7 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement4(1);
+        Achievement achievement = achievementRepository.findByUser(achievementUser);
+        achievement.AddAchievement(4);
+
 
 
 

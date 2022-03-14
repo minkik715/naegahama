@@ -29,6 +29,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostFileRepository postFileRepository;
+    private final AchievementRepository achievementRepository;
 
     //요청글 작성
     @Transactional
@@ -45,7 +46,8 @@ public class PostService {
         PostWrite(postRequestDto,user);
 
         // 최초 요청글 작성 업적 획득
-        user.getAchievement().setAchievement5(1);
+        Achievement achievement = achievementRepository.findByUser(user);
+        achievement.AddAchievement(5);
 
         // 3, 6번째 요청글 작성 시 50 경험치 획득
         PostWriteAddPoint(user);
@@ -375,7 +377,7 @@ public class PostService {
             throw new UserNotFoundException("권한이 존재하지 않습니다");
         }
 
-        findPost.setStatus("false");
+        findPost.setStatus("clodsed");
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

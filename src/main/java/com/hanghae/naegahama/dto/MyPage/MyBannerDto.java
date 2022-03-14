@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,10 +30,10 @@ public class MyBannerDto
         this.nickname = user.getNickName();
         this.email = user.getEmail();
         this.hippoName = user.getHippoName();
-        this.point =
+        this.point = user.getPoint();
         this.hippolv = user.getHippoLevel();
         this.category = user.getCategory();
-        this.imgUrl = null;
+        this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
         this.expert = expert;
     }
 }
