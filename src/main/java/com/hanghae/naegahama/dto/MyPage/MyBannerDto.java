@@ -30,7 +30,7 @@ public class MyBannerDto
         this.nickname = user.getNickName();
         this.email = user.getEmail();
         this.hippoName = user.getHippoName();
-        this.point = user.getPoint();
+        this.point = point;
         this.hippolv = user.getHippoLevel();
         this.category = user.getCategory();
         this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );

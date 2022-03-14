@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -39,6 +40,11 @@ public class AnswerService
     {
         User user = GetUser(userDetails);
         Post post = postRepository.findPostById(postId);
+
+        if (Objects.equals(post.getUser().getId(), userDetails.getUser().getId()))
+        {
+            throw new AnswerWritePostClosedException("자기 요청글에 답변을 달 수 없습니다.");
+        }
 
         if(post.getStatus().equals("closed"))
         {
@@ -222,5 +228,4 @@ public class AnswerService
             }
         }
     }
-
 }
