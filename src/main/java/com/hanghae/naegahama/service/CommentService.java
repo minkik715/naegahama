@@ -1,7 +1,10 @@
 
 package com.hanghae.naegahama.service;
 
-//import com.hanghae.naegahama.alarm.*;
+import com.hanghae.naegahama.alarm.*;
+import com.hanghae.naegahama.alarm.AlarmService;
+import com.hanghae.naegahama.alarm.MessageDto;
+import com.hanghae.naegahama.alarm.AlarmRepository;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
@@ -20,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -31,8 +34,8 @@ public class CommentService {
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-//    private final AlarmService alarmService;
-//    private final MessageRepository messageRepository;
+    private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -53,9 +56,12 @@ public class CommentService {
         }else{
             comment = new Comment(commentContent,parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
+
+            //댓글에 대댓글을 단 사람에게 주는 알람.
+            Alarm alarm1 = new Alarm(comment.getUser(),comment.getUser().getNickName(),Type.child,comment.getId(),comment.getContent());
+            Alarm save2 = alarmRepository.save(alarm1);
+            alarmService.alarmByMessage(new MessageDto(save2));
         }
-
-
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
 
@@ -64,17 +70,17 @@ public class CommentService {
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement4(1);
-
-
-
-//        Message message = new Message(findAnswer.getUser(),findAnswer.getTitle()+"에 댓글이 달렸습니다.");
-//        Message save1 = messageRepository.save(message);
-//        alarmService.alarmByMessage(new MessageDto(save1));
+        //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
+        if(parentCommentId == null) {
+        }else{
+            Alarm alarm = new Alarm(findAnswer.getUser(), comment.getUser().getNickName(), Type.commet, findAnswer.getId(), findAnswer.getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
         return ResponseEntity.ok().body(commentResponseDto);
-
-
-
     }
+
+
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {
         Comment findComment = commentRepository.findById(commentId).orElseThrow(

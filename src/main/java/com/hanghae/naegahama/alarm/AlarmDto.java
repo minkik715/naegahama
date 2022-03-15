@@ -1,37 +1,45 @@
 package com.hanghae.naegahama.alarm;
 
-
-import com.hanghae.naegahama.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto implements Serializable {
+public class AlarmDto implements Serializable {
     private Long alarmId;
-    private Long receiverId;
     private String senderNickName;
     private Type type;
     private Long id;
     private String title;
-    LocalDateTime modifiedAt;
-    private ReadingStatus readingStatus;
+    private LocalDateTime modifiedAt;
+    private ReadingStatus readingStatust;
 
-    public MessageDto (Alarm alarm) {
+    public AlarmDto(Alarm alarm) {
         this.alarmId = alarm.getAlarmId();
         this.senderNickName = alarm.getSenderNickName();
         this.type = alarm.getType();
         this.id = alarm.getId();
         this.title = alarm.getTitle();
         this.modifiedAt = alarm.getModifiedAt();
-        this.readingStatus = alarm.getReadingStatus();
+        this.readingStatust = alarm.getReadingStatus();
+    }
+
+    public static AlarmDto convertMessageToDto(Alarm alarm) {
+        return new AlarmDto(
+                alarm.getAlarmId(),
+                alarm.getSenderNickName(),
+                alarm.getType(),
+                alarm.getId(),
+                alarm.getTitle(),
+                alarm.getModifiedAt(),
+                alarm.getReadingStatus()
+        );
     }
 }
-
-
-//메세지를 작성하면, alarmService를 이용해서 메시지에 의한 알람을 발송해주겠습니다.

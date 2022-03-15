@@ -1,17 +1,20 @@
 package com.hanghae.naegahama.alarm;
 
+import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 public class AlarmController {
 
     private final SimpMessageSendingOperations messagingTemplate;
+    private final AlarmService alarmService;
 
     // stomp 테스트 화면
     @GetMapping("/alarm/stomp")
@@ -22,6 +25,38 @@ public class AlarmController {
     @MessageMapping("/{userId}")
     public void message(@DestinationVariable("userId") Long userId) {
         messagingTemplate.convertAndSend("/sub/" + userId, "alarm socket connection completed.");
+    }
+
+    //알람 삭제
+    @DeleteMapping("/api/alarm/{alarmId}")
+    public ResponseEntity<?> deleteAlarm(@PathVariable Long alarmId,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(alarmService.deleteAlarm(alarmId, userDetails));
+    }
+
+    //알람 전체삭제
+    @DeleteMapping("/api/alarm")
+    public ResponseEntity<?> deleteAllAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(alarmService.deleteAllAlarm(userDetails));
+    }
+
+    //알람 전체조회
+    @GetMapping("/api/alarm")
+    public ResponseEntity<?> getAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(alarmService.getAlarm(userDetails));
+    }
+
+    //알람 리딩 안된 갯수 조회.
+    @GetMapping("/api/alarmCount")
+    public ResponseEntity countAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(alarmService.countAlarm(userDetails));
+    }
+
+
+    //알람 리딩 전체 확인
+    @PostMapping("/api/alarm")
+    public ResponseEntity<?> readAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body( alarmService.readAlarm(userDetails));
     }
 }
 

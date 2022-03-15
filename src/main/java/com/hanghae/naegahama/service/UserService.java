@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -36,11 +37,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    //
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final AchievementRepository achievementRepository;
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
+
 
 
     public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -226,7 +228,6 @@ public class UserService {
         UserResponseDto userResponse = new UserResponseDto(user);
         return ResponseEntity.ok().body(userResponse);
     }
-
 
     // 하나의 트랜젝션이 끝나면 1차 영속성 컨텍스트는 초기화된다.
     //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!

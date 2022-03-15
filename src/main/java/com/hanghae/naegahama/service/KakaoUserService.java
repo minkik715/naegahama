@@ -52,6 +52,10 @@ public class KakaoUserService {
         {
             kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG",UUID.randomUUID().toString());
         }
+        else if (accessToken.equals("dean"))
+        {
+            kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean",UUID.randomUUID().toString());
+        }
         else {
              kakaoUserInfoDto = getKakaoUserInfo(accessToken);
         }

@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
@@ -27,9 +28,9 @@ public class AnswerService
     private final AnswerLikeRepository answerLikeRepository;
     private final AnswerFileRepository answerFileRepository;
     private final UserRepository userRepository;
-
     private final AnswerVideoRepository answerVideoRepository;
-
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
 
     // 답변글 작성
     @Transactional
@@ -81,6 +82,10 @@ public class AnswerService
 
         achievementUser.getAchievement().setAchievement8(1);
 
+
+        Alarm alarm = new Alarm(post.getUser(),saveAnwser.getUser().getNickName(), Type.answer,post.getId(),post.getTitle());
+        Alarm save1 = alarmRepository.save(alarm);
+        alarmService.alarmByMessage(new MessageDto(save1));
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
@@ -234,6 +239,13 @@ public class AnswerService
             answerWriter.addPoint( addPoint );
         }
 
+        Alarm alarm = new Alarm(requestWriter,answerWriter.getNickName(), Type.rate,answer.getId(),answer.getTitle());
+        Alarm save1 = alarmRepository.save(alarm);
+        alarmService.alarmByMessage(new MessageDto(save1));
+
+        Alarm alarm1 = new Alarm(answerWriter,requestWriter.getNickName(), Type.rated,answer.getId(),answer.getTitle());
+        Alarm save2 = alarmRepository.save(alarm1);
+        alarmService.alarmByMessage(new MessageDto(save2));
 
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));

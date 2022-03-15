@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.alarm;
 
-import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

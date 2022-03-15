@@ -2,6 +2,9 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.hanghae.naegahama.alarm.Alarm;
+import com.hanghae.naegahama.alarm.MessageDto;
+import com.hanghae.naegahama.alarm.Type;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
@@ -72,7 +75,6 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
-
     @JsonManagedReference
     @OneToOne
     @JoinColumn ( name = "achievement_id")
@@ -82,6 +84,10 @@ public class User extends Timestamped{
     @JsonBackReference
     @OneToMany(mappedBy = "user")
     private List<Search> searchWord = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "receiver")
+    private List<Alarm> alarmList = new ArrayList<>();
 
 
     public User(String email, String nickName, String password, int point) {
@@ -134,24 +140,25 @@ public class User extends Timestamped{
         this.hippoName = hippoName;
     }
 
-    public void addPoint(Integer point)
-    {
+    public Alarm addPoint(Integer point) {
         this.point += point;
 
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
-        if (this.hippoLevel != 3 )
-        {
-            if (this.point >= 2000)
-            {
+        if (this.hippoLevel != 3) {
+            if (this.point >= 2000) {
                 this.hippoLevel = 3;
-            }
-            else if ( this.point >= 1000 && this.hippoLevel !=2)
-            {
+                Alarm alarm = new Alarm(this, null, Type.level, (long) this.hippoLevel, null);
+                return alarm;
+            } else if (this.point >= 1000 && this.hippoLevel != 2) {
                 this.hippoLevel = 2;
+                Alarm alarm = new Alarm(this, null, Type.level, (long) this.hippoLevel, null);
+                return alarm;
             }
         }
-
+        return null;
     }
+
+
 
     public void setAchievement(Achievement achievement)
     {
