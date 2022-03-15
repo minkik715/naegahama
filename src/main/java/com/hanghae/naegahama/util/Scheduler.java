@@ -22,7 +22,6 @@ import java.util.List;
 public class Scheduler {
 
     private final PostRepository postRepository;
-    private final AnswerVideoRepository answerVideoRepository;
 
     //로직구현
     //초 분 시간, 일 월 요일
@@ -31,9 +30,9 @@ public class Scheduler {
     public void changeTime() {
         List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
-            if (post.getDeadLine() != null) {
-                if (post.getStatus().equals("true") && post.getDeadLine().isBefore(LocalDateTime.now())) {
-                    post.setStatus("false");
+            if (post.getDeadLine().getYear() != 2100) {
+                if (post.getStatus().equals("opened") && post.getDeadLine().isBefore(LocalDateTime.now())) {
+                    post.setStatus("closed");
                 }
             }
         }

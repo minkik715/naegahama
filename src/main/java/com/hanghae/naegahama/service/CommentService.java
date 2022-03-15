@@ -1,7 +1,6 @@
 
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
@@ -12,6 +11,7 @@ import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,8 +30,8 @@ public class CommentService {
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final AlarmService alarmService;
-    private final MessageRepository messageRepository;
+
+    private final JwtDecoder jwtDecoder;
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -44,10 +43,7 @@ public class CommentService {
         Comment comment = null;
         if(parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
-            if(timestamp !=null){
-                String[] split = timestamp.split(":");
 
-            }
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
         }else{
@@ -67,10 +63,14 @@ public class CommentService {
 
 
 
+/*
         Message message = new Message(findAnswer.getUser(),findAnswer.getTitle()+"에 댓글이 달렸습니다.");
         Message save1 = messageRepository.save(message);
         alarmService.alarmByMessage(new MessageDto(save1));
+
+ */
         return ResponseEntity.ok().body(commentResponseDto);
+
 
 
 

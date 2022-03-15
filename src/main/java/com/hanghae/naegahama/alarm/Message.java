@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.alarm;
 
 import com.hanghae.naegahama.domain.Timestamped;
@@ -40,3 +41,4 @@ import javax.persistence.*;
         }
 
     }
+*/

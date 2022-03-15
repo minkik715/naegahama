@@ -32,7 +32,6 @@ public class SurveyService {
     public void createHippo(SurveyRequestDto surveyRequestDto, User user)
     {
 
-
         ArrayList<Long> longs = new ArrayList<>();
         for (Long aLong : surveyRequestDto.getResult()) {
             longs.add(aLong);

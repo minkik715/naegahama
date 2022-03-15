@@ -1,6 +1,5 @@
-package com.hanghae.naegahama.alarm;
+/*package com.hanghae.naegahama.alarm;
 
-import com.hanghae.naegahama.config.jwt.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StompHandler implements ChannelInterceptor {
 
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     //Controller에 가기전에 이곳을 먼저 들리게 된다. 그것이 인터셉터의 역할
     @Override
@@ -36,7 +34,7 @@ public class StompHandler implements ChannelInterceptor {
         }
         return message;
     }
-}
+}*/
 
 //    preSend를 오버라이딩하여, CONNECT하는 상황이라면, 토큰을 검증해줍니다.
 //        토큰이 유효하지 않다면, 예외를 발생시켜줄 것입니다.

@@ -1,3 +1,4 @@
+/*
 package com.hanghae.naegahama.alarm;
 
 
@@ -27,4 +28,4 @@ public class MessageDto implements Serializable {
     }
 }
 
-//메세지를 작성하면, alarmService를 이용해서 메시지에 의한 알람을 발송해주겠습니다.
+//메세지를 작성하면, alarmService를 이용해서 메시지에 의한 알람을 발송해주겠습니다.*/
