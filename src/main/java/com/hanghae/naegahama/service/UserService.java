@@ -179,12 +179,10 @@ public class UserService {
 
     public MyBannerDto myBanner(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        int[] expert = new int[12];
-        Arrays.fill(expert, 0);
-        int i =0;
+        ArrayList<String> expert = new ArrayList<>();
         for (String cate : Category.category) {
             if(answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, cate, 4) >=5){
-                expert[i] = 1;
+                expert.add(cate);
             }
         }
 

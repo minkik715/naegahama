@@ -156,13 +156,11 @@ public class AnswerService
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
 
-        answerLikeRepository.deleteByAnswer(answer);
+     /*   answerLikeRepository.deleteByAnswer(answer);
         answerFileRepository.deleteByAnswer(answer);
         answerVideoRepository.deleteByAnswer(answer);
-        commentRepository.deleteByAnswer(answer);
-
+        commentRepository.deleteByAnswer(answer);*/
         answerRepository.deleteById(answerId);
-
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

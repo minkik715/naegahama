@@ -1,8 +1,11 @@
 package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 
 @Setter
 @Getter
@@ -20,19 +23,19 @@ public class MyBannerDto
 
     private String category;
 
-    private int[] expert = new int[12];
+    private ArrayList<String> expert;
 
     private String imgUrl;
 
-    public MyBannerDto(User user,int[] expert,int point)
+    public MyBannerDto(User user,ArrayList<String> expert,int point)
     {
         this.nickname = user.getNickName();
         this.email = user.getEmail();
         this.hippoName = user.getHippoName();
-        this.point =
+        this.point = point;
         this.hippolv = user.getHippoLevel();
         this.category = user.getCategory();
-        this.imgUrl = null;
+        this.imgUrl = HippoURL.name(user.getHippoName(),user.getHippoLevel());
         this.expert = expert;
     }
 }
