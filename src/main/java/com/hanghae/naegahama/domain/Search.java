@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Search {
+public class Search extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

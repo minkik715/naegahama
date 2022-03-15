@@ -28,12 +28,23 @@ public class SearchCotroller {
         return ResponseEntity.ok().body(searchService.answerSearchList(searchWord));
     }
 
-//    //검색어 순위.
-//    @GetMapping("/api/search")
-//    public ResponseEntity<?> SearchList() {
-//        return ResponseEntity.ok().body(searchService.SearchList());
-//    }
+    //최근검색어 순위.
+    @GetMapping("/search")
+    public ResponseEntity<?> SearchList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(searchService.SearchList(userDetails));
+    }
+    //검색어 삭제
+    @DeleteMapping("/search/{searchId}")
+    public ResponseEntity<?> deleteSearch(@PathVariable Long searchId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(searchService.deleteSearch(searchId, userDetails));
+   }
 
+    //검색어 전체삭제
+    @DeleteMapping("/search")
+    public ResponseEntity<?> deleteAllSearch(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(searchService.deleteAllSearch(userDetails));
+    }
 
 
 }

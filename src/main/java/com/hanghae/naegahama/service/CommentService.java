@@ -11,6 +11,7 @@ import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,6 +31,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
+    private final JwtDecoder jwtDecoder;
+
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
         Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
@@ -41,10 +43,7 @@ public class CommentService {
         Comment comment = null;
         if(parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
-            if(timestamp !=null){
-                String[] split = timestamp.split(":");
 
-            }
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
         }else{
@@ -63,7 +62,15 @@ public class CommentService {
         achievementUser.getAchievement().setAchievement4(1);
 
 
+
+/*
+        Message message = new Message(findAnswer.getUser(),findAnswer.getTitle()+"에 댓글이 달렸습니다.");
+        Message save1 = messageRepository.save(message);
+        alarmService.alarmByMessage(new MessageDto(save1));
+
+ */
         return ResponseEntity.ok().body(commentResponseDto);
+
 
 
 
