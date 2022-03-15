@@ -52,11 +52,11 @@ jobs:
       env:
        AWS_ACCESS_KEY_ID: AKIAWXS7W34BUF4NQRF6
        AWS_SECRET_ACCESS_KEY: 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
-      run: |
+      run:
             aws s3 cp \
             --region ap-northeast-2 \
             --acl private \
-    ./springboot-intro-build.zip s3://springboot-intro-build/
+    ./springboot-intro-build.zip s3://springboot-intro-build
 
 
 #         distribution: 'temurin'
