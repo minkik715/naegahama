@@ -23,7 +23,7 @@ public class HippoURL
     private static String[] leaderHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader3ircle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader3circle.png"
     };
 
     private static String[] smellHippoUrl = {
