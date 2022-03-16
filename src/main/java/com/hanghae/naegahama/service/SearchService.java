@@ -28,19 +28,14 @@ public class SearchService {
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final SearchRepository searchRepository;
+    private final UserRepository userRepository;
 
 
     //검색키워드 searchRepository에 저장.
     public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
         log.info("searchWord = {}", searchWord);
 
-        if (!(userDetails == null)) {
-            User user = userDetails.getUser();
-            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) {
-                Search search = new Search(searchWord, user);
-                searchRepository.save(search);
-            }
-        }
+        userCheck(searchWord, userDetails);
 
         //요청글 검색.
         List<Post> posts = postRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
@@ -71,13 +66,14 @@ public class SearchService {
                 searchRequests,
                 answerCount
         );
+
         return searchPostRequest;
     }
 
 
     //답변글 검색
-    public SearchAnswerRequest answerSearchList(String searchWord) {
-
+    public SearchAnswerRequest answerSearchList(String searchWord, UserDetailsImpl userDetails) {
+        userCheck(searchWord, userDetails);
         log.info("searchWord = {}", searchWord);
         List<Answer> Answers = answerRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
         List<SearchRequest> searchRequests = new ArrayList<>();
@@ -111,6 +107,19 @@ public class SearchService {
                 postCount
         );
         return searchAnswerRequest;
+    }
+
+    private void userCheck(String searchWord, UserDetailsImpl userDetails) {
+        if (!(userDetails == null)) {
+            User user = userDetails.getUser();
+            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) {
+                Search search = new Search(searchWord, user);
+                searchRepository.save(search);
+            }
+            User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+            achievementUser.getAchievement().setAchievement7(1);
+        }
     }
 
     //최근검색어 조회.

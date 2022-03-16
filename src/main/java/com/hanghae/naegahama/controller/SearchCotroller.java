@@ -24,8 +24,8 @@ public class SearchCotroller {
 
     //답변글 검색결과.
     @GetMapping("/answersearch/{searchWord}")
-    public ResponseEntity<?> answerSearchList(@PathVariable String searchWord) {
-        return ResponseEntity.ok().body(searchService.answerSearchList(searchWord));
+    public ResponseEntity<?> answerSearchList(@PathVariable String searchWord, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(searchService.answerSearchList(searchWord, userDetails));
     }
 
     //최근검색어 순위.

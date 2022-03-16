@@ -45,7 +45,7 @@ public class PostService {
         Long postId = PostWrite(postRequestDto, user);
 
         // 최초 요청글 작성 업적 획득
-        user.getAchievement().setAchievement5(1);
+        user.getAchievement().setAchievement3(1);
 
         // 3, 6번째 요청글 작성 시 50 경험치 획득
         PostWriteAddPoint(user);

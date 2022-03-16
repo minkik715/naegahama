@@ -35,7 +35,7 @@ public class MyBannerDto
         this.point = point;
         this.hippolv = user.getHippoLevel();
         this.category = user.getCategory();
-        this.imgUrl = HippoURL.name(user.getHippoName(),user.getHippoLevel());
+        this.imgUrl = user.getHippoImage();
         this.expert = expert;
     }
 }

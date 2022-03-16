@@ -109,6 +109,7 @@ public class User extends Timestamped{
 
     public void setHippoName(String hippoName) {
         this.hippoName = hippoName;
+        this.hippoImage = HippoURL.name(hippoName,this.getHippoLevel());
     }
 
     public void addPoint(Integer point)

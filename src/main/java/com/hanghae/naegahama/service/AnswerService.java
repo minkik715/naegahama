@@ -87,7 +87,7 @@ public class AnswerService
         }
 
 
-        achievementUser.getAchievement().setAchievement8(1);
+        achievementUser.getAchievement().setAchievement1(1);
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -216,18 +216,18 @@ public class AnswerService
         // 1점을 받을 시 업적 1 획득
         if ( starPostRequestDto.getStar() == 1)
         {
-            answerWriter.getAchievement().setAchievement1(1);
+            answerWriter.getAchievement().setAchievement8(1);
         }
         // 5점을 받을 시 업적 2 획득
         else if( starPostRequestDto.getStar() == 5)
         {
-            answerWriter.getAchievement().setAchievement2(1);
+            answerWriter.getAchievement().setAchievement4(1);
         }
 
         // 최초 평가시 업적 7 획득
         User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement7(1);
+        achievementUser.getAchievement().setAchievement2(1);
 
         Integer addPoint = (starPostRequestDto.getStar()) * 100;
         String category = answerWriter.getCategory();
