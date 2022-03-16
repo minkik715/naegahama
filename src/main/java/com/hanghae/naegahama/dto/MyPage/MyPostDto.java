@@ -15,24 +15,26 @@ public class MyPostDto
 {
     private Long requestId;
     private String title;
-//    private String content;
+    private String contents;
     private String modifiedAt;
     private String nickname;
     private String imgUrl;
     private String category;
+    private Long likes;
 
 //    private Long likeCount;
 //    private Integer answerCount ;
 
-    public MyPostDto(Post post, User user )
+    public MyPostDto(Post post, User user,Long likeCount)
     {
         this.requestId = post.getId();
         this.title = post.getTitle();
+        this.contents = post.getContent();
         this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
         this.nickname = user.getNickName();
         this.category = post.getCategory();
         this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
-//        this.likeCount = likeCount;
+        this.likes = likeCount;
 
     }
 
