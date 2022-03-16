@@ -15,22 +15,23 @@ public class MyAnswerDto
 {
     private Long answerId;
     private String title;
-//    private String content;
+    private String contents;
     private String modifiedAt;
     private String nickname;
     private String imgUrl;
     private String category;
-//    private Integer answerCount ;
+    private Long likes ;
 
-    public MyAnswerDto(Answer answer, User user)
+    public MyAnswerDto(Answer answer, User user, Long likes)
     {
         this.answerId = answer.getId();
         this.title = answer.getTitle();
+        this.contents = answer.getContent();
         this.modifiedAt = TimeHandler.setModifiedAtLIst(answer.getModifiedAt());
         this.nickname = user.getNickName();
         this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
         this.category = answer.getPost().getCategory();
-
+        this.likes = likes;
     }
 
 

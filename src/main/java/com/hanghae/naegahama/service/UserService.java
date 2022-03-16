@@ -37,6 +37,8 @@ public class UserService {
     //
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final AnswerLikeRepository answerLikeRepository;
 
 
 
@@ -57,7 +59,7 @@ public class UserService {
 
         for (Post post : postList)
         {
-            MyPostDto postMyPageDto = new MyPostDto(post, user);
+            MyPostDto postMyPageDto = new MyPostDto(post, user,postLikeRepository.countByPost(post));
             myPageDtoList.add(postMyPageDto);
         }
 
@@ -72,7 +74,7 @@ public class UserService {
         for (Answer answer : answerList)
         {
 
-            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user);
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user,answerLikeRepository.countByAnswer(answer));
             myAnswerDtoList.add(myAnswerDto);
         }
         return myAnswerDtoList;
