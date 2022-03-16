@@ -142,18 +142,7 @@ public class PostService {
 
 
         for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-
-            String timeSet = getDeadLine(post);
-
-            PostResponseDto postResponseDto = new PostResponseDto(
-                     post,
-                    answerCount,
-                    postLikeCount,
-                    timeSet
-            );
-            response.add(postResponseDto);
+            createPostResponseDto(response, post);
         }
         return response;
     }
@@ -208,16 +197,7 @@ public class PostService {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            PostResponseDto categoryResponseDto = new PostResponseDto(
-                    post,
-                    answerCount,
-                    postLikeCount,
-                    getDeadLine(post)
-            );
-
-            response.add(categoryResponseDto);
+            createPostResponseDto(response, post);
         }
         return response;
     }
@@ -264,53 +244,18 @@ public class PostService {
             Collections.sort(posts);
 
             for (Post post : posts) {
-                Integer answerCount = answerRepository.countByPost(post);
-                Long postLikeCount = postLikeRepository.countByPost(post);
-                PostResponseDto categoryResponseDto = new PostResponseDto(
-                        post,
-                        answerCount,
-                        postLikeCount,
-                        getDeadLine(post)
-
-                );
-                response.add(categoryResponseDto);
+                createPostResponseDto(response, post);
             }
         } else if (sort.equals("time")) {
             Collections.sort(posts, comparator);
             for (Post post : posts) {
                 int year = post.getDeadLine().getYear();
                 if (year != 2100 && post.getStatus().equals("opened")) {
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post,
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post)
-                    );
-                    response.add(categoryResponseDto);
+                    createPostResponseDto(response, post);
                 } else if (year == 2100) {
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post,
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post)
-                    );
-
-                    tempresponse.add(categoryResponseDto);
+                    createPostResponseDto(tempresponse, post);
                 }else{
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post,
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post)
-                    );
-
-                    tempresponse2.add(categoryResponseDto);
+                    createPostResponseDto(tempresponse2, post);
                 }
             }
 
@@ -324,6 +269,19 @@ public class PostService {
         return ResponseEntity.ok().
 
                 body(response);
+    }
+
+    private void createPostResponseDto(List<PostResponseDto> response, Post post) {
+        Integer answerCount = answerRepository.countByPost(post);
+        Long postLikeCount = postLikeRepository.countByPost(post);
+        PostResponseDto categoryResponseDto = new PostResponseDto(
+                post,
+                answerCount,
+                postLikeCount,
+                getDeadLine(post),
+                post.getUser()
+        );
+        response.add(categoryResponseDto);
     }
 
 

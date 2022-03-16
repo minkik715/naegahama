@@ -1,6 +1,8 @@
 package com.hanghae.naegahama.dto.post;
 
 import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +23,10 @@ public class PostResponseDto {
 
     private String writer;
 
+    private String imgUrl;
+
     public PostResponseDto(Post post,
-                           Integer answerCount, Long postLikeCount, String timeSet) {
+                           Integer answerCount, Long postLikeCount, String timeSet, User user) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
@@ -31,7 +35,8 @@ public class PostResponseDto {
         this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
         this.timeSet = timeSet;
         this.status = post.getStatus();
-        this.writer = post.getUser().getNickName();
+        this.writer = user.getNickName();
+        this.imgUrl = user.getHippoImage();
 
     }
 }

@@ -28,6 +28,8 @@ public class AnswerGetResponseDto
 
     private int imageCount;
 
+    private String imgUrl;
+
     public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
     {
         this.answerId = answer.getId();
@@ -37,5 +39,6 @@ public class AnswerGetResponseDto
         this.commentCount = commentCount;
         this.answerLikeCount = likeCount;
         this.imageCount = imageCount;
+        this.imgUrl = answer.getUser().getHippoImage();
     }
 }

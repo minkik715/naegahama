@@ -6,14 +6,12 @@ import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.*;
-import com.hanghae.naegahama.dto.login.LoginRequestDto;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
-import com.hanghae.naegahama.handler.ex.PasswordNotCollectException;
 import com.hanghae.naegahama.initial.Category;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -40,77 +37,8 @@ public class UserService {
     //
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
-    private final AchievementRepository achievementRepository;
 
 
-    public LoginRequestDto signUp(SignUpRequestDto signUpRequestDto) {
-        String password = signUpRequestDto.getPassword();
-        checkPassword(signUpRequestDto, password);
-        User user = new User(signUpRequestDto, encodePassword(password));
-        userRepository.save(user);
-
-        // 회원 가입시 업적 리포지토리 저장
-        Achievement achievement = new Achievement(user);
-        achievementRepository.save(achievement);
-        user.setAchievement(achievement);
-
-        return new LoginRequestDto(signUpRequestDto.getEmail(), password);
-
-    }
-
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-    private void checkPassword(SignUpRequestDto signUpRequestDto, String password) {
-        if (password.equals(signUpRequestDto.getPasswordCheck())) {
-            return;
-        }
-        throw new PasswordCheckFailException("비밀번호가 일치하지 않습니다.");
-    }
-
- /*   public ResponseEntity<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) throws EmailNotFoundException {
-        String email = loginRequestDto.getEmail();
-        String password = loginRequestDto.getPassword();
-
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EmailNotFoundException("해당 이메일은 존재하지 않습니다.")
-        );
-        loginPassword(password, user);
-        return getLoginResponseDtoResponseEntity(user);
-    }*/
-
-  /*  @Transactional
-    public ResponseEntity<?> kakaoSignup(String kakaoAccessToken) throws EmailNotFoundException, JsonProcessingException {
-        log.info("kakaoAccessToken ={}", kakaoAccessToken);
-        KakaoUserInfoDto userInfo = kakaoOAuth2.getUserInfo(kakaoAccessToken);
-        log.info("kakaoId = {}, nickname = {}", userInfo.getId(), userInfo.getNickname());
-        User user = userRepository.findByKakaoId(userInfo.getId()).orElse(null);
-        User saveUser;
-        if (user == null) {
-            User newUser = new User(userInfo);
-            log.info("kakaoId = {}", userInfo.getId());
-            saveUser = userRepository.save(newUser);
-            achievementRepository.save(new Achievement(saveUser));
-        }else{
-            saveUser = user;
-        }
-        return getLoginResponseDtoResponseEntity(saveUser);
-    }*/
-
- /*   private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
-        String token = jwtAuthenticationProvider.createToken(String.valueOf(user.getId()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token, user.getId(),user.getUserStatus());
-        return ResponseEntity.ok().body(loginResponseDto);
-    }*/
-
-
-    private void loginPassword(String password, User user) {
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            return;
-        }
-        throw new PasswordNotCollectException("비밀번호를 확인해주세요.");
-    }
 
     public ResponseEntity<?> nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
@@ -186,31 +114,6 @@ public class UserService {
             }
         }
 
-       /* Long cook = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "cook", 4);
-        Long health = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "health", 4);
-        Long knowledge = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "knowledge", 4);
-        Long create = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "create", 4);
-        Long visit = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "visit", 4);
-        Long job = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "job", 4);
-        Long pet = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "pet", 4);
-        Long fashion = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "fashion", 4);
-        Long consult = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "consult", 4);
-        Long device = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "device", 4);
-        Long life = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "life", 4);
-        Long etc = answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, "etc", 4);
-        if(cook >= 5){expert[0] = 1;}
-        if(health >= 5){expert[1] = 1;}
-        if(knowledge >= 5){expert[2] = 1;}
-        if(create >= 5){expert[3] = 1;}
-        if(visit >= 5){expert[4] = 1;}
-        if(job >= 5){expert[5] = 1;}
-        if(pet >= 5){expert[6] = 1;}
-        if(fashion >= 5){expert[7] = 1;}
-        if(consult >= 5){expert[8] = 1;}
-        if(device >= 5){expert[9] = 1;}
-        if(life >= 5){expert[10] = 1;}
-        if(etc >= 5){expert[11] = 1;}
-*/
         int point = user.getPoint();
         if(point <3000){
              point = point % 1000;

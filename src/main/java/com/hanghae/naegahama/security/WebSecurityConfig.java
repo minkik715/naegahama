@@ -135,16 +135,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //댓글
         skipPathList.add("GET,/api/comment/**");
 
-        skipPathList.add("GET,/**");
-        skipPathList.add("POST,/**");
-
-
         //etc
         skipPathList.add("GET,/api/rank");
-        skipPathList.add("GET,/api/postsearch/**");
-        skipPathList.add("GET,/api/answersearch/**");
         skipPathList.add("GET,/api/shorts");
         skipPathList.add("GET,/api/survey/{hippoName}");
+
 
         skipPathList.add("GET,/favicon.ico");
 

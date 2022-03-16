@@ -111,7 +111,7 @@ public class CommentService {
         }
         for (Comment comment : commentList) {
             if(comment.getParentCommentId() == null) {
-                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment);
+                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment,comment.getUser());
                 parentCommentListResponseDtoList.add(commentListResponseDto);
             }
         }
@@ -129,7 +129,7 @@ public class CommentService {
             throw new CommentNotFoundException("해당 댓글에는 대댓글이 존재하지 않습니다.");
         }
         for (Comment comment : kidsCommentList) {
-            KidsCommentListResponseDto kidsCommentListResponseDto = new KidsCommentListResponseDto(comment);
+            KidsCommentListResponseDto kidsCommentListResponseDto = new KidsCommentListResponseDto(comment, comment.getUser());
             kidsCommentListResponseDtoList.add(kidsCommentListResponseDto);
 
         }

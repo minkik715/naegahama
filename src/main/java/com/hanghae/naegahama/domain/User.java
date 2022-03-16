@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
+import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,9 @@ public class User extends Timestamped{
 
     @Column
     private String hippoName;  //하마이름이랑 레벨(포인트 = 경험치)를 프론트한테 주기. (노션에 이미지url를 적어드리기)
+
+    @Column
+    private String hippoImage;
 
     @Column
     private String category;
@@ -84,31 +88,6 @@ public class User extends Timestamped{
     private List<Search> searchWord = new ArrayList<>();
 
 
-    public User(String email, String nickName, String password, int point) {
-        this.email = email;
-        this.nickName = nickName;
-        this.password = password;
-        this.point = point;
-        this.hippoLevel = 1;
-        this.userStatus = "true";
-    }
-
-    public User(SignUpRequestDto signUpRequestDto, String password) {
-        this.email = signUpRequestDto.getEmail();
-        this.nickName = signUpRequestDto.getNickname();
-        this.password = password;
-        this.hippoLevel = 1;
-        this.userStatus = "true";
-
-
-    }
-    public User(KakaoUserInfoDto kakaoUserInfoDto) {
-        this.email = kakaoUserInfoDto.getEmail();
-        this.nickName = kakaoUserInfoDto.getNickname();
-        this.kakaoId = kakaoUserInfoDto.getId();
-        this.hippoLevel = 1;
-        this.userStatus = "true";
-    }
 
 
     public User(String encodedPassword, String email, UserRoleEnum role, Long kakaoId) {
@@ -116,6 +95,7 @@ public class User extends Timestamped{
         this.email = email;
         this.role = role;
         this.kakaoId = kakaoId;
+        this.hippoImage = HippoURL.basicHippoURL;
     }
 
     @Transactional
@@ -125,9 +105,6 @@ public class User extends Timestamped{
         this.age = userInfoRequestDto.getAge();
         this.category = userInfoRequestDto.getCategory();
         this.userStatus = "false";
-    }
-    public void setHippoLevel(Integer hippoLevel) {
-        this.hippoLevel = hippoLevel;
     }
 
     public void setHippoName(String hippoName) {
@@ -144,10 +121,13 @@ public class User extends Timestamped{
             if (this.point >= 2000)
             {
                 this.hippoLevel = 3;
+                this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
             }
             else if ( this.point >= 1000 && this.hippoLevel !=2)
             {
                 this.hippoLevel = 2;
+                this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
+
             }
         }
 
@@ -158,7 +138,4 @@ public class User extends Timestamped{
         this.achievement = achievement;
     }
 
-    public void setSearch(List<Search> searchWord) {
-        this.searchWord = searchWord;
-    }
 }

@@ -117,6 +117,7 @@ public class KakaoUserService {
             kakaoUser = new User(encodedPassword, email, role, kakaoId);
             userRepository.save(kakaoUser).setAchievement(new Achievement());
 
+
         }
         return kakaoUser;
     }
