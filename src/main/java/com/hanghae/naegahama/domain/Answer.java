@@ -56,19 +56,19 @@ public class Answer extends Timestamped {
     }
 
     @JsonBackReference
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
     private List<AnswerLike> likeList = new ArrayList<>();
 
     @JsonBackReference
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
     @JsonBackReference
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer",cascade = CascadeType.REMOVE)
     private List<AnswerFile> fileList = new ArrayList<>();
 
     @JsonBackReference
-    @OneToOne(mappedBy = "answer")
+    @OneToOne(mappedBy = "answer",cascade = CascadeType.REMOVE)
     private AnswerVideo answerVideo;
 
 

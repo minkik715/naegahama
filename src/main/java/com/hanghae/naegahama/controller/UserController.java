@@ -18,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +41,8 @@ public class UserController {
     }
 
     @PostMapping("/user/kakaoLogin")
-    public ResponseEntity<?> login(@RequestBody @Validated Map<String, Object> param,HttpServletResponse response) throws JsonProcessingException {
-
-         return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(),response);
+    public ResponseEntity<?> login(@RequestBody @Validated Map<String, Object> param, HttpServletResponse response) throws JsonProcessingException {
+        return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(),response);
     }
 
     @PostMapping("/userinfo")

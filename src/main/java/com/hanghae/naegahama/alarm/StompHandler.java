@@ -18,6 +18,7 @@ public class StompHandler implements ChannelInterceptor {
 
     private final JwtDecoder jwtDecoder;
 
+
     //Controller에 가기전에 이곳을 먼저 들리게 된다. 그것이 인터셉터의 역할
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {

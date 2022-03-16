@@ -15,6 +15,7 @@ import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final AlarmService alarmService;
     private final AlarmRepository alarmRepository;
+    private final JwtDecoder jwtDecoder;
+
 
     @Transactional
     public ResponseEntity<?> writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
@@ -45,41 +48,38 @@ public class CommentService {
         String commentContent = commentRequestDto.getComment();
         Long parentCommentId = commentRequestDto.getParentCommentId();
         Comment comment = null;
-        if(parentCommentId == null) {
+        if (parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
-            if(timestamp !=null){
-                String[] split = timestamp.split(":");
 
-            }
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
-        }else{
-            comment = new Comment(commentContent,parentCommentId, findAnswer, user);
+        } else {
+            comment = new Comment(commentContent, parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
 
             //댓글에 대댓글을 단 사람에게 주는 알람.
-            Alarm alarm1 = new Alarm(comment.getUser(),comment.getUser().getNickName(),Type.child,comment.getId(),comment.getContent());
+            Alarm alarm1 = new Alarm(comment.getUser(), comment.getUser().getNickName(), Type.child, comment.getId(), comment.getContent());
             Alarm save2 = alarmRepository.save(alarm1);
             alarmService.alarmByMessage(new MessageDto(save2));
         }
         Comment save = commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(save,answerId);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(save, answerId);
 
 
         // 최초 평가시 업적 7 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement4(1);
+
         //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
-        if(parentCommentId == null) {
-        }else{
+        if (parentCommentId == null) {
+        } else {
             Alarm alarm = new Alarm(findAnswer.getUser(), comment.getUser().getNickName(), Type.commet, findAnswer.getId(), findAnswer.getTitle());
             Alarm save1 = alarmRepository.save(alarm);
             alarmService.alarmByMessage(new MessageDto(save1));
         }
         return ResponseEntity.ok().body(commentResponseDto);
     }
-
 
 
     public ResponseEntity<?> modifyComment(Long commentId, CommentModifyRequestDto commentModifyRequestDto) {

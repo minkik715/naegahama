@@ -1,3 +1,4 @@
+
 package com.hanghae.naegahama.alarm;
 
 import lombok.RequiredArgsConstructor;
@@ -38,4 +39,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 }
 
 ///ws-stomp로 소켓을 연결하고, /sub/... 을 구독하고 있으면, 메세지를 전송할 수 있습니다.
-//        토큰을 인증하기 위한 stompHandler를 추가해줍니다. 연결이 되기 전에 해당 핸들러의 메소드를 실행할 것입니다.
+//        토큰을 인증하기 위한 stompHandler를 추가해줍니다. 연결이 되기 전에 해당 핸들러의 메소드를 실행할 것입니다.*/

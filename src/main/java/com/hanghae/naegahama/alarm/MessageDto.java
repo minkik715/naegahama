@@ -1,7 +1,6 @@
+
 package com.hanghae.naegahama.alarm;
 
-
-import com.hanghae.naegahama.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +31,5 @@ public class MessageDto implements Serializable {
         this.readingStatus = alarm.getReadingStatus();
     }
 }
-
 
 //메세지를 작성하면, alarmService를 이용해서 메시지에 의한 알람을 발송해주겠습니다.

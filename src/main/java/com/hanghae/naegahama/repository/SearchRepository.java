@@ -9,12 +9,13 @@ import java.util.List;
 
 public interface SearchRepository extends JpaRepository<Search, Long> {
 
-    List<Search> findAllByUserOrderByCreatedAtDesc(User user);
-    Search findByUserOrderByCreatedAtDesc(User user);
-    void deleteByUser(User user);
-
     boolean existsBySearchWordAndUser(String searchWord, User user);
 
-    void deleteByIdAndUser(Long searchId, User user);
+    List<Search> findAllByUserOrderByCreatedAtDesc(User user);
 
+    Search findByUserOrderByCreatedAtDesc(User user);
+
+    void deleteByUser(User user);
+
+    void deleteByIdAndUser(Long searchId, User user);
 }

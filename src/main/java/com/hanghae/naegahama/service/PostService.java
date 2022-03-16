@@ -32,17 +32,17 @@ public class PostService {
 
     //요청글 작성
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails)
-    {
+    public ResponseEntity<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         // 로그인 예외 처리 + json 데이터 예외처리
         UserCheck(userDetails);
         PostWriteException(postRequestDto);
 
         // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
-        User user = GetUser(userDetails);;
+        User user = GetUser(userDetails);
+
 
         // Post 작성 및 저장
-        PostWrite(postRequestDto,user);
+        PostWrite(postRequestDto, user);
 
         // 최초 요청글 작성 업적 획득
         user.getAchievement().setAchievement5(1);
@@ -52,9 +52,6 @@ public class PostService {
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
-
-
-
 
 
     //요청글 수정
@@ -154,12 +151,14 @@ public class PostService {
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
-                    post.getModifiedAt(),
                     answerCount,
                     postLikeCount,
                     timeSet,
-                    post.getStatus()
+                    post.getStatus() ,
+                    post.getUser().getNickName()
+
             );
+            postResponseDto.setModifiedAt(post.getModifiedAt());
             response.add(postResponseDto);
         }
         return response;
@@ -229,12 +228,15 @@ public class PostService {
                     post.getId(),
                     post.getTitle(),
                     post.getContent(),
-                    post.getModifiedAt(),
                     answerCount,
                     postLikeCount,
                     getDeadLine(post),
-                    post.getStatus()
+                    post.getStatus(),
+                    post.getUser().getNickName()
+
             );
+            categoryResponseDto.setModifiedAt(post.getModifiedAt());
+
             response.add(categoryResponseDto);
         }
         return response;
@@ -253,6 +255,7 @@ public class PostService {
         Comparator<Post> comparator = new Comparator<Post>() {
             @Override
             public int compare(Post o1, Post o2) {
+
                 if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
                     return -1;
                 } else if (!o1.getDeadLine().isBefore(o2.getDeadLine())) {
@@ -260,11 +263,15 @@ public class PostService {
                 } else {
                     return 0;
                 }
+
+
             }
         };
+
         List<Post> posts;
         List<PostResponseDto> response = new ArrayList<>();
         List<PostResponseDto> tempresponse = new ArrayList<>();
+        List<PostResponseDto> tempresponse2 = new ArrayList<>();
         if (category.equals("all")) {
             posts = postRepository.findAllByOrderByCreatedAtDesc();
         } else {
@@ -283,48 +290,70 @@ public class PostService {
                         post.getId(),
                         post.getTitle(),
                         post.getContent(),
-                        post.getModifiedAt(),
                         answerCount,
                         postLikeCount,
                         getDeadLine(post),
-                        post.getStatus()
+                        post.getStatus(),
+                        post.getUser().getNickName()
                 );
+                categoryResponseDto.setModifiedAt(post.getModifiedAt());
                 response.add(categoryResponseDto);
             }
         } else if (sort.equals("time")) {
             Collections.sort(posts, comparator);
             for (Post post : posts) {
-                if (post.getStatus().equals("true")) {
+                int year = post.getDeadLine().getYear();
+                if (year != 2100 && post.getStatus().equals("opened")) {
                     Integer answerCount = answerRepository.countByPost(post);
                     Long postLikeCount = postLikeRepository.countByPost(post);
                     PostResponseDto categoryResponseDto = new PostResponseDto(
                             post.getId(),
                             post.getTitle(),
                             post.getContent(),
-                            post.getModifiedAt(),
                             answerCount,
                             postLikeCount,
                             getDeadLine(post),
-                            post.getStatus()
+                            post.getStatus(),
+                            post.getUser().getNickName()
+
                     );
+                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
                     response.add(categoryResponseDto);
-                } else {
+                } else if (year == 2100) {
                     Integer answerCount = answerRepository.countByPost(post);
                     Long postLikeCount = postLikeRepository.countByPost(post);
                     PostResponseDto categoryResponseDto = new PostResponseDto(
                             post.getId(),
                             post.getTitle(),
                             post.getContent(),
-                            post.getModifiedAt(),
                             answerCount,
                             postLikeCount,
                             getDeadLine(post),
-                            post.getStatus()
+                            post.getStatus(),
+                            post.getUser().getNickName()
+
                     );
+                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
+
                     tempresponse.add(categoryResponseDto);
+                }else{
+                    Integer answerCount = answerRepository.countByPost(post);
+                    Long postLikeCount = postLikeRepository.countByPost(post);
+                    PostResponseDto categoryResponseDto = new PostResponseDto(
+                            post.getId(),
+                            post.getTitle(),
+                            post.getContent(),
+                            answerCount,
+                            postLikeCount,
+                            getDeadLine(post),
+                            post.getStatus(),
+                            post.getUser().getNickName()
+                    );
+                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
+
+                    tempresponse2.add(categoryResponseDto);
                 }
             }
-            response.addAll(tempresponse);
 
         } else {
             throw new PostNotFoundException("글이 존재하지 않습니다");
@@ -332,34 +361,31 @@ public class PostService {
 
 
         response.addAll(tempresponse);
-        return ResponseEntity.ok().body(response);
+        response.addAll(tempresponse2);
+        return ResponseEntity.ok().
+
+                body(response);
     }
 
 
     private String getDeadLine(Post post) {
         String timeSet;
         LocalDateTime deadLine = post.getDeadLine();
-        if (deadLine == null) {
+        if (deadLine.getYear() == 2100) {
             timeSet = "기한 없음";
         } else {
             long minutes = 61;
             if (deadLine.isBefore(LocalDateTime.now())) {
-                post.setStatus("false");
+                post.setStatus("closed");
                 timeSet = "마감된 요청글 입니다.";
             } else {
-                minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                int hour = (int) (minutes / 60);
-                minutes = minutes % 60;
-                timeSet = "마감 " + hour + "시간 " + minutes + "분 전";
+                long hour = ChronoUnit.HOURS.between(LocalDateTime.now(), deadLine);
+                timeSet = "마감 " + hour + "시간전";
 
                 if (hour < 1) {
                     minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                    timeSet = "마감 " + minutes + "분 전";
+                    timeSet = "마감 " + minutes + "분전";
 
-                }
-                if (minutes < 1) {
-                    long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), deadLine);
-                    timeSet = "마감 " + seconds + "초 전";
                 }
             }
         }
@@ -371,38 +397,31 @@ public class PostService {
         Post findPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("존재하지 않는 글 입니다.")
         );
-        if(!findPost.getUser().getId().equals(user.getId())){
+        if (!findPost.getUser().getId().equals(user.getId())) {
             throw new UserNotFoundException("권한이 존재하지 않습니다");
         }
 
-        findPost.setStatus("false");
+        findPost.setStatus("closed");
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 
-
-
     // Post 작성 json 데이터 예외처리
-    private void PostWriteException(PostRequestDto postRequestDto)
-    {
+    private void PostWriteException(PostRequestDto postRequestDto) {
         // 전달받은 json 데이터에서 전달받은 제목값이 null이라면 예외처리
-        if (postRequestDto.getTitle().equals(""))
-        {
+        if (postRequestDto.getTitle().equals("")) {
             throw new PostWriteTitleNullException("제목이 입력되지 않았습니다.");
         }
         // 전달받은 json 데이터에서 전달받은 내용값이 null이라면 예외처리
-        if (postRequestDto.getContent().equals(""))
-        {
+        if (postRequestDto.getContent().equals("")) {
             throw new PostWriteContentNullException("내용이 입력되지 않았습니다.");
         }
         // 전달받은 json 데이터에서 전달받은 범주값이 null이라면 예외처리
-        if (postRequestDto.getCategory().equals(""))
-        {
+        if (postRequestDto.getCategory().equals("")) {
             throw new PostWriteCategoryNullException("범주가 설정되지 않았습니다.");
         }
         // 전달받은 json 데이터에서 전달받은 난이도값이 null이라면 예외처리
-        if (postRequestDto.getLevel().equals(""))
-        {
+        if (postRequestDto.getLevel().equals("")) {
             throw new PostWriteLevelNullException("난이도가 설정되지 않았습니다.");
         }
 
@@ -414,34 +433,28 @@ public class PostService {
     }
 
     // 유저 로그인 검사
-    private void UserCheck(UserDetailsImpl userDetails)
-    {
-        if ( userDetails == null)
-        {
+    private void UserCheck(UserDetailsImpl userDetails) {
+        if (userDetails == null) {
             throw new LoginUserNotFoundException("로그인 상태가 아닙니다.");
         }
     }
 
     // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
-    private User GetUser(UserDetailsImpl userDetails)
-    {
+    private User GetUser(UserDetailsImpl userDetails) {
         return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
                 () -> new LoginUserNotFoundException("유저를 찾을 수 없습니다."));
     }
 
 
-
     // Post 작성 및 저장
     @Transactional
-    void PostWrite(PostRequestDto postRequestDto, User user)
-    {
+    void PostWrite(PostRequestDto postRequestDto, User user) {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
 
         Post post = postRepository.save(new Post(postRequestDto, user));
 
         // 파라미터의 이미지 파일 url의 갯수만큼 반복
-        for (String url : postRequestDto.getFile())
-        {
+        for (String url : postRequestDto.getFile()) {
             // post의 파일 url 리스트를 가지고 있을 postFile 엔티티 생성 및 저장
             PostFile saveFile = postFileRepository.save(new PostFile(url, post));
             // 저장된 postFile을 저장된 post의 fileList에 한개씩 추가함
@@ -449,27 +462,21 @@ public class PostService {
         }
 
         // 잔여시간 처리
-        if (postRequestDto.getTimeSet() == 0)
-        {
-            post.setDeadLine(null);
-        }
-        else
-        {
+        if (postRequestDto.getTimeSet() == 0) {
+            post.setDeadLine(LocalDateTime.of(2100, 7, 15, 0, 0, 0));
+        } else {
             LocalDateTime deadline = post.getCreatedAt().plusHours(postRequestDto.getTimeSet());
             post.setDeadLine(deadline);
         }
     }
 
     @Transactional
-    void PostWriteAddPoint(User user)
-    {
+    void PostWriteAddPoint(User user) {
         Long postCount = postRepository.countByUser(user);
-        if (postCount == 3 || postCount == 6)
-        {
+        if (postCount == 3 || postCount == 6) {
             user.addPoint(50);
         }
     }
-
 
 
 }

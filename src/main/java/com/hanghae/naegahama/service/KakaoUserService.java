@@ -57,6 +57,7 @@ public class KakaoUserService {
             kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean",UUID.randomUUID().toString());
         }
         else {
+
              kakaoUserInfoDto = getKakaoUserInfo(accessToken);
         }
         // 3. 필요시에 회원가입
