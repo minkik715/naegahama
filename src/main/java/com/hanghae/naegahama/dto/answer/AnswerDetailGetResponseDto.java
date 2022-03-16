@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +24,7 @@ public class AnswerDetailGetResponseDto
 
     private String category;
 
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     private int star;
 
@@ -46,7 +47,7 @@ public class AnswerDetailGetResponseDto
         this.answerWriterId = answer.getUser().getId();
         this.title = answer.getTitle();
         this.content = answer.getContent();
-        this.modifiedAt = answer.getModifiedAt();
+        this.modifiedAt = TimeHandler.setModifiedAtAnswerDetail(answer.getModifiedAt());
         this.star = answer.getStar();
         this.answerLikeCount = likeCount;
         this.commentCount = commentCount;

@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.dto.post;
 
+import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
@@ -19,26 +21,17 @@ public class PostResponseDto {
 
     private String writer;
 
-    public void setModifiedAt(LocalDateTime modifiedAt) {
-        String date = "";
-        if(modifiedAt.getDayOfMonth() == LocalDateTime.now().getDayOfMonth()){
-            date= date + modifiedAt.getHour()+":"+modifiedAt.getMinute();
-        }else{
-            date = date + modifiedAt.getMonthValue()+"월"+modifiedAt.getDayOfMonth() +"일";
-        }
-        this.modifiedAt = date;
-    }
-
-    public PostResponseDto(Long id, String title, String content,
-                           Integer answerCount, Long postLikeCount, String timeSet, String status, String writer) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+    public PostResponseDto(Post post,
+                           Integer answerCount, Long postLikeCount, String timeSet) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
         this.answerCount = answerCount;
         this.postLikeCount = postLikeCount;
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
         this.timeSet = timeSet;
-        this.status = status;
-        this.writer = writer;
+        this.status = post.getStatus();
+        this.writer = post.getUser().getNickName();
 
     }
 }

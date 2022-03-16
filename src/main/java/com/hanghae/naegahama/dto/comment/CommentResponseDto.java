@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.dto.comment;
 
 import com.hanghae.naegahama.domain.Comment;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,7 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment save,Long answerId) {
         this.commentWriter= save.getUser().getNickName();
         this.content = save.getContent();
-        this.modifiedAt= save.getCreatedAt().toString();
+        this.modifiedAt= TimeHandler.setModifiedAtComment(save.getModifiedAt());
         this.answerId = answerId;
         this.commentId = save.getId();
         this.commentWriterId = save.getUser().getId();

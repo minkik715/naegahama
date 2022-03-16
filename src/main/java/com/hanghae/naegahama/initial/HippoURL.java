@@ -15,15 +15,15 @@ public class HippoURL
     private static String basicHippoURL = "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/f0fcb249-2cef-4539-a9ff-27dc171194d6%EA%B8%B0%EB%B3%B8%20%ED%95%98%EB%A7%88.PNG";
 
     private static String[] effortHippoUrl = {
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/dadcd345-bd3c-4d91-9135-4805ca4fe49b%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88.png",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/dadcd345-bd3c-4d91-9135-4805ca4fe49b%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88.png",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/dadcd345-bd3c-4d91-9135-4805ca4fe49b%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%841.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%842.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%85%B8%EB%A0%A5%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%843.png"
     };
 
     private static String[] leaderHippoUrl = {
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/bfd4f95a-15e6-4100-9174-b19c0581281a%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/bfd4f95a-15e6-4100-9174-b19c0581281a%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/bfd4f95a-15e6-4100-9174-b19c0581281a%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88.PNG"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%841.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%842.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EB%A6%AC%EB%8D%94%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%843.png"
     };
 
     private static String[] smellHippoUrl = {
@@ -45,9 +45,9 @@ public class HippoURL
     };
 
     private static String[] smartHippoUrl1 = {
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/3776ecac-551a-43dd-9db1-1d2eff4c8c5c%EC%8A%A4%EB%A7%88%ED%8A%B8%20%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/3776ecac-551a-43dd-9db1-1d2eff4c8c5c%EC%8A%A4%EB%A7%88%ED%8A%B8%20%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/3776ecac-551a-43dd-9db1-1d2eff4c8c5c%EC%8A%A4%EB%A7%88%ED%8A%B8%20%ED%95%98%EB%A7%88.PNG"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%841.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%842.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%8A%A4%EB%A7%88%ED%8A%B8%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%843.png"
     };
 
     private static String[] sweetHippoUrl = {
@@ -57,9 +57,9 @@ public class HippoURL
     };
 
     private static String[] centiHippoUrl = {
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/165fe5a6-2a54-4133-b538-f4d8ad423aec%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/165fe5a6-2a54-4133-b538-f4d8ad423aec%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88.PNG",
-            "https://naegahama.s3.ap-northeast-2.amazonaws.com/static/165fe5a6-2a54-4133-b538-f4d8ad423aec%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88.PNG"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%841.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%842.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%EC%84%BC%EC%B9%98%ED%95%98%EB%A7%88%ED%94%84%EB%A1%9C%ED%95%843.png"
     };
 
     public static String name(String hippoName, Integer hippoLv)
