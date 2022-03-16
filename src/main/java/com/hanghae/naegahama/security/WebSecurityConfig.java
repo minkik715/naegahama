@@ -137,10 +137,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //etc
         skipPathList.add("GET,/api/rank");
-        skipPathList.add("GET,/api/postsearch/**");
-        skipPathList.add("GET,/api/answersearch/**");
         skipPathList.add("GET,/api/shorts");
         skipPathList.add("GET,/api/survey/{hippoName}");
+
 
         skipPathList.add("GET,/favicon.ico");
 

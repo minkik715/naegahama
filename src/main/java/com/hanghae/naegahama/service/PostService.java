@@ -42,7 +42,7 @@ public class PostService {
 
 
         // Post 작성 및 저장
-        PostWrite(postRequestDto, user);
+        Long postId = PostWrite(postRequestDto, user);
 
         // 최초 요청글 작성 업적 획득
         user.getAchievement().setAchievement5(1);
@@ -50,7 +50,7 @@ public class PostService {
         // 3, 6번째 요청글 작성 시 50 경험치 획득
         PostWriteAddPoint(user);
 
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return ResponseEntity.ok().body(postId);
     }
 
 
@@ -142,24 +142,7 @@ public class PostService {
 
 
         for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-
-            String timeSet = getDeadLine(post);
-
-            PostResponseDto postResponseDto = new PostResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    answerCount,
-                    postLikeCount,
-                    timeSet,
-                    post.getStatus() ,
-                    post.getUser().getNickName()
-
-            );
-            postResponseDto.setModifiedAt(post.getModifiedAt());
-            response.add(postResponseDto);
+            createPostResponseDto(response, post);
         }
         return response;
     }
@@ -189,20 +172,12 @@ public class PostService {
         getDeadLine(post);
 
         ResponseDto ResponseDto = new ResponseDto(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getModifiedAt(),
+                post,
                 answerCount,
-                post.getUser().getId(),
-                post.getUser().getNickName(),
                 postLikeCount,
                 userIdList,
                 fileList,
-                post.getLevel(),
-                post.getCategory(),
-                getDeadLine(post),
-                post.getStatus());
+                getDeadLine(post));
 
 
         return ResponseDto;
@@ -222,22 +197,7 @@ public class PostService {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         for (Post post : posts) {
-            Integer answerCount = answerRepository.countByPost(post);
-            Long postLikeCount = postLikeRepository.countByPost(post);
-            PostResponseDto categoryResponseDto = new PostResponseDto(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getContent(),
-                    answerCount,
-                    postLikeCount,
-                    getDeadLine(post),
-                    post.getStatus(),
-                    post.getUser().getNickName()
-
-            );
-            categoryResponseDto.setModifiedAt(post.getModifiedAt());
-
-            response.add(categoryResponseDto);
+            createPostResponseDto(response, post);
         }
         return response;
     }
@@ -284,74 +244,18 @@ public class PostService {
             Collections.sort(posts);
 
             for (Post post : posts) {
-                Integer answerCount = answerRepository.countByPost(post);
-                Long postLikeCount = postLikeRepository.countByPost(post);
-                PostResponseDto categoryResponseDto = new PostResponseDto(
-                        post.getId(),
-                        post.getTitle(),
-                        post.getContent(),
-                        answerCount,
-                        postLikeCount,
-                        getDeadLine(post),
-                        post.getStatus(),
-                        post.getUser().getNickName()
-                );
-                categoryResponseDto.setModifiedAt(post.getModifiedAt());
-                response.add(categoryResponseDto);
+                createPostResponseDto(response, post);
             }
         } else if (sort.equals("time")) {
             Collections.sort(posts, comparator);
             for (Post post : posts) {
                 int year = post.getDeadLine().getYear();
                 if (year != 2100 && post.getStatus().equals("opened")) {
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post.getId(),
-                            post.getTitle(),
-                            post.getContent(),
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post),
-                            post.getStatus(),
-                            post.getUser().getNickName()
-
-                    );
-                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
-                    response.add(categoryResponseDto);
+                    createPostResponseDto(response, post);
                 } else if (year == 2100) {
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post.getId(),
-                            post.getTitle(),
-                            post.getContent(),
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post),
-                            post.getStatus(),
-                            post.getUser().getNickName()
-
-                    );
-                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
-
-                    tempresponse.add(categoryResponseDto);
+                    createPostResponseDto(tempresponse, post);
                 }else{
-                    Integer answerCount = answerRepository.countByPost(post);
-                    Long postLikeCount = postLikeRepository.countByPost(post);
-                    PostResponseDto categoryResponseDto = new PostResponseDto(
-                            post.getId(),
-                            post.getTitle(),
-                            post.getContent(),
-                            answerCount,
-                            postLikeCount,
-                            getDeadLine(post),
-                            post.getStatus(),
-                            post.getUser().getNickName()
-                    );
-                    categoryResponseDto.setModifiedAt(post.getModifiedAt());
-
-                    tempresponse2.add(categoryResponseDto);
+                    createPostResponseDto(tempresponse2, post);
                 }
             }
 
@@ -365,6 +269,19 @@ public class PostService {
         return ResponseEntity.ok().
 
                 body(response);
+    }
+
+    private void createPostResponseDto(List<PostResponseDto> response, Post post) {
+        Integer answerCount = answerRepository.countByPost(post);
+        Long postLikeCount = postLikeRepository.countByPost(post);
+        PostResponseDto categoryResponseDto = new PostResponseDto(
+                post,
+                answerCount,
+                postLikeCount,
+                getDeadLine(post),
+                post.getUser()
+        );
+        response.add(categoryResponseDto);
     }
 
 
@@ -448,7 +365,7 @@ public class PostService {
 
     // Post 작성 및 저장
     @Transactional
-    void PostWrite(PostRequestDto postRequestDto, User user) {
+    Long PostWrite(PostRequestDto postRequestDto, User user) {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
 
         Post post = postRepository.save(new Post(postRequestDto, user));
@@ -468,6 +385,7 @@ public class PostService {
             LocalDateTime deadline = post.getCreatedAt().plusHours(postRequestDto.getTimeSet());
             post.setDeadLine(deadline);
         }
+        return post.getId();
     }
 
     @Transactional

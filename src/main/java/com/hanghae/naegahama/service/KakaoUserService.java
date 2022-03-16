@@ -64,35 +64,7 @@ public class KakaoUserService {
         return ResponseEntity.ok().body(loginResponseDto);
     }*/
 
-    private String getAccessToken(String code) throws JsonProcessingException {
-        // HTTP Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // HTTP Body 생성
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "authorization_code");
-        body.add("client_id", "61db540d862894225a4938d0133cb467");
-        body.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
-        body.add("code", code);
-
-        // HTTP 요청 보내기
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-                new HttpEntity<>(body, headers);
-        RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
-        String responseBody = response.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
-        return jsonNode.get("access_token").asText();
-    }
 
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
@@ -144,6 +116,7 @@ public class KakaoUserService {
 
             kakaoUser = new User(encodedPassword, email, role, kakaoId);
             userRepository.save(kakaoUser).setAchievement(new Achievement());
+
 
         }
         return kakaoUser;

@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.dto.answer;
 
 import com.hanghae.naegahama.domain.Answer;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +24,7 @@ public class AnswerDetailGetResponseDto
 
     private String category;
 
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     private int star;
 
@@ -38,6 +39,9 @@ public class AnswerDetailGetResponseDto
     private List<String> fileList;
 
     private String videoUrl;
+    
+    private String imgUrl;
+
 
     public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList,
                                       List<String> fileList, String category) {
@@ -46,7 +50,7 @@ public class AnswerDetailGetResponseDto
         this.answerWriterId = answer.getUser().getId();
         this.title = answer.getTitle();
         this.content = answer.getContent();
-        this.modifiedAt = answer.getModifiedAt();
+        this.modifiedAt = TimeHandler.setModifiedAtAnswerDetail(answer.getModifiedAt());
         this.star = answer.getStar();
         this.answerLikeCount = likeCount;
         this.commentCount = commentCount;
@@ -55,7 +59,7 @@ public class AnswerDetailGetResponseDto
         this.fileList = fileList;
         this.category = category;
         this.videoUrl = answer.getAnswerVideo().getUrl();
-
+        this.imgUrl = answer.getUser().getHippoImage();
     }
 
     

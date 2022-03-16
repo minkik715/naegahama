@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.hanghae.validtest.ValidTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-03-15T04:19:46" hostname="DESKTOP-M6VAUEC" time="0.413">
-  <properties/>
-  <testcase name="게시글 DTO 테스트" classname="com.hanghae.validtest.ValidTest" time="0.413"/>
-  <system-out><![CDATA[PostRequestDto(title=null, content=null, category=null, level=null, file=null, timeSet=1)
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

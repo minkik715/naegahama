@@ -1,6 +1,9 @@
 package com.hanghae.naegahama.dto.comment;
 
 import com.hanghae.naegahama.domain.Comment;
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,14 +19,17 @@ public class CommentListResponseDto {
 
     private String timestamp;
 
+    private String imgUrl;
 
-    public CommentListResponseDto(Comment comment) {
+
+    public CommentListResponseDto(Comment comment, User user) {
         this.answerId = comment.getAnswer().getId();
         this.commentId = comment.getId();
-        this.commentWriterId = comment.getUser().getId();
-        this.commentWriter = comment.getUser().getNickName();
+        this.commentWriterId = user.getId();
+        this.commentWriter = user.getNickName();
         this.content = comment.getContent();
-        this.modifiedAt = comment.getModifiedAt().toString();
+        this.modifiedAt = TimeHandler.setModifiedAtComment(comment.getModifiedAt());
         this.timestamp = comment.getTimestamp();
+        this.imgUrl = user.getHippoImage();
     }
 }
