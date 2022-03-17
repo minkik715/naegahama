@@ -38,7 +38,6 @@ public class Alarm extends Timestamped {
     @Column
     private String title;
 
-
     @Enumerated(EnumType.STRING)
     private ReadingStatus readingStatus;
 

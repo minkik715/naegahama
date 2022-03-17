@@ -9,7 +9,7 @@ public  interface AlarmRepository extends JpaRepository<Alarm, Long> {
     //알람 전체 삭제
     void deleteByReceiver(User user);
     //알람 삭제
-    void deleteByIdAndReceiver(Long alarmId, User user);
+    void deleteByAlarmIdAndReceiver(Long alarmId, User user);
 
     List<Alarm> findAllByReceiverOrderByCreatedAtDesc(User user);
 
@@ -17,6 +17,5 @@ public  interface AlarmRepository extends JpaRepository<Alarm, Long> {
     List<Alarm>findAllByReceiver(User user);
 
 //알람 갯수 파악
-    Long countByReceiver(User user);
+    Long countByReadingStatusAndReceiver(ReadingStatus N, User user);
 }
-

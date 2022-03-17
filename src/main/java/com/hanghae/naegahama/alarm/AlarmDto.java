@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Data
@@ -19,7 +18,7 @@ public class AlarmDto implements Serializable {
     private Long id;
     private String title;
     private LocalDateTime modifiedAt;
-    private ReadingStatus readingStatust;
+    private ReadingStatus readingStatus;
 
     public AlarmDto(Alarm alarm) {
         this.alarmId = alarm.getAlarmId();
@@ -28,7 +27,7 @@ public class AlarmDto implements Serializable {
         this.id = alarm.getId();
         this.title = alarm.getTitle();
         this.modifiedAt = alarm.getModifiedAt();
-        this.readingStatust = alarm.getReadingStatus();
+        this.readingStatus = alarm.getReadingStatus();
     }
 
     public static AlarmDto convertMessageToDto(Alarm alarm) {

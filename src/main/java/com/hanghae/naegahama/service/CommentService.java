@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -53,14 +54,26 @@ public class CommentService {
 
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
+            //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
+            if (!findAnswer.getUser().equals(comment.getUser())) {
+                Alarm alarm = new Alarm(findAnswer.getUser(), comment.getUser().getNickName(), Type.comment, findAnswer.getId(), findAnswer.getTitle());
+                Alarm save1 = alarmRepository.save(alarm);
+                alarmService.alarmByMessage(new MessageDto(save1));
+            }
         } else {
             comment = new Comment(commentContent, parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
 
             //댓글에 대댓글을 단 사람에게 주는 알람.
-            Alarm alarm1 = new Alarm(comment.getUser(), comment.getUser().getNickName(), Type.child, comment.getId(), comment.getContent());
-            Alarm save2 = alarmRepository.save(alarm1);
-            alarmService.alarmByMessage(new MessageDto(save2));
+
+                Comment findcomment = commentRepository.findById(parentCommentId).orElseThrow(
+                        () -> new CommentNotFoundException("댓글 없습니다.")
+                );
+            if (!findcomment.getUser().equals(comment.getUser())) {
+                Alarm alarm1 = new Alarm(findcomment.getUser(), comment.getUser().getNickName(), Type.child, parentCommentId, findcomment.getContent());
+                Alarm save2 = alarmRepository.save(alarm1);
+                alarmService.alarmByMessage(new MessageDto(save2));
+            }
         }
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save, answerId);
@@ -71,13 +84,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         achievementUser.getAchievement().setAchievement4(1);
 
-        //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
-        if (parentCommentId == null) {
-        } else {
-            Alarm alarm = new Alarm(findAnswer.getUser(), comment.getUser().getNickName(), Type.commet, findAnswer.getId(), findAnswer.getTitle());
-            Alarm save1 = alarmRepository.save(alarm);
-            alarmService.alarmByMessage(new MessageDto(save1));
-        }
+
         return ResponseEntity.ok().body(commentResponseDto);
     }
 
@@ -86,13 +93,13 @@ public class CommentService {
         Comment findComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
-        findComment.setComment(commentModifyRequestDto.getContent(),commentModifyRequestDto.getTimestamp());
+        findComment.setComment(commentModifyRequestDto.getContent(), commentModifyRequestDto.getTimestamp());
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
 
     public ResponseEntity<?> deleteComment(Long commentId) {
-       commentRepository.findById(commentId).orElseThrow(
+        commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
         commentRepository.deleteAll(commentRepository.findAllByParentCommentId(commentId));
@@ -112,11 +119,11 @@ public class CommentService {
 
         // 날라갈 댓글 글 리스트
         List<CommentListResponseDto> parentCommentListResponseDtoList = new ArrayList<>();
-        if(commentList == null){
+        if (commentList == null) {
             throw new CommentNotFoundException("해당 글에는 댓글이 존재하지 않습니다.");
         }
         for (Comment comment : commentList) {
-            if(comment.getParentCommentId() == null) {
+            if (comment.getParentCommentId() == null) {
                 CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment);
                 parentCommentListResponseDtoList.add(commentListResponseDto);
             }
@@ -131,7 +138,7 @@ public class CommentService {
         );
         List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(commentId);
         List<KidsCommentListResponseDto> kidsCommentListResponseDtoList = new ArrayList<>();
-        if(kidsCommentList == null){
+        if (kidsCommentList == null) {
             throw new CommentNotFoundException("해당 댓글에는 대댓글이 존재하지 않습니다.");
         }
         for (Comment comment : kidsCommentList) {
@@ -139,7 +146,7 @@ public class CommentService {
             kidsCommentListResponseDtoList.add(kidsCommentListResponseDto);
 
         }
-        AllCommentResponseDto allCommentResponseDto = new AllCommentResponseDto(new CommentResponseDto(parentComment,parentComment.getAnswer().getId()),kidsCommentListResponseDtoList);
+        AllCommentResponseDto allCommentResponseDto = new AllCommentResponseDto(new CommentResponseDto(parentComment, parentComment.getAnswer().getId()), kidsCommentListResponseDtoList);
         return ResponseEntity.ok().body(allCommentResponseDto);
     }
 }

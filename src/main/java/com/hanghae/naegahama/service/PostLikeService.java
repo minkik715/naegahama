@@ -52,9 +52,11 @@ public class PostLikeService {
             postLikeRepository.deleteById(findPostLike.getId());
             postWriter.addPoint(-5);
         }
-        Alarm alarm = new Alarm(user,post.getUser().getNickName(), Type.likeP,findPostLike.getId(),findPostLike.getPost().getTitle());
-        Alarm save1 = alarmRepository.save(alarm);
-        alarmService.alarmByMessage(new MessageDto(save1));
+        if (!user.equals(findPostLike.getUser())) {
+            Alarm alarm = new Alarm(user, findPostLike.getUser().getNickName(), Type.likeP, findPostLike.getPost().getId(), findPostLike.getPost().getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
         return new PostLikeResponseDto(postId, postLikeRepository.countByPost(post));
     }
 

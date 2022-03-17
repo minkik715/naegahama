@@ -44,11 +44,11 @@ public class AnswerLikeService {
             answerLikeRepository.deleteById(findAnswerLike.getId());
             answerWriter.addPoint(-5);
         }
-
-        Alarm alarm = new Alarm(user,answer.getUser().getNickName(), Type.likeA,findAnswerLike.getId(),findAnswerLike.getAnswer().getTitle());
-        Alarm save1 = alarmRepository.save(alarm);
-        alarmService.alarmByMessage(new MessageDto(save1));
-
+        if (!user.equals(findAnswerLike.getUser())) {
+            Alarm alarm = new Alarm(user, findAnswerLike.getUser().getNickName(), Type.likeA, findAnswerLike.getAnswer().getId(), findAnswerLike.getAnswer().getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
     }
 }

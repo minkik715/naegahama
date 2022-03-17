@@ -27,13 +27,15 @@ public class AlarmService {
     }
 
     //알람 삭제
+    @Transactional
     public ResponseEntity deleteAlarm(Long alarmId, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        alarmRepository.deleteByIdAndReceiver(alarmId, user);
+        alarmRepository.deleteByAlarmIdAndReceiver(alarmId, user);
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
     //알람 전체 삭제
+    @Transactional
     public ResponseEntity<?> deleteAllAlarm(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         alarmRepository.deleteByReceiver(user);
@@ -97,11 +99,10 @@ public class AlarmService {
         return timeSet;
     }
 
-
-    //리딩 안된 갯수
+    //리딩 안된 알람갯수 카운트.
     public CountAlarmDto countAlarm(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        Long alarmCount = alarmRepository.countByReceiver(user);
+        Long alarmCount = alarmRepository.countByReadingStatusAndReceiver(ReadingStatus.N, user);
 
         CountAlarmDto countAlarmDto = new CountAlarmDto(
                 alarmCount
@@ -126,15 +127,21 @@ public class AlarmService {
     }
 }
 
+//    레디스 연결하기 완성하기.
+//        - 만족도 평가를 해야할때 (마감 시간 후에) (미확인)
+//        - 만족도 평가(경험치) 받았을때 (미확인)
+//        - 레벨 오를때 (미확인)
 
 
-//- 내가 요청한 글에 답변이 남겼을때 ansid
-// 답변글에 댓글을 남긴경우 commentid
-//        - 만족도 평가를 해야할때 (마감 시간 후에) rate =
-//        - 만족도 평가(경험치) 받았을때
-//        - 레벨 오를때
-//        - 좋아요 받았을떄
-
+//    기능 6 , 알람 8
+//        - 내가 요청한 글에 답변이 남겼을때 answer
+//        - 답변글에 댓글을 남긴경우 comment
+//        - 댓글에 대댓글이 남겼을떄 child
+//        - 만족도 평가를 해야할때 (마감 시간 후에) rate
+//        - 만족도 평가(경험치) 받았을때 rated
+//        - 레벨 오를때 levelㅣ
+//        - 요청글 좋아요 받았을떄 likeP
+//        - 답변글 좋아요 받았을떄 likeA
 
 
 //        소켓을 연결하며 클라이언트가 구독했던 곳으로 메세지를 전송해주면 됩니다.*/

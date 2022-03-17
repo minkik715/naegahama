@@ -16,18 +16,18 @@ public class AlarmResponseDto {
     private Long id;
     private String title;
     private LocalDateTime modifiedAt;
-    private ReadingStatus readingStatust;
+    private ReadingStatus readingStatus;
     private String timeSet;
 
     public AlarmResponseDto( Long alarmId, String senderNickName, Type type, Long id, String title,
-                             LocalDateTime modifiedAt, ReadingStatus readingStatust, String timeSet) {
+                             LocalDateTime modifiedAt, ReadingStatus readingStatus, String timeSet) {
         this.alarmId = alarmId;
         this.senderNickName = senderNickName;
         this.type = type;
         this.id = id;
         this.title = title;
         this.modifiedAt = modifiedAt;
-        this.readingStatust = readingStatust;
+        this.readingStatus = readingStatus;
         this.timeSet = timeSet;
 
     }

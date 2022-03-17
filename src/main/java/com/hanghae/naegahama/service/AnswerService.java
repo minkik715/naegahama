@@ -81,11 +81,11 @@ public class AnswerService
 
 
         achievementUser.getAchievement().setAchievement8(1);
-
-
-        Alarm alarm = new Alarm(post.getUser(),saveAnwser.getUser().getNickName(), Type.answer,post.getId(),post.getTitle());
-        Alarm save1 = alarmRepository.save(alarm);
-        alarmService.alarmByMessage(new MessageDto(save1));
+        if (!post.getUser().equals(saveAnwser.getUser())) {
+            Alarm alarm = new Alarm(post.getUser(), saveAnwser.getUser().getNickName(), Type.answer, post.getId(), post.getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
@@ -236,16 +236,16 @@ public class AnswerService
         {
             answerWriter.addPoint( addPoint );
         }
-
-        Alarm alarm = new Alarm(requestWriter,answerWriter.getNickName(), Type.rate,answer.getId(),answer.getTitle());
-        Alarm save1 = alarmRepository.save(alarm);
-        alarmService.alarmByMessage(new MessageDto(save1));
-
-        Alarm alarm1 = new Alarm(answerWriter,requestWriter.getNickName(), Type.rated,answer.getId(),answer.getTitle());
-        Alarm save2 = alarmRepository.save(alarm1);
-        alarmService.alarmByMessage(new MessageDto(save2));
-
-
+        if (!requestWriter.equals(answerWriter)) {
+            Alarm alarm = new Alarm(requestWriter, answerWriter.getNickName(), Type.rate, answer.getId(), answer.getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
+        if (!answerWriter.equals(requestWriter)) {
+            Alarm alarm1 = new Alarm(answerWriter, requestWriter.getNickName(), Type.rated, answer.getId(), answer.getTitle());
+            Alarm save2 = alarmRepository.save(alarm1);
+            alarmService.alarmByMessage(new MessageDto(save2));
+        }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

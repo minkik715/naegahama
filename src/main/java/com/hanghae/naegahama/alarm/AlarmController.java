@@ -29,7 +29,7 @@ public class AlarmController {
 
     //알람 삭제
     @DeleteMapping("/api/alarm/{alarmId}")
-    public ResponseEntity<?> deleteAlarm(@PathVariable Long alarmId,
+    public ResponseEntity deleteAlarm(@PathVariable Long alarmId,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(alarmService.deleteAlarm(alarmId, userDetails));
     }
@@ -46,7 +46,7 @@ public class AlarmController {
         return ResponseEntity.ok().body(alarmService.getAlarm(userDetails));
     }
 
-    //알람 리딩 안된 갯수 조회.
+    //알람 리딩 안된 알람갯수 조회.
     @GetMapping("/api/alarmCount")
     public ResponseEntity countAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(alarmService.countAlarm(userDetails));

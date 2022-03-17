@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
     public enum Type {
-        commet, child, answer, rate, rated, level, likeA, likeP
+        comment, child, answer, rate, rated, level, likeA, likeP
     }

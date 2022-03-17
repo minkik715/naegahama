@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-/*
+        /*
          * 1.
          * UsernamePasswordAuthenticationFilter 이전에 FormLoginFilter, JwtFilter 를 등록합니다.
          * FormLoginFilter : 로그인 인증을 실시합니다.
@@ -135,14 +135,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //댓글
         skipPathList.add("GET,/api/comment/**");
 
+//        //모든 메소드 허용.
+//        skipPathList.add("GET,/**");
+//        skipPathList.add("POST,/**");
+//        skipPathList.add("DELETE,/**");
+
         //etc
         skipPathList.add("GET,/api/rank");
-        skipPathList.add("GET,/api/postsearch/**");
-        skipPathList.add("GET,/api/answersearch/**");
         skipPathList.add("GET,/api/shorts");
         skipPathList.add("GET,/api/survey/{hippoName}");
 
         skipPathList.add("GET,/favicon.ico");
+
+        skipPathList.add("GET,/ws-stomp/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
