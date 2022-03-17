@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 public class JWTAuthProvider implements AuthenticationProvider {
 
     private final JwtDecoder jwtDecoder;
-
     private final UserRepository userRepository;
 
     @Override

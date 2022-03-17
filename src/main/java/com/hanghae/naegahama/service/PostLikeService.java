@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
@@ -24,6 +25,8 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
 
     @Transactional
     public PostLikeResponseDto PostLike(Long postId, Long id) {
@@ -48,6 +51,11 @@ public class PostLikeService {
         {
             postLikeRepository.deleteById(findPostLike.getId());
             postWriter.addPoint(-5);
+        }
+        if (!user.equals(findPostLike.getUser())) {
+            Alarm alarm = new Alarm(user, findPostLike.getUser().getNickName(), Type.likeP, findPostLike.getPost().getId(), findPostLike.getPost().getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
         }
         return new PostLikeResponseDto(postId, postLikeRepository.countByPost(post));
     }

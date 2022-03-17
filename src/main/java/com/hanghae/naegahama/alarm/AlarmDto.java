@@ -1,4 +1,3 @@
-
 package com.hanghae.naegahama.alarm;
 
 import lombok.AllArgsConstructor;
@@ -8,20 +7,20 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto implements Serializable {
+public class AlarmDto implements Serializable {
     private Long alarmId;
-    private Long receiverId;
     private String senderNickName;
     private Type type;
     private Long id;
     private String title;
-    LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt;
     private ReadingStatus readingStatus;
 
-    public MessageDto (Alarm alarm) {
+    public AlarmDto(Alarm alarm) {
         this.alarmId = alarm.getAlarmId();
         this.senderNickName = alarm.getSenderNickName();
         this.type = alarm.getType();
@@ -30,6 +29,16 @@ public class MessageDto implements Serializable {
         this.modifiedAt = alarm.getModifiedAt();
         this.readingStatus = alarm.getReadingStatus();
     }
-}
 
-//메세지를 작성하면, alarmService를 이용해서 메시지에 의한 알람을 발송해주겠습니다.
+    public static AlarmDto convertMessageToDto(Alarm alarm) {
+        return new AlarmDto(
+                alarm.getAlarmId(),
+                alarm.getSenderNickName(),
+                alarm.getType(),
+                alarm.getId(),
+                alarm.getTitle(),
+                alarm.getModifiedAt(),
+                alarm.getReadingStatus()
+        );
+    }
+}

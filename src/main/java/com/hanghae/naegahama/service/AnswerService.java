@@ -1,20 +1,17 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
-import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +28,20 @@ public class AnswerService
     private final AnswerLikeRepository answerLikeRepository;
     private final AnswerFileRepository answerFileRepository;
     private final UserRepository userRepository;
-
     private final AnswerVideoRepository answerVideoRepository;
-
-    private final S3Uploader s3Uploader;
-
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
 
     // 답변글 작성
     @Transactional
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
-        //answer와 연결된 post를 찾고
         Post post = postRepository.findPostById(postId);
-        if(post.getStatus().equals("false")){
+
+        if(post.getStatus().equals("false"))
+        {
             return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
         }
-
-        //filelist가 빈 Answer를 미리 하나 만들어두고
-       // Answer answer = new Answer(answerPostRequestDto,post,user, publishing);
 
         //저장된 Answer을 꺼내와서
         Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user));
@@ -86,8 +79,14 @@ public class AnswerService
             }
         }
 
-
         achievementUser.getAchievement().setAchievement1(1);
+
+
+        if (!post.getUser().equals(saveAnwser.getUser())) {
+            Alarm alarm = new Alarm(post.getUser(), saveAnwser.getUser().getNickName(), Type.answer, post.getId(), post.getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
@@ -239,9 +238,16 @@ public class AnswerService
         {
             answerWriter.addPoint( addPoint );
         }
-
-
-
+        if (!requestWriter.equals(answerWriter)) {
+            Alarm alarm = new Alarm(requestWriter, answerWriter.getNickName(), Type.rate, answer.getId(), answer.getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
+        }
+        if (!answerWriter.equals(requestWriter)) {
+            Alarm alarm1 = new Alarm(answerWriter, requestWriter.getNickName(), Type.rated, answer.getId(), answer.getTitle());
+            Alarm save2 = alarmRepository.save(alarm1);
+            alarmService.alarmByMessage(new MessageDto(save2));
+        }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

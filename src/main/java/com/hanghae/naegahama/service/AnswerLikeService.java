@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
@@ -15,6 +16,9 @@ public class AnswerLikeService {
     private final AnswerLikeRepository answerLikeRepository;
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
+
 
     @Transactional
     public AnswerLikeResponseDto AnswerLike(Long answerId, Long id) {
@@ -39,6 +43,11 @@ public class AnswerLikeService {
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
             answerWriter.addPoint(-5);
+        }
+        if (!user.equals(findAnswerLike.getUser())) {
+            Alarm alarm = new Alarm(user, findAnswerLike.getUser().getNickName(), Type.likeA, findAnswerLike.getAnswer().getId(), findAnswerLike.getAnswer().getTitle());
+            Alarm save1 = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(save1));
         }
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
     }
