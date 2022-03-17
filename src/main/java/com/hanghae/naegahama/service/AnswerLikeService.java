@@ -38,17 +38,18 @@ public class AnswerLikeService {
         if(findAnswerLike == null){
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
-            answerLikeRepository.save(answerLike);
+            findAnswerLike = answerLikeRepository.save(answerLike);
+            if (answerWriter.equals(findAnswerLike.getUser())) {
+                Alarm alarm = new Alarm(answerWriter, user.getNickName(), Type.likeA, answer.getId(), answer.getTitle());
+                Alarm save1 = alarmRepository.save(alarm);
+                alarmService.alarmByMessage(new MessageDto(save1));
+            }
             answerWriter.addPoint(5);
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
             answerWriter.addPoint(-5);
         }
-        if (!user.equals(findAnswerLike.getUser())) {
-            Alarm alarm = new Alarm(user, findAnswerLike.getUser().getNickName(), Type.likeA, findAnswerLike.getAnswer().getId(), findAnswerLike.getAnswer().getTitle());
-            Alarm save1 = alarmRepository.save(alarm);
-            alarmService.alarmByMessage(new MessageDto(save1));
-        }
+
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
     }
 }

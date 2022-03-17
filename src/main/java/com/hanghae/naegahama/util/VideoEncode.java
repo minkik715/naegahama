@@ -23,11 +23,11 @@ public class VideoEncode {
     public void init(){
         try{
             //locat에서 돌릴떄
-            ffmpeg = new FFmpeg("src/main/resources/src/bin/ffmpeg.exe");
-            ffprobe = new FFprobe("src/main/resources/src/bin/ffprobe.exe");
+            // ffmpeg = new FFmpeg("src/main/resources/src/bin/ffmpeg.exe");
+            //ffprobe = new FFprobe("src/main/resources/src/bin/ffprobe.exe");
             //ec2에 올릴떄
-//           ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
-//            ffprobe = new FFprobe("/usr/bin/ffprobe");
+           ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
+            ffprobe = new FFprobe("/usr/bin/ffprobe");
         }catch (Exception e){
             e.printStackTrace();
         }

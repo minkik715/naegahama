@@ -79,6 +79,8 @@ public class AnswerService
             }
         }
 
+
+
         achievementUser.getAchievement().setAchievement1(1);
 
 

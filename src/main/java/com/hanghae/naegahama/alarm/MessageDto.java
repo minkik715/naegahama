@@ -18,16 +18,17 @@ public class MessageDto implements Serializable {
     private Type type;
     private Long id;
     private String title;
-    LocalDateTime modifiedAt;
+    String modifiedAt;
     private ReadingStatus readingStatus;
 
     public MessageDto (Alarm alarm) {
+        this.receiverId = alarm.getReceiver().getId();
         this.alarmId = alarm.getAlarmId();
         this.senderNickName = alarm.getSenderNickName();
         this.type = alarm.getType();
         this.id = alarm.getId();
         this.title = alarm.getTitle();
-        this.modifiedAt = alarm.getModifiedAt();
+        this.modifiedAt = alarm.getModifiedAt().toString();
         this.readingStatus = alarm.getReadingStatus();
     }
 }

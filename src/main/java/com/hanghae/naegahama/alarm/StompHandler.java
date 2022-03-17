@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.alarm;
 
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.repository.UserRepository;
 import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +13,16 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class StompHandler implements ChannelInterceptor {
 
     private final JwtDecoder jwtDecoder;
+    private final RedisRepository redisRepository;
+    private final UserRepository userRepository;
 
 
     //Controller에 가기전에 이곳을 먼저 들리게 된다. 그것이 인터셉터의 역할
@@ -34,11 +40,33 @@ public class StompHandler implements ChannelInterceptor {
             // 헤더의 토큰값을 빼오기
             if(!jwtDecoder.isValidToken(accessor.getFirstNativeHeader("token")).isPresent())
                 throw new AccessDeniedException("");
+            log.info("connect 성공");
+        }else if(accessor.getCommand() == StompCommand.SUBSCRIBE){
+            String token = accessor.getFirstNativeHeader("token");
+            log.info("token = {}", token);
+            String username = jwtDecoder.decodeUsername(token);
+            log.info("userId = {} username = {}", token, username);
+            Optional<User> byEmail = userRepository.findByEmail(username);
+            String id = String.valueOf(byEmail.get().getId());
+            log.info(id);
+
+            String sessionId = (String) message.getHeaders().get("simpSessionId");
+            redisRepository.setSessionAlarm(sessionId,id);
+            String userId1 = redisRepository.getSessionUserId(sessionId);
+            log.info("SUBSCRIBED {}, {}", userId1, sessionId);
+        }
+        else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
+
+            // 연결이 종료된 클라이언트 sesssionId로 채팅방 id를 얻는다.
+
+            // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
+            String token = accessor.getFirstNativeHeader("token");
+            String sessionId = (String) message.getHeaders().get("simpSessionId");
+            String userId = jwtDecoder.decodeUserId(token);
+            redisRepository.removeUserEnterInfo(sessionId);
+            log.info("DISCONNECT {}, {}", userId, sessionId);
         }
         return message;
     }
 }
 
-//    preSend를 오버라이딩하여, CONNECT하는 상황이라면, 토큰을 검증해줍니다.
-//        토큰이 유효하지 않다면, 예외를 발생시켜줄 것입니다.
-//        토큰 검증하는 코드는 예제가 많으므로 생략하겠습니다.

@@ -15,7 +15,6 @@ import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
-import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -38,7 +36,6 @@ public class CommentService {
     private final UserRepository userRepository;
     private final AlarmService alarmService;
     private final AlarmRepository alarmRepository;
-    private final JwtDecoder jwtDecoder;
 
 
     @Transactional
