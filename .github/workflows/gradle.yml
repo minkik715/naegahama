@@ -2,9 +2,9 @@ name: Spring Boot with Gradle CI/CD
 
 on:
   push:
-    branches: [ distribute_test ]
+    branches: [ main ]
   pull_request:
-    branches: [ distribute_test ]
+    branches: [ main ]
 
 jobs:
   build:
