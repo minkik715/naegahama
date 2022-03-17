@@ -61,7 +61,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws deploy create-deployment \
-        --application-name naegahama \
+        --application-name springboot-intro \
         --deployment-group-name springboot-intro-deploy-group \
         --file-exists-behavior OVERWRITE \
         --s3-location bucket=minkicicdbucket,bundleType=zip,key=hippo/hippo-build.zip \
