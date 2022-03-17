@@ -53,3 +53,16 @@ jobs:
       # S3로 업로드
     - name: Upload to AWS S3
       run: aws s3 cp --region ap-northeast-2 --acl private ./naegahama-build.zip s3://minkicicdbucket/hippo/hippo-build.zip
+
+# Deploy
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws deploy create-deployment \
+        --application-name naegahama \
+        --deployment-group-name springboot-intro-deploy-group \
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=minkicicdbucket,bundleType=zip,key=hippo/hippo-build.zip \
+        --region ap-northeast-2
