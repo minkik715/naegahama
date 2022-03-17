@@ -21,6 +21,7 @@ public class MyPostDto
     private String imgUrl;
     private String category;
     private Long likes;
+    private String img;
 
 //    private Long likeCount;
 //    private Integer answerCount ;

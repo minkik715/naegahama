@@ -60,6 +60,11 @@ public class UserService {
         for (Post post : postList)
         {
             MyPostDto postMyPageDto = new MyPostDto(post, user,postLikeRepository.countByPost(post));
+
+            if ( post.getFileList().size() != 0)
+            {
+                postMyPageDto.setImg(post.getFileList().get(0).getUrl());
+            }
             myPageDtoList.add(postMyPageDto);
         }
 
@@ -75,6 +80,11 @@ public class UserService {
         {
 
             MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user,answerLikeRepository.countByAnswer(answer));
+
+            if ( answer.getFileList().size() != 0)
+            {
+                myAnswerDto.setImg(answer.getFileList().get(0).getUrl());
+            }
             myAnswerDtoList.add(myAnswerDto);
         }
         return myAnswerDtoList;

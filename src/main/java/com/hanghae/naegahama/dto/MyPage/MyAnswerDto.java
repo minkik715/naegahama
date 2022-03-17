@@ -21,6 +21,7 @@ public class MyAnswerDto
     private String imgUrl;
     private String category;
     private Long likes ;
+    private String img;
 
     public MyAnswerDto(Answer answer, User user, Long likes)
     {
