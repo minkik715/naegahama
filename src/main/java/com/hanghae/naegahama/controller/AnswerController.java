@@ -1,6 +1,4 @@
-
 package com.hanghae.naegahama.controller;
-
 
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -25,7 +23,6 @@ public class AnswerController
              @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return answerService.answerWrite(answerPostRequestDto,postId, userDetails.getUser());
-//        answerService.answerWrite(answerPostRequestDto, multipartFile,postId, userDetails);
     }
 
 

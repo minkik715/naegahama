@@ -22,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,11 +47,16 @@ public class KakaoUserService {
         if(accessToken.equals("12345")){
              kakaoUserInfoDto = new KakaoUserInfoDto(123456L,"123",UUID.randomUUID().toString());
         }
-        else if(accessToken.equals("pjg")){
-            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"123",UUID.randomUUID().toString());
+
+        else if (accessToken.equals("pjg"))
+        {
+            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG",UUID.randomUUID().toString());
         }
-        else
-         {
+        else if (accessToken.equals("dean"))
+        {
+            kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean",UUID.randomUUID().toString());
+        }
+        else {
              kakaoUserInfoDto = getKakaoUserInfo(accessToken);
         }
         // 3. 필요시에 회원가입

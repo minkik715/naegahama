@@ -359,7 +359,7 @@ public class PostService {
     // @Transactional을 사용하기 위해 userRepository에서 불러온 유저를 반환
     private User GetUser(UserDetailsImpl userDetails) {
         return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
-                () -> new LoginUserNotFoundException("업적 달성 유저를 찾을 수 없습니다."));
+                () -> new LoginUserNotFoundException("유저를 찾을 수 없습니다."));
     }
 
 
