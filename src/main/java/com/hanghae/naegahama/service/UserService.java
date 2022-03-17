@@ -33,14 +33,10 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final AnswerRepository answerRepository;
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
-    private final AchievementRepository achievementRepository;
-    private final AlarmRepository alarmRepository;
-    private final AlarmService alarmService;
 
 
 

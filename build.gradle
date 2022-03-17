@@ -48,7 +48,7 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
+    implementation 'it.ozimov:embedded-redis:0.7.2'
     // websocket, stomp
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:stomp-websocket:2.3.3'

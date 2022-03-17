@@ -13,19 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AlarmController {
 
-    private final SimpMessageSendingOperations messagingTemplate;
+
     private final AlarmService alarmService;
 
-    // stomp 테스트 화면
-    @GetMapping("/alarm/stomp")
-    public String stompAlarm() {
-        return "/stomp";
-    }
-
-    @MessageMapping("/{userId}")
-    public void message(@DestinationVariable("userId") Long userId) {
-        messagingTemplate.convertAndSend("/sub/" + userId, "alarm socket connection completed.");
-    }
 
     //알람 삭제
     @DeleteMapping("/api/alarm/{alarmId}")

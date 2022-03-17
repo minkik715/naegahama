@@ -5,6 +5,8 @@ import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlarmService {
 
-    private final SimpMessageSendingOperations messagingTemplate;
+    private final RedisTemplate redisTemplate;
+    private final ChannelTopic channelTopic;
     private final AlarmRepository alarmRepository;
 
     public void alarmByMessage(MessageDto messageDto) {
-        messagingTemplate.convertAndSend("/sub/" + messageDto.getReceiverId(), messageDto);
+        redisTemplate.convertAndSend(channelTopic.getTopic(), messageDto);
     }
 
     //알람 삭제
