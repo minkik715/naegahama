@@ -30,7 +30,7 @@ public class Alarm extends Timestamped {
     private String senderNickName;
 
     @Column
-    private Type type;
+    private AlarmType alarmType;
 
     @Column
     private Long id;
@@ -42,10 +42,10 @@ public class Alarm extends Timestamped {
     private ReadingStatus readingStatus;
 
 
-    public Alarm(User receiver, String senderNickName, Type type, Long id, String title) {
+    public Alarm(User receiver, String senderNickName, AlarmType alarmType, Long id, String title) {
         this.receiver = receiver;
         this.senderNickName = senderNickName;
-        this.type = type;
+        this.alarmType = alarmType;
         this.id = id;
         this.title = title;
         this.readingStatus = ReadingStatus.N;

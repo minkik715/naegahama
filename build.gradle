@@ -64,3 +64,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task copySubmodule(type: Copy){
+    from './naegahamaSecret'
+    include '*.yml'
+    into './src/main/resources'
+}

@@ -5,7 +5,7 @@
 //import com.hanghae.naegahama.alarm.Alarm;
 //import com.hanghae.naegahama.alarm.AlarmRepository;
 //import com.hanghae.naegahama.alarm.ReadingStatus;
-//import com.hanghae.naegahama.alarm.Type;
+//import com.hanghae.naegahama.alarm.AlarmType;
 //import com.hanghae.naegahama.domain.*;
 //import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 //import com.hanghae.naegahama.repository.*;
@@ -144,17 +144,17 @@
 //        postLikeRepository.save(new PostLike(new PostLikeRequestDto(userList.get(5), PostList.get(15))));
 //
 //        List<Alarm> alarmList = new ArrayList<>();
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(1), userList.get(0).getNickName(), Type.answer, PostList.get(0).getId(), PostList.get(0).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(2), userList.get(1).getNickName(), Type.commet, PostList.get(1).getId(), PostList.get(1).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(3), userList.get(2).getNickName(), Type.likeA, PostList.get(2).getId(), PostList.get(2).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(4), userList.get(3).getNickName(), Type.child, PostList.get(3).getId(), PostList.get(3).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(5), userList.get(4).getNickName(), Type.rate, PostList.get(4).getId(), PostList.get(4).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(6), userList.get(5).getNickName(), Type.rated, PostList.get(5).getId(), PostList.get(5).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(7), userList.get(6).getNickName(), Type.level, PostList.get(0).getId(), PostList.get(0).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(8), userList.get(1).getNickName(), Type.likeP, PostList.get(1).getId(), PostList.get(1).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(4), userList.get(2).getNickName(), Type.level, PostList.get(2).getId(), PostList.get(2).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(2), userList.get(3).getNickName(), Type.commet, PostList.get(3).getId(), PostList.get(3).getTitle())));
-//        alarmList.add(alarmRepository.save(new Alarm(userList.get(0), userList.get(4).getNickName(), Type.answer, PostList.get(4).getId(), PostList.get(4).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(1), userList.get(0).getNickName(), AlarmType.answer, PostList.get(0).getId(), PostList.get(0).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(2), userList.get(1).getNickName(), AlarmType.commet, PostList.get(1).getId(), PostList.get(1).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(3), userList.get(2).getNickName(), AlarmType.likeA, PostList.get(2).getId(), PostList.get(2).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(4), userList.get(3).getNickName(), AlarmType.child, PostList.get(3).getId(), PostList.get(3).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(5), userList.get(4).getNickName(), AlarmType.rate, PostList.get(4).getId(), PostList.get(4).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(6), userList.get(5).getNickName(), AlarmType.rated, PostList.get(5).getId(), PostList.get(5).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(7), userList.get(6).getNickName(), AlarmType.level, PostList.get(0).getId(), PostList.get(0).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(8), userList.get(1).getNickName(), AlarmType.likeP, PostList.get(1).getId(), PostList.get(1).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(4), userList.get(2).getNickName(), AlarmType.level, PostList.get(2).getId(), PostList.get(2).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(2), userList.get(3).getNickName(), AlarmType.commet, PostList.get(3).getId(), PostList.get(3).getTitle())));
+//        alarmList.add(alarmRepository.save(new Alarm(userList.get(0), userList.get(4).getNickName(), AlarmType.answer, PostList.get(4).getId(), PostList.get(4).getTitle())));
 //
 //
 //    }

@@ -4,6 +4,7 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.dto.event.AlarmEventListener;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
 import com.hanghae.naegahama.repository.PostLikeRepository;
@@ -11,12 +12,10 @@ import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +26,7 @@ public class PostLikeService {
     private final PostRepository postRepository;
     private final AlarmRepository alarmRepository;
     private final AlarmService alarmService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public PostLikeResponseDto PostLike(Long postId, Long id) {
@@ -43,14 +43,9 @@ public class PostLikeService {
         PostLike findPostLike = postLikeRepository.findByUserAndPost(user,post).orElse(null);
         log.info("userId ={}", user.getId());
         if(findPostLike == null){
-            PostLikeRequestDto requestDto = new PostLikeRequestDto(user, post);
-            PostLike postLike = new PostLike(requestDto);
-            findPostLike = postLikeRepository.save(postLike);
-            if (user.equals(findPostLike.getUser())) {
-                Alarm alarm = new Alarm(postWriter, findPostLike.getUser().getNickName(), Type.likeP, post.getId(), post.getTitle());
-                Alarm save1 = alarmRepository.save(alarm);
-                alarmService.alarmByMessage(new MessageDto(save1));
-            }
+            postLikeRepository.save(new PostLike(new PostLikeRequestDto(user, post)));
+            log.info("postWriter Name= {}, user name = {}", postWriter.getNickName(), user.getNickName());
+            applicationEventPublisher.publishEvent(new AlarmEventListener(postWriter,user,post,AlarmType.likeP));
             postWriter.addPoint(5);
         } else
         {

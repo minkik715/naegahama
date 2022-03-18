@@ -10,6 +10,7 @@ import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
+import com.hanghae.naegahama.dto.event.AlarmEventListener;
 import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
@@ -17,6 +18,7 @@ import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final AlarmService alarmService;
     private final AlarmRepository alarmRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+
 
 
     @Transactional
@@ -52,11 +56,8 @@ public class CommentService {
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
             //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
-            if (!findAnswer.getUser().equals(comment.getUser())) {
-                Alarm alarm = new Alarm(findAnswer.getUser(), comment.getUser().getNickName(), Type.comment, findAnswer.getId(), findAnswer.getTitle());
-                Alarm save1 = alarmRepository.save(alarm);
-                alarmService.alarmByMessage(new MessageDto(save1));
-            }
+            applicationEventPublisher.publishEvent(new AlarmEventListener(findAnswer.getUser(), comment.getUser(),findAnswer, AlarmType.comment));
+
         } else {
             comment = new Comment(commentContent, parentCommentId, findAnswer, user);
             user.getCommentList().add(comment);
@@ -66,11 +67,8 @@ public class CommentService {
                 Comment findcomment = commentRepository.findById(parentCommentId).orElseThrow(
                         () -> new CommentNotFoundException("댓글 없습니다.")
                 );
-            if (!findcomment.getUser().equals(comment.getUser())) {
-                Alarm alarm1 = new Alarm(findcomment.getUser(), comment.getUser().getNickName(), Type.child, parentCommentId, findcomment.getContent());
-                Alarm save2 = alarmRepository.save(alarm1);
-                alarmService.alarmByMessage(new MessageDto(save2));
-            }
+            applicationEventPublisher.publishEvent(new AlarmEventListener(findcomment.getUser(), comment.getUser(),comment, AlarmType.child));
+
         }
         Comment save = commentRepository.save(comment);
         CommentResponseDto commentResponseDto = new CommentResponseDto(save, answerId);

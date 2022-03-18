@@ -294,14 +294,14 @@ public class PostService {
             long minutes = 61;
             if (deadLine.isBefore(LocalDateTime.now())) {
                 post.setStatus("closed");
-                timeSet = "마감된 요청글 입니다.";
+                timeSet = "마감";
             } else {
                 long hour = ChronoUnit.HOURS.between(LocalDateTime.now(), deadLine);
-                timeSet = "마감 " + hour + "시간전";
+                timeSet = hour + "시간전";
 
                 if (hour < 1) {
                     minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                    timeSet = "마감 " + minutes + "분전";
+                    timeSet = minutes + "분전";
 
                 }
             }
