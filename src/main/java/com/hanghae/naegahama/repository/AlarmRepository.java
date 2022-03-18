@@ -1,5 +1,6 @@
-package com.hanghae.naegahama.alarm;
-
+package com.hanghae.naegahama.repository;
+import com.hanghae.naegahama.dto.alarm.ReadingStatus;
+import com.hanghae.naegahama.domain.Alarm;
 import com.hanghae.naegahama.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,6 +17,6 @@ public  interface AlarmRepository extends JpaRepository<Alarm, Long> {
     //
     List<Alarm>findAllByReceiver(User user);
 
-//알람 갯수 파악
+    //알람 갯수 파악
     Long countByReadingStatusAndReceiver(ReadingStatus N, User user);
 }

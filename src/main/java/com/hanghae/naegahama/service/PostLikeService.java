@@ -1,11 +1,14 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
+import com.hanghae.naegahama.domain.Alarm;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.dto.alarm.MessageDto;
+import com.hanghae.naegahama.dto.alarm.Type;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
@@ -14,9 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

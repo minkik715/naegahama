@@ -1,5 +1,8 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.dto.alarm;
 
+import com.hanghae.naegahama.domain.Alarm;
+import com.hanghae.naegahama.dto.alarm.ReadingStatus;
+import com.hanghae.naegahama.dto.alarm.Type;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

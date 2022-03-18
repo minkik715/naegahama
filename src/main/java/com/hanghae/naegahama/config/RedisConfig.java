@@ -1,6 +1,7 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.config;
 
 
+import com.hanghae.naegahama.pubsub.RedisSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

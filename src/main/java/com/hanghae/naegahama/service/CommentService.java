@@ -1,10 +1,10 @@
 
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
-import com.hanghae.naegahama.alarm.AlarmService;
-import com.hanghae.naegahama.alarm.MessageDto;
-import com.hanghae.naegahama.alarm.AlarmRepository;
+import com.hanghae.naegahama.domain.Alarm;
+import com.hanghae.naegahama.dto.alarm.MessageDto;
+import com.hanghae.naegahama.dto.alarm.Type;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

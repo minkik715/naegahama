@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.dto.alarm;
 
 import lombok.Getter;
 import lombok.Setter;

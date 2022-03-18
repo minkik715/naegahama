@@ -1,10 +1,12 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.alarm.MessageDto;
+import com.hanghae.naegahama.dto.alarm.Type;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
 import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

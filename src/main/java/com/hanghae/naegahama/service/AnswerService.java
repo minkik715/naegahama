@@ -1,8 +1,9 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.alarm.MessageDto;
+import com.hanghae.naegahama.dto.alarm.Type;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;

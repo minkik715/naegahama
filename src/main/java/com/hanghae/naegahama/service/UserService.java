@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service

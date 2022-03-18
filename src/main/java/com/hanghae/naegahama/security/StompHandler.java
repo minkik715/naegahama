@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.security;
 
 import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;

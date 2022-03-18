@@ -1,8 +1,12 @@
 
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.domain.Alarm;
+import com.hanghae.naegahama.dto.alarm.*;
+import com.hanghae.naegahama.repository.AlarmRepository;
+import com.hanghae.naegahama.dto.alarm.ReadingStatus;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -128,6 +132,7 @@ public class AlarmService {
 }
 
 //    레디스 연결하기 완성하기.
+// 타임세트
 //        - 만족도 평가를 해야할때 (마감 시간 후에) (미확인)
 //        - 만족도 평가(경험치) 받았을때 (미확인)
 //        - 레벨 오를때 (미확인)
@@ -139,7 +144,7 @@ public class AlarmService {
 //        - 댓글에 대댓글이 남겼을떄 child
 //        - 만족도 평가를 해야할때 (마감 시간 후에) rate
 //        - 만족도 평가(경험치) 받았을때 rated
-//        - 레벨 오를때 levelㅣ
+//        - 레벨 오를때 level
 //        - 요청글 좋아요 받았을떄 likeP
 //        - 답변글 좋아요 받았을떄 likeA
 

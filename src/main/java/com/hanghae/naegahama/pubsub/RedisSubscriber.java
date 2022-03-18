@@ -1,6 +1,7 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanghae.naegahama.domain.Alarm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

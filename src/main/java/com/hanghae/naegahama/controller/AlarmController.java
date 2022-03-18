@@ -1,6 +1,7 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.security.UserDetailsImpl;
+import com.hanghae.naegahama.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

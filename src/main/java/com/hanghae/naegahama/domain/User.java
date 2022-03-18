@@ -2,9 +2,7 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hanghae.naegahama.alarm.Alarm;
-import com.hanghae.naegahama.alarm.MessageDto;
-import com.hanghae.naegahama.alarm.Type;
+import com.hanghae.naegahama.dto.alarm.Type;
 import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
