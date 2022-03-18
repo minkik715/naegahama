@@ -27,7 +27,6 @@ public class RankService {
     public ResponseEntity<?> getTop5Rank() {
         //과거 5개 가져오기
         List<Rank> previousTop5Rank = rankRepository.findAllByOrderByRankAsc();
-        List<Rank> saveRank = new ArrayList<>();
         List<User> previousUserRankList = new ArrayList<>();
         List<User> top5ByOrderByPointDesc = userRepository.findTop5ByOrderByPointDesc();
         List<RankResponseDto> rankResponseDtoList = new ArrayList<>();

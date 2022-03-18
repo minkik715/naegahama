@@ -1,12 +1,13 @@
 package com.hanghae.naegahama.controller;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class SurveyController {
 
     //설문조사 제출
     @PostMapping("/api/survey")
-    public ResponseEntity<?> createHippo(@RequestBody SurveyRequestDto surveyRequestDto,
+    public ResponseEntity<?> createHippo(@RequestBody @Validated SurveyRequestDto surveyRequestDto,
                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         surveyService.createHippo(surveyRequestDto, userDetails.getUser());

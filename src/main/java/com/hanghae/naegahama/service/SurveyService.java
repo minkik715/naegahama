@@ -1,6 +1,6 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.config.auth.UserDetailsImpl;
+import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
@@ -11,7 +11,6 @@ import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 
@@ -32,7 +31,6 @@ public class SurveyService {
     @Transactional
     public void createHippo(SurveyRequestDto surveyRequestDto, User user)
     {
-
 
         ArrayList<Long> longs = new ArrayList<>();
         for (Long aLong : surveyRequestDto.getResult()) {
@@ -99,8 +97,12 @@ public class SurveyService {
         }
         user.setHippoName(hippo);
 
-        // 최초 요청글 작성시 업적 5 획득
-        user.getAchievement().setAchievement6(1);
+
+        // 최초 평가시 업적 6 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
+
 
         userRepository.save(user);
 

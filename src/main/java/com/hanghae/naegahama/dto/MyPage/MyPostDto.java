@@ -1,6 +1,9 @@
 package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.initial.HippoURL;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,17 +15,28 @@ public class MyPostDto
 {
     private Long requestId;
     private String title;
-//    private String content;
-    private LocalDateTime modifiedAt;
-    private Long likeCount;
+    private String contents;
+    private String modifiedAt;
+    private String nickname;
+    private String imgUrl;
+    private String category;
+    private Long likes;
+    private String img;
+
+//    private Long likeCount;
 //    private Integer answerCount ;
 
-    public MyPostDto(Post post, Long likeCount)
+    public MyPostDto(Post post, User user,Long likeCount)
     {
         this.requestId = post.getId();
         this.title = post.getTitle();
-        this.modifiedAt = post.getModifiedAt();
-        this.likeCount = likeCount;
+        this.contents = post.getContent();
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
+        this.nickname = user.getNickName();
+        this.category = post.getCategory();
+        this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
+        this.likes = likeCount;
+
     }
 
 

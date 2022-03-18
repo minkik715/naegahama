@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.dto.post;
 
+import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +14,7 @@ public class ResponseDto {
     private Long postId;
     private String title;
     private String content;
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
     private Integer answerCount;
     private Long user_id;
     private String nickname;
@@ -25,23 +27,22 @@ public class ResponseDto {
 
     private String timeSet;
     private String status;
-    public ResponseDto(Long id, String title, String content, LocalDateTime modifiedAt, Integer answerCount,
-                       Long user_id,String nickname, Long postLikeCount, List<Long> likeUserId,List <String> fileList,
-                       String level, String category,String timeSet,String status)
+    public ResponseDto(Post post,  Integer answerCount, Long postLikeCount, List<Long> likeUserId, List <String> fileList,
+                        String timeSet)
     {
-        this.postId = id;
-        this.title = title;
-        this.content = content;
-        this.modifiedAt = modifiedAt;
+        this.postId = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
         this.answerCount = answerCount;
-        this.user_id = user_id;
-        this.nickname = nickname;
+        this.user_id = post.getUser().getId();
+        this.nickname = post.getUser().getNickName();
         this.postLikeCount = postLikeCount;
         this.likeUserIdList  = likeUserId;
-        this.level = level;
+        this.level = post.getLevel();
         this.fileList = fileList;
-        this.category = category;
+        this.category = post.getCategory();
         this.timeSet = timeSet;
-        this.status = status;
+        this.status = post.getStatus();
     }
 }

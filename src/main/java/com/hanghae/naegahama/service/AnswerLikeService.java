@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
@@ -15,6 +16,9 @@ public class AnswerLikeService {
     private final AnswerLikeRepository answerLikeRepository;
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
+
 
     @Transactional
     public AnswerLikeResponseDto AnswerLike(Long answerId, Long id) {
@@ -26,16 +30,26 @@ public class AnswerLikeService {
                 ()->new IllegalArgumentException("답변글이 없습니다.")
         );
 
+        User answerWriter = answer.getUser();
+
         //오 좋은 거 배우고 갑니다.
         AnswerLike findAnswerLike = answerLikeRepository.findByUserAndAnswer(user,answer).orElse(null);
 
         if(findAnswerLike == null){
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
-            answerLikeRepository.save(answerLike);
+            findAnswerLike = answerLikeRepository.save(answerLike);
+            if (answerWriter.equals(findAnswerLike.getUser())) {
+                Alarm alarm = new Alarm(answerWriter, user.getNickName(), Type.likeA, answer.getId(), answer.getTitle());
+                Alarm save1 = alarmRepository.save(alarm);
+                alarmService.alarmByMessage(new MessageDto(save1));
+            }
+            answerWriter.addPoint(5);
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
+            answerWriter.addPoint(-5);
         }
+
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
     }
 }

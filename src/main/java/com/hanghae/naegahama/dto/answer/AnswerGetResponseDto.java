@@ -3,6 +3,7 @@ package com.hanghae.naegahama.dto.answer;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.User;
 
+import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,7 @@ public class AnswerGetResponseDto
 
     private String title;
 
-    private LocalDateTime modifiedAt;
+    private String modifiedAt;
 
     private Long answerLikeCount;
 
@@ -27,14 +28,17 @@ public class AnswerGetResponseDto
 
     private int imageCount;
 
+    private String imgUrl;
+
     public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
     {
         this.answerId = answer.getId();
         this.answerWriter = answer.getUser().getNickName();
         this.title = answer.getTitle();
-        this.modifiedAt = answer.getModifiedAt();
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(answer.getModifiedAt());
         this.commentCount = commentCount;
         this.answerLikeCount = likeCount;
         this.imageCount = imageCount;
+        this.imgUrl = answer.getUser().getHippoImage();
     }
 }

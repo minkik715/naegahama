@@ -9,7 +9,6 @@ import java.util.List;
 public interface AnswerFileRepository extends JpaRepository<AnswerFile,Long> {
     void deleteByAnswer(Answer answer);
 
-    List<AnswerFile> findAllByStatusAndUrlEndingWith(Boolean bool,String ext);
 
     List<AnswerFile> findAllByAnswerOrderByCreatedAt(Answer answer);
 }

@@ -24,6 +24,7 @@ public class AnswerVideo extends Timestamped{
         this.answer = answer;
     }
 
+
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
     @OneToOne
