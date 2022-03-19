@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class AlarmDto implements Serializable {
     private Long alarmId;
     private String senderNickName;
-    private Type type;
+    private AlarmType alarmType;
     private Long id;
     private String title;
     private LocalDateTime modifiedAt;
@@ -23,7 +23,7 @@ public class AlarmDto implements Serializable {
     public AlarmDto(Alarm alarm) {
         this.alarmId = alarm.getAlarmId();
         this.senderNickName = alarm.getSenderNickName();
-        this.type = alarm.getType();
+        this.alarmType = alarm.getAlarmType();
         this.id = alarm.getId();
         this.title = alarm.getTitle();
         this.modifiedAt = alarm.getModifiedAt();
@@ -34,7 +34,7 @@ public class AlarmDto implements Serializable {
         return new AlarmDto(
                 alarm.getAlarmId(),
                 alarm.getSenderNickName(),
-                alarm.getType(),
+                alarm.getAlarmType(),
                 alarm.getId(),
                 alarm.getTitle(),
                 alarm.getModifiedAt(),
