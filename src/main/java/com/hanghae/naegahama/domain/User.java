@@ -3,11 +3,14 @@ package com.hanghae.naegahama.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.alarm.Alarm;
-import com.hanghae.naegahama.alarm.Type;
+import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -99,6 +102,9 @@ public class User extends Timestamped{
         this.role = role;
         this.kakaoId = kakaoId;
         this.hippoImage = HippoURL.basicHippoURL;
+        this.userStatus = "true";
+        this.hippoName = "일반 하마";
+        this.hippoLevel = 1;
     }
 
     @Transactional
@@ -119,11 +125,12 @@ public class User extends Timestamped{
         this.point += point;
 
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
+        //도메인에 있어서 어떻게 할수가 없네요 적용 불가...
         if (this.hippoLevel != 3) {
             if (this.point >= 2000) {
                 this.hippoLevel = 3;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
-                Alarm alarm = new Alarm(this, null, Type.level, (long) this.hippoLevel, null);
+                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
                 return alarm;
             }
             else if ( this.point >= 1000 && this.hippoLevel !=2)
@@ -131,12 +138,13 @@ public class User extends Timestamped{
                 this.hippoLevel = 2;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
 
-                Alarm alarm = new Alarm(this, null, Type.level, (long) this.hippoLevel, null);
+                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
                 return alarm;
             }
         }
         return null;
     }
+
 
 
 

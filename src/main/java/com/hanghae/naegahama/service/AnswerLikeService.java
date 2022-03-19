@@ -4,8 +4,10 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
+import com.hanghae.naegahama.dto.event.AlarmEventListener;
 import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,6 +20,7 @@ public class AnswerLikeService {
     private final AnswerRepository answerRepository;
     private final AlarmRepository alarmRepository;
     private final AlarmService alarmService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
 
     @Transactional
@@ -35,15 +38,12 @@ public class AnswerLikeService {
         //오 좋은 거 배우고 갑니다.
         AnswerLike findAnswerLike = answerLikeRepository.findByUserAndAnswer(user,answer).orElse(null);
 
+
         if(findAnswerLike == null){
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
             findAnswerLike = answerLikeRepository.save(answerLike);
-            if (answerWriter.equals(findAnswerLike.getUser())) {
-                Alarm alarm = new Alarm(answerWriter, user.getNickName(), Type.likeA, answer.getId(), answer.getTitle());
-                Alarm save1 = alarmRepository.save(alarm);
-                alarmService.alarmByMessage(new MessageDto(save1));
-            }
+            applicationEventPublisher.publishEvent(new AlarmEventListener(user,answerWriter,answer,AlarmType.likeA));
             answerWriter.addPoint(5);
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());

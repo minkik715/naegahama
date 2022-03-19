@@ -4,10 +4,13 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
+import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,7 @@ public class AnswerService
     private final AnswerVideoRepository answerVideoRepository;
     private final AlarmRepository alarmRepository;
     private final AlarmService alarmService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     // 답변글 작성
     @Transactional
@@ -83,14 +87,10 @@ public class AnswerService
 
         achievementUser.getAchievement().setAchievement1(1);
 
+        applicationEventPublisher.publishEvent(new AlarmEventListener(post.getUser(), user,post,AlarmType.answer));
 
-        if (!post.getUser().equals(saveAnwser.getUser())) {
-            Alarm alarm = new Alarm(post.getUser(), saveAnwser.getUser().getNickName(), Type.answer, post.getId(), post.getTitle());
-            Alarm save1 = alarmRepository.save(alarm);
-            alarmService.alarmByMessage(new MessageDto(save1));
-        }
 
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return ResponseEntity.ok().body(saveAnwser.getId());
     }
 
 
@@ -210,6 +210,9 @@ public class AnswerService
         {
             throw new IllegalArgumentException("이미 평가한 답글입니다.");
         }
+        User user = userRepository.findById(requestWriter.getId()).orElseThrow(
+                () -> new UserNotFoundException("해당 유저는 존재하지 않습니다.")
+        );
 
         answer.Star(starPostRequestDto);
         User answerWriter = answer.getUser();
@@ -217,12 +220,12 @@ public class AnswerService
         // 1점을 받을 시 업적 1 획득
         if ( starPostRequestDto.getStar() == 1)
         {
-            answerWriter.getAchievement().setAchievement8(1);
+            user.getAchievement().setAchievement8(1);
         }
         // 5점을 받을 시 업적 2 획득
         else if( starPostRequestDto.getStar() == 5)
         {
-            answerWriter.getAchievement().setAchievement4(1);
+            user.getAchievement().setAchievement4(1);
         }
 
         // 최초 평가시 업적 7 획득
@@ -240,16 +243,7 @@ public class AnswerService
         {
             answerWriter.addPoint( addPoint );
         }
-        if (!requestWriter.equals(answerWriter)) {
-            Alarm alarm = new Alarm(requestWriter, answerWriter.getNickName(), Type.rate, answer.getId(), answer.getTitle());
-            Alarm save1 = alarmRepository.save(alarm);
-            alarmService.alarmByMessage(new MessageDto(save1));
-        }
-        if (!answerWriter.equals(requestWriter)) {
-            Alarm alarm1 = new Alarm(answerWriter, requestWriter.getNickName(), Type.rated, answer.getId(), answer.getTitle());
-            Alarm save2 = alarmRepository.save(alarm1);
-            alarmService.alarmByMessage(new MessageDto(save2));
-        }
+        applicationEventPublisher.publishEvent(new AlarmEventListener(answerWriter,achievementUser,answer,AlarmType.rated));
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

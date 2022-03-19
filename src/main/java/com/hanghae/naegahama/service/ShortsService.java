@@ -38,7 +38,7 @@ public class ShortsService {
             if(url.substring(url.lastIndexOf(".")+1).equals("mp4")){
                 url = url.replace("mp4", "short");
             }
-            shortsResponseDtoList.add(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId(),postId));
+            shortsResponseDtoList.add(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId(),postId,user.getHippoImage()));
         }
 
         return ResponseEntity.ok().body(shortsResponseDtoList);
