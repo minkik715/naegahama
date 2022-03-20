@@ -25,10 +25,9 @@ public class AlarmHandler {
         User sender = alarmEventListener.getSender();
         Object object = alarmEventListener.getObject();
         AlarmType alarmType = alarmEventListener.getAlarmType();
-        // Type이 rated likeA comment일 경우에는 answer 객체가 필요하다.
-        // Typedl likeP answer rate post 객체가 필요하다.
-        if (!receiver.getNickName().equals(sender.getNickName())) {
 
+        if (!receiver.getNickName().equals(sender.getNickName()))
+        {
             if (alarmType.equals(AlarmType.rated) || alarmType.equals(AlarmType.likeA) || alarmType.equals(AlarmType.comment)) {
                 answerAlarm(receiver, sender, (Answer) object, alarmType);
             } else if (alarmType.equals(AlarmType.likeP) || alarmType.equals(AlarmType.answer) || alarmType.equals(AlarmType.rate)) {

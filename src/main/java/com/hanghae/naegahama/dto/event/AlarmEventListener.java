@@ -7,15 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter @NoArgsConstructor
-public class AlarmEventListener {
+public class AlarmEventListener
+{
     User receiver;
     User sender;
-
     Object object;
-
     AlarmType alarmType;
 
-    public AlarmEventListener(User receiver, User sender,Object object,AlarmType alarmType) {
+    public AlarmEventListener(User receiver, User sender,Object object,AlarmType alarmType)
+    {
         this.receiver = receiver;
         this.sender = sender;
         this.object = object;

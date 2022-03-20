@@ -45,17 +45,19 @@ public class KakaoUserService {
     public ResponseEntity<?> kakaoLogin(String accessToken,HttpServletResponse response) throws JsonProcessingException {
         log.info("accessToken = {}",accessToken);
         // 2. 토큰으로 카카오 API 호출
+        KakaoUserInfoDto kakaoUserInfoDto;
+
         if(accessToken.equals("12345")){
-            kakaoUserInfoDto = new KakaoUserInfoDto(123456L,"123",UUID.randomUUID().toString());
+            kakaoUserInfoDto = new KakaoUserInfoDto(123456L,"123");
         }
 
         else if (accessToken.equals("pjg"))
         {
-            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG",UUID.randomUUID().toString());
+            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG");
         }
         else if (accessToken.equals("dean"))
         {
-            kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean",UUID.randomUUID().toString());
+            kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean");
         }
         else {
             kakaoUserInfoDto = getKakaoUserInfo(accessToken);
@@ -63,7 +65,7 @@ public class KakaoUserService {
 
 
         // 3. 필요시에 회원가입
-        User kakaoUser = registerKakaoUserIfNeeded(getKakaoUserInfo(accessToken));
+        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfoDto);
 
         // 4. 강제 로그인 처리
         return forceLogin(kakaoUser,response);
@@ -104,8 +106,8 @@ public class KakaoUserService {
         return new KakaoUserInfoDto(id, nickname);
     }
 
-    @Transactional
-    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfoDto) {
+    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfoDto)
+    {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfoDto.getId();
         User kakaoUser = userRepository.findByKakaoId(kakaoId)
