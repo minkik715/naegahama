@@ -58,7 +58,13 @@ dependencies {
     implementation 'org.webjars:jquery:3.1.1-1'
 }
 
+processResources.dependsOn('copySecret')
 
+task copySecret(type: Copy) {
+    from '../naegahamaSecret/application.yml'
+    from '../naegahamaSecret/aws.yml'// auth 서브모듈에 있는 oauth 설정파일을 복사한다.
+    into 'src/main/resources'
+}
 
 
 tasks.named('test') {
