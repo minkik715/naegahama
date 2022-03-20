@@ -3,12 +3,14 @@ package com.hanghae.naegahama.dto.MyPage;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class MyBannerDto
 {
     private String nickname;

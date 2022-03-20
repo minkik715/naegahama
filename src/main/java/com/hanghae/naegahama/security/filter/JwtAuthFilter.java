@@ -2,6 +2,7 @@ package com.hanghae.naegahama.security.filter;
 
 import com.hanghae.naegahama.security.jwt.HeaderTokenExtractor;
 import com.hanghae.naegahama.security.jwt.JwtPreProcessingToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,6 +20,7 @@ import java.io.IOException;
  * Token 을 내려주는 Filter 가 아닌  client 에서 받아지는 Token 을 서버 사이드에서 검증하는 클레스 SecurityContextHolder 보관소에 해당
  * Token 값의 인증 상태를 보관 하고 필요할때 마다 인증 확인 후 권한 상태 확인 하는 기능
  */
+@Slf4j
 public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     private final HeaderTokenExtractor extractor;
@@ -40,11 +42,12 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
         // JWT 값을 담아주는 변수 TokenPayload
         String tokenPayload = request.getHeader("token");
+        log.info("tokenPayload = {}", tokenPayload);
         if (tokenPayload == null) {
             response.sendRedirect("/api/error");
             return null;
         }
-
+        log.info("tokenPayload = {}", tokenPayload);
         JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
                 extractor.extract(tokenPayload, request));
 

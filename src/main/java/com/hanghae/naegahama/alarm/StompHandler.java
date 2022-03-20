@@ -46,7 +46,7 @@ public class StompHandler implements ChannelInterceptor {
             log.info("token = {}", token);
             String username = jwtDecoder.decodeUsername(token);
             log.info("userId = {} username = {}", token, username);
-            Optional<User> byEmail = userRepository.findByEmail(username);
+            Optional<User> byEmail = userRepository.findByNickName(username);
             String id = String.valueOf(byEmail.get().getId());
             log.info(id);
 
@@ -62,9 +62,8 @@ public class StompHandler implements ChannelInterceptor {
             // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
             String token = accessor.getFirstNativeHeader("token");
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String userId = jwtDecoder.decodeUserId(token);
             redisRepository.removeUserEnterInfo(sessionId);
-            log.info("DISCONNECT {}, {}", userId, sessionId);
+            log.info("DISCONNECT  {}", sessionId);
         }
         return message;
     }

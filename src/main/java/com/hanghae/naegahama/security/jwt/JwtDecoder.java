@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class JwtDecoder {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public String decodeUsername(String token) {
+        log.info("token = {}", token);
         DecodedJWT decodedJWT = isValidToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("유효한 토큰이 아닙니다."));
 
@@ -30,7 +32,7 @@ public class JwtDecoder {
 
         Date now = new Date();
         if (expiredDate.before(now)) {
-            throw new IllegalArgumentException("유효한 토큰이 아닙니다.");
+            throw new IllegalArgumentException("토큰의 유효시간이 끝났습니다.");
         }
 
         String username = decodedJWT
@@ -41,26 +43,7 @@ public class JwtDecoder {
         return username;
     }
 
-    public String decodeUserId(String token) {
-        DecodedJWT decodedJWT = isValidToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("유효한 토큰이 아닙니다."));
 
-        Date expiredDate = decodedJWT
-                .getClaim(CLAIM_EXPIRED_DATE)
-                .asDate();
-
-        Date now = new Date();
-        if (expiredDate.before(now)) {
-            throw new IllegalArgumentException("유효한 토큰이 아닙니다.");
-        }
-
-        String userId = decodedJWT
-                .getClaim(CLAIM_USER_ID)
-                .asString();
-
-
-        return userId;
-    }
 
     public Optional<DecodedJWT> isValidToken(String token) {
         DecodedJWT jwt = null;

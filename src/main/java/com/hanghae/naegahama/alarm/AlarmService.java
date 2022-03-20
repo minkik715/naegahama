@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +59,7 @@ public class AlarmService {
             AlarmResponseDto alarmResponseDto = new AlarmResponseDto(
                     alarm.getAlarmId(),
                     alarm.getSenderNickName(),
-                    alarm.getType(),
+                    alarm.getAlarmType(),
                     alarm.getId(),
                     alarm.getTitle(),
                     alarm.getModifiedAt(),
