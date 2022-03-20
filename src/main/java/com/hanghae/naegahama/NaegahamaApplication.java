@@ -1,5 +1,6 @@
 package com.hanghae.naegahama;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @SpringBootApplication
 public class NaegahamaApplication {
 
-    public static final String APPLICATION_LOCATIONS = "spring.config.location="
+    //로컬
+    /*public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
             + "classpath:aws.yml";
 
@@ -25,8 +27,13 @@ public class NaegahamaApplication {
         new SpringApplicationBuilder(NaegahamaApplication.class)
                 .properties(APPLICATION_LOCATIONS)
                 .run(args);
-    }
+    }*/
 
+    //ec2 자동배포
+
+    public static void main(String[] args) {
+        NaegahamaApplication.run(NaegahamaApplication.class, args);
+    }
 
    @Bean
     public TaskScheduler taskScheduler() {
