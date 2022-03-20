@@ -17,8 +17,6 @@ processResources.dependsOn('copyJava')
 
 
 task copyJava(type: Copy) {
-    group 'devkuma'
-    description 'backup java files.'
     from '../naegahamaSecret'
     into 'src/main/resources'
 }
