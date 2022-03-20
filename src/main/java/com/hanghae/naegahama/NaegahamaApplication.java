@@ -18,7 +18,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 public class NaegahamaApplication {
 
     //로컬
-    /*public static final String APPLICATION_LOCATIONS = "spring.config.location="
+    public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
             + "classpath:aws.yml";
 
@@ -27,14 +27,14 @@ public class NaegahamaApplication {
         new SpringApplicationBuilder(NaegahamaApplication.class)
                 .properties(APPLICATION_LOCATIONS)
                 .run(args);
-    }*/
+    }
 
     //ec2 자동배포
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         SpringApplication.run(NaegahamaApplication.class, args);
     }
-
+*/
    @Bean
     public TaskScheduler taskScheduler() {
 

@@ -13,7 +13,15 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+processResources.dependsOn('copyJava')
 
+
+task copyJava(type: Copy) {
+    group 'devkuma'
+    description 'backup java files.'
+    from '../naegahamaSecret'
+    into 'src/main/resources'
+}
 repositories {
     mavenCentral()
 }
@@ -58,14 +66,6 @@ dependencies {
     implementation 'org.webjars:jquery:3.1.1-1'
 }
 
-processResources.dependsOn('copySecret')
-
-task copySecret(type: Copy) {
-    from '../naegahamaSecret/*.yml'
-    into 'src/main/resources'
-}
 
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+
