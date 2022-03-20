@@ -32,7 +32,7 @@ public class NaegahamaApplication {
     //ec2 자동배포
 
     public static void main(String[] args) {
-        NaegahamaApplication.run(NaegahamaApplication.class, args);
+        SpringApplication.run(NaegahamaApplication.class, args);
     }
 
    @Bean
