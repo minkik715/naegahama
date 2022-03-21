@@ -3,14 +3,13 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.alarm.AlarmService;
-import com.hanghae.naegahama.alarm.MessageDto;
 import com.hanghae.naegahama.alarm.AlarmRepository;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
-import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.dto.event.CommentWriteEvent;
 import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
@@ -36,8 +35,6 @@ public class CommentService {
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final AlarmService alarmService;
-    private final AlarmRepository alarmRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
 
@@ -50,13 +47,15 @@ public class CommentService {
         String commentContent = commentRequestDto.getComment();
         Long parentCommentId = commentRequestDto.getParentCommentId();
         Comment comment = null;
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         if (parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
 
             comment = new Comment(commentContent, findAnswer, user, timestamp);
             user.getCommentList().add(comment);
             //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
-            applicationEventPublisher.publishEvent(new AlarmEventListener(findAnswer.getUser(), comment.getUser(),findAnswer, AlarmType.comment));
+            applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), findUser,findAnswer, AlarmType.comment));
 
         } else {
             comment = new Comment(commentContent, parentCommentId, findAnswer, user);
@@ -67,7 +66,7 @@ public class CommentService {
                 Comment findcomment = commentRepository.findById(parentCommentId).orElseThrow(
                         () -> new CommentNotFoundException("댓글 없습니다.")
                 );
-            applicationEventPublisher.publishEvent(new AlarmEventListener(findcomment.getUser(), comment.getUser(),comment, AlarmType.child));
+            applicationEventPublisher.publishEvent(new CommentWriteEvent(findcomment.getUser(), findUser, comment, AlarmType.child));
 
         }
         Comment save = commentRepository.save(comment);
@@ -75,9 +74,8 @@ public class CommentService {
 
 
         // 최초 평가시 업적 7 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement6(1);
+
+
 
 
         return ResponseEntity.ok().body(commentResponseDto);

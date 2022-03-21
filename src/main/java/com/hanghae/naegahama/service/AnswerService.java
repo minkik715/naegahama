@@ -4,7 +4,8 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
-import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.dto.event.StarGiveEvent;
+import com.hanghae.naegahama.dto.event.AnswerWriteEvent;
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -14,8 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +31,6 @@ public class AnswerService
     private final AnswerFileRepository answerFileRepository;
     private final UserRepository userRepository;
     private final AnswerVideoRepository answerVideoRepository;
-    private final AlarmRepository alarmRepository;
-    private final AlarmService alarmService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     // 답변글 작성
@@ -71,23 +68,11 @@ public class AnswerService
         //빠뜨리신 재균님?
         answerVideoRepository.save(videoUrl);
         // 최초 요청글 작성시 업적 5 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+        User answerUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
 
-        if(post.getAnswerList() !=null && post.getAnswerList().size() ==0){
-            LocalDateTime deadLine = post.getDeadLine();
-            long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-            log.info("잔여시간차이 = {}",minutes);
-            if(minutes <60){
-                achievementUser.addPoint(50);
-            }
-        }
 
-
-
-        achievementUser.getAchievement().setAchievement1(1);
-
-        applicationEventPublisher.publishEvent(new AlarmEventListener(post.getUser(), user,post,AlarmType.answer));
+        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post));
 
 
         return ResponseEntity.ok().body(saveAnwser.getId());
@@ -210,43 +195,17 @@ public class AnswerService
         {
             throw new IllegalArgumentException("이미 평가한 답글입니다.");
         }
-        User user = userRepository.findById(requestWriter.getId()).orElseThrow(
+        requestWriter = userRepository.findById(requestWriter.getId()).orElseThrow(
                 () -> new UserNotFoundException("해당 유저는 존재하지 않습니다.")
         );
 
         answer.Star(starPostRequestDto);
         User answerWriter = answer.getUser();
 
-        // 1점을 받을 시 업적 1 획득
-        if ( starPostRequestDto.getStar() == 1)
-        {
-            user.getAchievement().setAchievement8(1);
-        }
-        // 5점을 받을 시 업적 2 획득
-        else if( starPostRequestDto.getStar() == 5)
-        {
-            user.getAchievement().setAchievement4(1);
-        }
+        applicationEventPublisher.publishEvent(new StarGiveEvent(answerWriter,requestWriter,answer,starPostRequestDto.getStar()));
 
-        // 최초 평가시 업적 7 획득
-        User achievementUser = userRepository.findById(requestWriter.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement2(1);
 
-        Integer addPoint = (starPostRequestDto.getStar()) * 100;
-        String category = answerWriter.getCategory();
-        if( category.equals( answer.getPost().getCategory()))
-        {
-            answerWriter.addPoint( addPoint + 50 );
-        }
-        else
-        {
-            answerWriter.addPoint( addPoint );
-        }
-        if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
-            answerWriter.addPoint(200);
-        }
-        applicationEventPublisher.publishEvent(new AlarmEventListener(answerWriter,achievementUser,answer,AlarmType.rated));
+
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

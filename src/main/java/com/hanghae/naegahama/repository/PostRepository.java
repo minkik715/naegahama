@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByUserOrderByModifiedAtDesc(User user);
 
-    List<Post> findAllByUserHippoName(String hippoName);
+    List<Post> findAllByUser_HippoName(String hippoName);
 //    List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);
 
 
