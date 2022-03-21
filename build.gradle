@@ -13,7 +13,13 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+processResources.dependsOn('copyJava')
 
+
+task copyJava(type: Copy) {
+    from '../naegahamaSecret'
+    into 'src/main/resources'
+}
 repositories {
     mavenCentral()
 }
@@ -61,12 +67,3 @@ dependencies {
 
 
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-task copySubmodule(type: Copy){
-    from './naegahamaSecret'
-    include '*.yml'
-    into './src/main/resources'
-}

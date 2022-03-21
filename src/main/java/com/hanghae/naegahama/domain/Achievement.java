@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.domain;
 
-import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
