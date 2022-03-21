@@ -1,10 +1,9 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
-import com.hanghae.naegahama.dto.event.AnswerLikeEvent;
+import com.hanghae.naegahama.handler.event.AnswerLikeEvent;
 import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,7 +42,7 @@ public class AnswerLikeService {
             applicationEventPublisher.publishEvent(new AnswerLikeEvent(answerWriter,user,answer));
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
-            answerWriter.addPoint(-25);
+            answerWriter.setPoint(answerWriter.getPoint()-25);
         }
 
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));

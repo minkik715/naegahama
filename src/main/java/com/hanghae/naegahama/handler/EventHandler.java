@@ -2,14 +2,17 @@ package com.hanghae.naegahama.handler;
 
 import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
-import com.hanghae.naegahama.dto.event.*;
+import com.hanghae.naegahama.handler.event.*;
+import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Slf4j
 @RequiredArgsConstructor
 public class EventHandler {
@@ -27,22 +31,7 @@ public class EventHandler {
     private final UserRepository userRepository;
 
 
-/*
-
-  if (!receiver.getNickName().equals(sender.getNickName())) {
-
-            if (alarmType.equals(AlarmType.rated) || alarmType.equals(AlarmType.likeA) || alarmType.equals(AlarmType.comment)) {
-                answerAlarm(receiver, sender, (Answer) object, alarmType);
-            } else if (alarmType.equals(AlarmType.likeP) || alarmType.equals(AlarmType.answer) || alarmType.equals(AlarmType.rate)) {
-                postAlarm(receiver, sender, (Post) object, alarmType);
-            } else if (alarmType.equals(AlarmType.child)) {
-                commentAlarm(receiver, sender, (Comment) object, alarmType);
-            }
-        }
-        *
-
-        */
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void answerLikeEvent(AnswerLikeEvent answerLikeEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = answerLikeEvent.getReceiver();
@@ -57,7 +46,7 @@ public class EventHandler {
 
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void AnswerWriteEvent(AnswerWriteEvent AnswerWriteEvent){
         User receiver = AnswerWriteEvent.getReceiver();
         User sender = AnswerWriteEvent.getSender();
@@ -67,8 +56,12 @@ public class EventHandler {
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
         }
+        User findUser = userRepository.findById(sender.getId()).orElseThrow(
+                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
+        );
+        findUser.getAchievement().setAchievement1(1);
 
-        sender.getAchievement().setAchievement1(1);
+
 
 
         if(post.getAnswerList() !=null && post.getAnswerList().size() ==0){
@@ -81,7 +74,7 @@ public class EventHandler {
         }
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void StarGiveEvent(StarGiveEvent StarGiveEvent) {
         User receiver = StarGiveEvent.getReceiver();
         User sender = StarGiveEvent.getSender();
@@ -92,14 +85,17 @@ public class EventHandler {
         if (!receiver.getNickName().equals(sender.getNickName())) {
             answerAlarm(receiver,sender,answer,alarmType);
         }
+        User findUser = userRepository.findById(receiver.getId()).orElseThrow(
+                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
+        );
 
         // 1점을 받을 시 업적 1 획득
         if ( star.equals(1)) {
-            receiver.getAchievement().setAchievement8(1);
+            findUser.getAchievement().setAchievement8(1);
         }
         // 5점을 받을 시 업적 2 획득
         else if (star.equals(5)) {
-            receiver.getAchievement().setAchievement4(1);
+            findUser.getAchievement().setAchievement4(1);
         }
 
         // 최초 평가시 업적 7 획득
@@ -126,10 +122,10 @@ public class EventHandler {
         givePointAndSendAlarm(answer.getPost().getUser(), 50);
 
 
-        sender.getAchievement().setAchievement2(1);
+        findUser.getAchievement().setAchievement2(1);
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void commentWriteEvent(CommentWriteEvent commentWriteEvent) {
 
         User receiver = commentWriteEvent.getReceiver();
@@ -137,6 +133,10 @@ public class EventHandler {
         Object object = commentWriteEvent.getObject();
         AlarmType alarmType = commentWriteEvent.getAlarmType();
 
+
+        User findUser = userRepository.findById(sender.getId()).orElseThrow(
+                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
+        );
         if (!receiver.getNickName().equals(sender.getNickName())) {
             if(alarmType.equals(AlarmType.comment)) {
                 answerAlarm(receiver, sender, (Answer) object, alarmType);
@@ -144,11 +144,12 @@ public class EventHandler {
                 commentAlarm(receiver,sender, (Comment) object, alarmType);
             }
         }
-        sender.getAchievement().setAchievement6(1);
+        findUser.getAchievement().setAchievement6(1);
 
     }
 
-    @TransactionalEventListener
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) //커밋완료 후 작업
     public void postLikeEvent(PostLikeEvent postLikeEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = postLikeEvent.getReceiver();
@@ -164,19 +165,27 @@ public class EventHandler {
 
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void postWriteEvent(PostWriteEvent postWriteEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         Post post = postWriteEvent.getPost();
-        post.getUser().getAchievement().setAchievement3(1);
-        userRepository.save(post.getUser());
+        User findUser = userRepository.findById(post.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
+        );
+        findUser.getAchievement().setAchievement3(1);
+
     }
+
+
+
 
     public void givePointAndSendAlarm(User user, int i) {
         log.info("에러는여기서1?");
         log.info("에러는여기서2?");
-        Optional<User> byId = userRepository.findById(user.getId());
-        User findUser = byId.get();
-        List<Alarm> alarmList = findUser.addPoint(i);
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
+        );
+        List<Alarm> alarmList = findUser.sendAlarm(i);
         log.info("user point = {}", findUser.getPoint());
         for (Alarm alarm : alarmList) {
             Alarm saveAlarm = alarmRepository.save(alarm);
@@ -184,25 +193,31 @@ public class EventHandler {
         }
 
         log.info("user point = {}", findUser.getPoint());
-        User saveuser = userRepository.save(findUser);
-        log.info("user point = {}", saveuser.getPoint());
+        findUser.setPoint(findUser.getPoint()+i);
+        log.info("user point = {}", findUser.getPoint());
+
 
 
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void searchWordEvent(SearchWordEvent searchWordEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
-        searchWordEvent.getUser().getAchievement().setAchievement7(1);
+        User findUser = userRepository.findById(searchWordEvent.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
+        );
+        findUser.getAchievement().setAchievement7(1);
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void surveyEvent(SurveyEvent surveyEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
-        surveyEvent.getUser().getAchievement().setAchievement5(1);
+        User findUser = userRepository.findById(surveyEvent.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
+        );
+        findUser.getAchievement().setAchievement5(1);
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void postClosedEvent( PostClosedEvent postClosedEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = postClosedEvent.getReceiver();

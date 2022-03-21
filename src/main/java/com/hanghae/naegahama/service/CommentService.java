@@ -2,14 +2,12 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.alarm.*;
-import com.hanghae.naegahama.alarm.AlarmService;
-import com.hanghae.naegahama.alarm.AlarmRepository;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
-import com.hanghae.naegahama.dto.event.CommentWriteEvent;
+import com.hanghae.naegahama.handler.event.CommentWriteEvent;
 import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
