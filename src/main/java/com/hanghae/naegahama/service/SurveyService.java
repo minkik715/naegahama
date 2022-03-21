@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.initial.HippoResult;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
@@ -26,6 +27,7 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final HippoResult hippoResult;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -112,8 +114,9 @@ public class SurveyService {
     //설문조사 결과
     public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
         String hippoName = userDetails.getUser().getHippoName();
-        String imgUrl = userDetails.getUser().getHippoImage();
-        String surveyResult = userDetails.getUser().getSurveyResult();
+        String imgUrl = hippoResult.resultImage(hippoName);
+        String surveyResult = hippoResult.resultText(hippoName);
+
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
                 hippoName,

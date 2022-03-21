@@ -10,7 +10,7 @@ public class SurveyresponseDto {
     private String imgUrl;
     private String surveyResult;
 
-    public SurveyresponseDto(String hippoName, String imgUrl, String surveyResul) {
+    public SurveyresponseDto(String hippoName, String imgUrl, String surveyResult) {
         this.hippoName = hippoName;
         this.imgUrl = imgUrl;
         this.surveyResult = surveyResult;

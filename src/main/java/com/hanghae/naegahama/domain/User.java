@@ -51,9 +51,6 @@ public class User extends Timestamped{
     private String hippoImage;
 
     @Column
-    private String surveyResult;
-
-    @Column
     private String category;
 
     @Column
@@ -122,7 +119,6 @@ public class User extends Timestamped{
     public void setHippoName(String hippoName) {
         this.hippoName = hippoName;
         this.hippoImage = HippoURL.name(hippoName,this.getHippoLevel());
-        this.surveyResult = HippoURL.result(hippoName);
     }
 
     public Alarm addPoint(Integer point) {
