@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/api")
@@ -64,6 +66,12 @@ public class AnswerController
     public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);
+    }
+
+    @PostMapping("/video/{answerId}")
+    public ResponseEntity<?> answerVideo (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException
+    {
+        return answerService.answerVideo(answerId,userDetails);
     }
 
 }

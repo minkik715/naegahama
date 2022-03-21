@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +26,7 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     public String naegahama;
 
-    public String S3upload(MultipartFile multipartFile, String dirName, Boolean isVideo) throws IOException{
+    public String upload(MultipartFile multipartFile, String dirName, Boolean isVideo) throws IOException{
         File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
 
 
@@ -64,17 +63,17 @@ public class S3Uploader {
 //
 //
 //        }else {
-            return S3upload(uploadFile, dirName,false,UUID.randomUUID().toString());
+            return upload(uploadFile, dirName,false,UUID.randomUUID().toString());
 //        }
     }
     // S3로 파일 업로드하기
-    public String S3upload(File uploadFile, String dirName, Boolean isShort, String uuid) {
+    public String upload(File uploadFile, String dirName, Boolean isShort, String uuid) {
         if(isShort){
             String fileName = dirName + "/" + uuid +".short";   // S3에 저장된 파일 이름
             return putS3(uploadFile, fileName);
         }
-        String fileName = dirName + "/" + uuid +".mp4";
-//        String fileName = dirName + "/" +uuid +"."+uploadFile.getName().substring(uploadFile.getName().lastIndexOf(".")+1);   // S3에 저장된 파일 이름
+//        String fileName = dirName + "/" + uuid +".mp4";
+        String fileName = dirName + "/" +uuid +"."+uploadFile.getName().substring(uploadFile.getName().lastIndexOf(".")+1);   // S3에 저장된 파일 이름
         return putS3(uploadFile, fileName);
     }
 

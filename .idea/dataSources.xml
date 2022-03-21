@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Hama" uuid="0c541b39-c101-4490-ae5b-37b65d9febab">
+    <data-source source="LOCAL" name="hama" uuid="c7f0c106-700c-47e4-9cb0-4e743fd10810">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
