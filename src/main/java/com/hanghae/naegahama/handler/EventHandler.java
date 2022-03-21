@@ -11,6 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -47,7 +48,7 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             answerAlarm(receiver,sender,answer,alarmType);
-            receiver.addPoint(5);
+            givePointAndSendAlarm(receiver, 5);
         }
 
     }
@@ -71,7 +72,7 @@ public class EventHandler {
             long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
             log.info("잔여시간차이 = {}",minutes);
             if(minutes <60){
-                sender.addPoint(50);
+                givePointAndSendAlarm(sender, 50);
             }
         }
     }
@@ -101,13 +102,14 @@ public class EventHandler {
         Integer addPoint = (star) * 100;
         String category = receiver.getCategory();
         if( category.equals( answer.getPost().getCategory())) {
-            receiver.addPoint( addPoint + 50 );
+            givePointAndSendAlarm(receiver, addPoint + 50);
         }
         else {
-            receiver.addPoint( addPoint );
+            givePointAndSendAlarm(receiver, addPoint);
         }
         if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
-            receiver.addPoint(200);
+            givePointAndSendAlarm(receiver, 200);
+
         }
 
         sender.getAchievement().setAchievement2(1);
@@ -142,7 +144,7 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
-            receiver.addPoint(5);
+            givePointAndSendAlarm(receiver, 5);
         }
 
     }
@@ -154,9 +156,17 @@ public class EventHandler {
         post.getUser().getAchievement().setAchievement3(1);
         Long postCount = postRepository.countByUser(post.getUser());
         if (postCount == 3 || postCount == 6) {
-            post.getUser().addPoint(50);
+            givePointAndSendAlarm(post.getUser(), 50);
+
         }
 
+    }
+
+    private void givePointAndSendAlarm(User user, int i) {
+        List<Alarm> alarmList = user.addPoint(i);
+        for (Alarm alarm : alarmList) {
+            alarmService.alarmByMessage(new MessageDto(alarm));
+        }
     }
 
     @TransactionalEventListener

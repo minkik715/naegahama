@@ -117,7 +117,7 @@ public class SurveyService {
     public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
         String hippoName = userDetails.getUser().getHippoName();
         String imgUrl = userDetails.getUser().getHippoImage();
-        String surveyResult = userDetails.getUser().getSurveyResult();
+        String surveyResult = null;
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
                 hippoName,

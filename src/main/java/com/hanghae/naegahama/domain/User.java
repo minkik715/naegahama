@@ -51,9 +51,6 @@ public class User extends Timestamped{
     private String hippoImage;
 
     @Column
-    private String surveyResult;
-
-    @Column
     private String category;
 
     @Column
@@ -119,14 +116,13 @@ public class User extends Timestamped{
         this.gender = userInfoRequestDto.getGender();
         this.age = userInfoRequestDto.getAge();
         this.category = userInfoRequestDto.getCategory();
-        this.phoneNumber = userInfoRequestDto.getPhoneNumber();
+        this.phoneNumber = userInfoRequestDto.getPhone();
         this.userStatus = "false";
     }
 
     public void setHippoName(String hippoName) {
         this.hippoName = hippoName;
         this.hippoImage = HippoURL.name(hippoName,this.getHippoLevel());
-        this.surveyResult = HippoURL.result(hippoName);
     }
 
     public List<Alarm> addPoint(Integer point) {
@@ -150,7 +146,7 @@ public class User extends Timestamped{
                 alarmList.add(alarm);
             }
         }
-        Alarm alarm = new Alarm(this, null, AlarmType.point, (long) this.hippoLevel, String.valueOf(point));
+        Alarm alarm = new Alarm(this, null, AlarmType.point,(long) point, String.valueOf(point));
         alarmList.add(alarm);
         return alarmList;
     }
