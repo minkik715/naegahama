@@ -5,6 +5,7 @@ import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.dto.event.AnswerVideoEncoding;
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -37,7 +38,7 @@ public class AnswerService
     private final ApplicationEventPublisher applicationEventPublisher;
 
     // 답변글 작성
-    @Transactional
+
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
         Post post = postRepository.findPostById(postId);
@@ -88,6 +89,8 @@ public class AnswerService
         achievementUser.getAchievement().setAchievement1(1);
 
         applicationEventPublisher.publishEvent(new AlarmEventListener(post.getUser(), user,post,AlarmType.answer));
+        applicationEventPublisher.publishEvent(new AnswerVideoEncoding(saveAnwser.getId()));
+
 
 
         return ResponseEntity.ok().body(saveAnwser.getId());
