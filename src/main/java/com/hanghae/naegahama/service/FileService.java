@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.file.FileResponseDto;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;

@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="hippo-database" uuid="67ef83d2-3be7-44f7-b9f1-b970d7c15fb7">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://hippo-database.cmrmeuo3816y.ap-northeast-2.rds.amazonaws.com:3306</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="hippo-database" uuid="df7a711d-1d45-4b5c-830d-7768236d2797">
+    <data-source source="LOCAL" name="hama" uuid="c7f0c106-700c-47e4-9cb0-4e743fd10810">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
