@@ -1,7 +1,9 @@
 package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.dto.post.PostRequestDto;
+import com.hanghae.naegahama.dto.post.PostResponseDto;
 import com.hanghae.naegahama.dto.post.PutRequestDto;
+import com.hanghae.naegahama.dto.post.ResponseDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.PostService;
 import com.hanghae.naegahama.timetest.ExeTimer;
@@ -10,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -61,6 +65,11 @@ public class PostController {
         return ResponseEntity.ok().body(postService.finishPost(postId, userDetails.getUser()));
     }
 
+
+    @GetMapping("/api/post/admin")
+    public ResponseEntity<List<PostResponseDto>> getAdminPost(){
+        return ResponseEntity.ok().body(postService.getAdminPost());
+    }
 
 
 

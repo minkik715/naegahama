@@ -2,6 +2,7 @@ package com.hanghae.naegahama.repository;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.UserRoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -21,6 +22,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 작성 완료된 글 카테고리 분야로 보기.
     List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);    // 최신순
+
+    List<Post> findAllByUser_RoleOrderByCreatedAt(UserRoleEnum userRoleEnum);
 
     Long countByUser(User user);
 
