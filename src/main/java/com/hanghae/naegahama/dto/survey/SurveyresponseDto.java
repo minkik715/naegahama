@@ -1,10 +1,12 @@
 package com.hanghae.naegahama.dto.survey;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class SurveyresponseDto {
     private String hippoName;
     private String imgUrl;

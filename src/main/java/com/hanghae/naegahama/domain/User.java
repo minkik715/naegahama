@@ -60,6 +60,9 @@ public class User extends Timestamped{
     private String age;
 
     @Column
+    private String phoneNumber;
+
+    @Column
     private String userStatus;
 
     @Column(nullable = false)
@@ -113,6 +116,7 @@ public class User extends Timestamped{
         this.gender = userInfoRequestDto.getGender();
         this.age = userInfoRequestDto.getAge();
         this.category = userInfoRequestDto.getCategory();
+        this.phoneNumber = userInfoRequestDto.getPhoneNumber();
         this.userStatus = "false";
     }
 

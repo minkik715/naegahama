@@ -43,7 +43,7 @@ public class UserService {
 
     public ResponseEntity<?> nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
-        if (findNickname.isPresent()) {
+        if (nickname.startsWith("HM") || findNickname.isPresent()) {
             return ResponseEntity.ok().body(new BasicResponseDto("false"));
         }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
