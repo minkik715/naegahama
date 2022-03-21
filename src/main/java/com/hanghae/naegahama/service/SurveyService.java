@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.dto.event.SurveyEvent;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
@@ -11,6 +12,7 @@ import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 
@@ -26,6 +28,7 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -99,12 +102,13 @@ public class SurveyService {
         user.setHippoName(hippo);
 
         // 최초 평가시 업적 6 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement5(1);
 
 
         userRepository.save(user);
+
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        applicationEventPublisher.publishEvent(new SurveyEvent(achievementUser));
 
     }
 

@@ -129,9 +129,9 @@ public class User extends Timestamped{
         this.surveyResult = HippoURL.result(hippoName);
     }
 
-    public Alarm addPoint(Integer point) {
+    public List<Alarm> addPoint(Integer point) {
         this.point += point;
-
+        List<Alarm> alarmList = new ArrayList<>();
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
         //도메인에 있어서 어떻게 할수가 없네요 적용 불가...
         if (this.hippoLevel != 3) {
@@ -139,7 +139,7 @@ public class User extends Timestamped{
                 this.hippoLevel = 3;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
-                return alarm;
+                alarmList.add(alarm);
             }
             else if ( this.point >= 1000 && this.hippoLevel !=2)
             {
@@ -147,10 +147,12 @@ public class User extends Timestamped{
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
 
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
-                return alarm;
+                alarmList.add(alarm);
             }
         }
-        return null;
+        Alarm alarm = new Alarm(this, null, AlarmType.point, (long) this.hippoLevel, String.valueOf(point));
+        alarmList.add(alarm);
+        return alarmList;
     }
 
 

@@ -4,7 +4,7 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.dto.event.PostLikeEvent;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
 import com.hanghae.naegahama.repository.PostLikeRepository;
@@ -44,9 +44,7 @@ public class PostLikeService {
         log.info("userId ={}", user.getId());
         if(findPostLike == null){
             postLikeRepository.save(new PostLike(new PostLikeRequestDto(user, post)));
-            log.info("postWriter Name= {}, user name = {}", postWriter.getNickName(), user.getNickName());
-            applicationEventPublisher.publishEvent(new AlarmEventListener(postWriter,user,post,AlarmType.likeP));
-            postWriter.addPoint(5);
+            applicationEventPublisher.publishEvent(new PostLikeEvent(postWriter,user,post));
         } else
         {
             postLikeRepository.deleteById(findPostLike.getId());
