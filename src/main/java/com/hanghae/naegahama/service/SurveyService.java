@@ -27,7 +27,6 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final HippoResult hippoResult;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -114,8 +113,8 @@ public class SurveyService {
     //설문조사 결과
     public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
         String hippoName = userDetails.getUser().getHippoName();
-        String imgUrl = hippoResult.resultImage(hippoName);
-        String surveyResult = hippoResult.resultText(hippoName);
+        String imgUrl = HippoResult.resultImage(hippoName);
+        String surveyResult = HippoResult.resultText(hippoName);
 
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
