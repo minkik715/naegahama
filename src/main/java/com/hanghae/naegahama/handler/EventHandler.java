@@ -3,15 +3,18 @@ package com.hanghae.naegahama.handler;
 import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.event.*;
-import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -21,7 +24,8 @@ public class EventHandler {
     private final AlarmRepository alarmRepository;
     private final AlarmService alarmService;
 
-    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
 
 /*
 
@@ -48,7 +52,7 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             answerAlarm(receiver,sender,answer,alarmType);
-            givePointAndSendAlarm(receiver, 5);
+            givePointAndSendAlarm(receiver, 50);
         }
 
     }
@@ -72,7 +76,7 @@ public class EventHandler {
             long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
             log.info("잔여시간차이 = {}",minutes);
             if(minutes <60){
-                givePointAndSendAlarm(sender, 50);
+                givePointAndSendAlarm(sender, 25);
             }
         }
     }
@@ -99,18 +103,28 @@ public class EventHandler {
         }
 
         // 최초 평가시 업적 7 획득
-        Integer addPoint = (star) * 100;
-        String category = receiver.getCategory();
-        if( category.equals( answer.getPost().getCategory())) {
-            givePointAndSendAlarm(receiver, addPoint + 50);
-        }
-        else {
-            givePointAndSendAlarm(receiver, addPoint);
-        }
-        if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
-            givePointAndSendAlarm(receiver, 200);
 
+        if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
+            Integer addPoint = (star) * 150;
+            String category = receiver.getCategory();
+            if( category.equals( answer.getPost().getCategory())) {
+                givePointAndSendAlarm(receiver, addPoint + 50);
+            }
+            else {
+                givePointAndSendAlarm(receiver, addPoint);
+            }
+        }else{
+            Integer addPoint = (star) * 100;
+            String category = receiver.getCategory();
+            if( category.equals( answer.getPost().getCategory())) {
+                givePointAndSendAlarm(receiver, addPoint + 50);
+            }
+            else {
+                givePointAndSendAlarm(receiver, addPoint);
+            }
         }
+        givePointAndSendAlarm(answer.getPost().getUser(), 50);
+
 
         sender.getAchievement().setAchievement2(1);
     }
@@ -144,29 +158,36 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
-            givePointAndSendAlarm(receiver, 5);
+            givePointAndSendAlarm(receiver, 25);
         }
+        log.info("이벤트리스너순서");
 
     }
 
-    @TransactionalEventListener
     public void postWriteEvent(PostWriteEvent postWriteEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         Post post = postWriteEvent.getPost();
         post.getUser().getAchievement().setAchievement3(1);
-        Long postCount = postRepository.countByUser(post.getUser());
-        if (postCount == 3 || postCount == 6) {
-            givePointAndSendAlarm(post.getUser(), 50);
-
-        }
-
+        userRepository.save(post.getUser());
     }
 
-    private void givePointAndSendAlarm(User user, int i) {
-        List<Alarm> alarmList = user.addPoint(i);
+    public void givePointAndSendAlarm(User user, int i) {
+        log.info("에러는여기서1?");
+        log.info("에러는여기서2?");
+        Optional<User> byId = userRepository.findById(user.getId());
+        User findUser = byId.get();
+        List<Alarm> alarmList = findUser.addPoint(i);
+        log.info("user point = {}", findUser.getPoint());
         for (Alarm alarm : alarmList) {
-            alarmService.alarmByMessage(new MessageDto(alarm));
+            Alarm saveAlarm = alarmRepository.save(alarm);
+            alarmService.alarmByMessage(new MessageDto(saveAlarm));
         }
+
+        log.info("user point = {}", findUser.getPoint());
+        User saveuser = userRepository.save(findUser);
+        log.info("user point = {}", saveuser.getPoint());
+
+
     }
 
     @TransactionalEventListener

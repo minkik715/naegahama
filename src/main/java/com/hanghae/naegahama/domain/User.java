@@ -146,8 +146,7 @@ public class User extends Timestamped{
                 alarmList.add(alarm);
             }
         }
-        Alarm alarm = new Alarm(this, null, AlarmType.point,(long) point, String.valueOf(point));
-        alarmList.add(alarm);
+        alarmList.add(new Alarm(this, null, AlarmType.point,(long) point, String.valueOf(point)));
         return alarmList;
     }
 

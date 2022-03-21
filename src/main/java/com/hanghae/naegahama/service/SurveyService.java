@@ -1,6 +1,8 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.dto.event.SurveyEvent;
+import com.hanghae.naegahama.initial.HippoResult;
+import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.domain.Post;
@@ -28,7 +30,7 @@ public class SurveyService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final PostLikeRepository postLikeRepository;
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
@@ -102,13 +104,12 @@ public class SurveyService {
         user.setHippoName(hippo);
 
         // 최초 평가시 업적 6 획득
+        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        achievementUser.getAchievement().setAchievement5(1);
 
 
         userRepository.save(user);
-
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        applicationEventPublisher.publishEvent(new SurveyEvent(achievementUser));
 
     }
 
@@ -116,8 +117,9 @@ public class SurveyService {
     //설문조사 결과
     public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
         String hippoName = userDetails.getUser().getHippoName();
-        String imgUrl = userDetails.getUser().getHippoImage();
-        String surveyResult = null;
+        String imgUrl = HippoResult.resultImage(hippoName);
+        String surveyResult = HippoResult.resultText(hippoName);
+
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
                 hippoName,
@@ -132,9 +134,11 @@ public class SurveyService {
 
         //하마 이름이 같은 게시글을 포스트 레포지토리에서 가져온다.
 //        User user = userDetails.getUser();
-        List<Post> posts = postRepository.findAllByUserHippoName(hippoName);
+        List<Post> posts = postRepository.findAllByUser_HippoName(hippoName);
         List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
-
+        if(posts.size() <3){
+            return null;
+        }
         //랜덤 숫자 두개를 추출한다.
         int size = posts.size();
         int min = 0;
@@ -143,6 +147,7 @@ public class SurveyService {
         int random2 = -1;
         while (true) {
             random2 = (int) ((Math.random() * (size - min)) + min);
+            log.info(String.valueOf(random2));
             if (random != random2) {
                 break;
             }
@@ -151,9 +156,12 @@ public class SurveyService {
         //요청게시글에서 램덤으로 두개를 가져온다.
         Post post1 = posts.get(random);
         Post post2 = posts.get(random2);
-
-        CommendResponseDto commendResponseDto = new CommendResponseDto(post1,post2);
-                commendResponseDtos.add(commendResponseDto);
+        Long countByPost1 = postLikeRepository.countByPost(post1);
+        CommendResponseDto commendResponseDto = new CommendResponseDto(post1,countByPost1);
+        commendResponseDtos.add(commendResponseDto);
+        Long countByPost2 = postLikeRepository.countByPost(post2);
+        CommendResponseDto commendResponseDto2 = new CommendResponseDto(post2,countByPost2);
+        commendResponseDtos.add(commendResponseDto2);
 
         return commendResponseDtos;
     }

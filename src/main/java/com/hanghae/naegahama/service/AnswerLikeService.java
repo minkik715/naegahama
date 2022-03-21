@@ -36,15 +36,14 @@ public class AnswerLikeService {
         //오 좋은 거 배우고 갑니다.
         AnswerLike findAnswerLike = answerLikeRepository.findByUserAndAnswer(user,answer).orElse(null);
 
-
         if(findAnswerLike == null){
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
             findAnswerLike = answerLikeRepository.save(answerLike);
-            applicationEventPublisher.publishEvent(new AnswerLikeEvent(user,answerWriter,answer));
+            applicationEventPublisher.publishEvent(new AnswerLikeEvent(answerWriter,user,answer));
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
-            answerWriter.addPoint(-5);
+            answerWriter.addPoint(-25);
         }
 
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));

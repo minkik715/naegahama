@@ -43,15 +43,22 @@ public class PostLikeService {
         PostLike findPostLike = postLikeRepository.findByUserAndPost(user,post).orElse(null);
         log.info("userId ={}", user.getId());
         if(findPostLike == null){
+            log.info("서비스순서1");
             postLikeRepository.save(new PostLike(new PostLikeRequestDto(user, post)));
             applicationEventPublisher.publishEvent(new PostLikeEvent(postWriter,user,post));
+            log.info("서비스순서2");
         } else
         {
             postLikeRepository.deleteById(findPostLike.getId());
-            postWriter.addPoint(-5);
+            postWriter.addPoint(-25);
         }
+        log.info("서비스순서3");
+
+        userRepository.save(user);
+        log.info("서비스순서4");
 
         return new PostLikeResponseDto(postId, postLikeRepository.countByPost(post));
+
     }
 
 }
