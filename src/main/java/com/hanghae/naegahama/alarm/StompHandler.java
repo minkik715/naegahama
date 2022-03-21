@@ -46,8 +46,11 @@ public class StompHandler implements ChannelInterceptor {
             log.info("token = {}", token);
             String username = jwtDecoder.decodeUsername(token);
             log.info("userId = {} username = {}", token, username);
-            Optional<User> byEmail = userRepository.findByNickName(username);
-            String id = String.valueOf(byEmail.get().getId());
+            Optional<User> byEmail = userRepository.findByEmail(username);
+            String id = null;
+            if(byEmail.isPresent()){
+                id = String.valueOf(byEmail.get().getId());
+            }
             log.info(id);
 
             String sessionId = (String) message.getHeaders().get("simpSessionId");

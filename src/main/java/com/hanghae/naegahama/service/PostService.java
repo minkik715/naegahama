@@ -266,9 +266,7 @@ public class PostService {
 
         response.addAll(tempresponse);
         response.addAll(tempresponse2);
-        return ResponseEntity.ok().
-
-                body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     private void createPostResponseDto(List<PostResponseDto> response, Post post) {
@@ -397,6 +395,15 @@ public class PostService {
     }
 
 
+    public List<PostResponseDto> getAdminPost() {
+        List<PostResponseDto> response = new ArrayList<>();
+
+        for (Post post : postRepository.findAllByUser_RoleOrderByCreatedAt(UserRoleEnum.ADMIN)) {
+            createPostResponseDto(response,post);
+        }
+
+        return response;
+    }
 }
 
 

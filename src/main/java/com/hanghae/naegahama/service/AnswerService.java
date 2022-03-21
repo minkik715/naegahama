@@ -243,6 +243,9 @@ public class AnswerService
         {
             answerWriter.addPoint( addPoint );
         }
+        if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
+            answerWriter.addPoint(200);
+        }
         applicationEventPublisher.publishEvent(new AlarmEventListener(answerWriter,achievementUser,answer,AlarmType.rated));
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
