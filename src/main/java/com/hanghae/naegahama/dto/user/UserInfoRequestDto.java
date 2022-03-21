@@ -21,5 +21,5 @@ public class UserInfoRequestDto {
     @NotBlank(message = "닉네임은 필수입니다.")
     private String nickname;
 
-    private String phoneNumber =null;
+    private String phone =null;
 }

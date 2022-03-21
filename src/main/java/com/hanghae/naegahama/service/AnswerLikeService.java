@@ -4,7 +4,7 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
-import com.hanghae.naegahama.dto.event.AlarmEventListener;
+import com.hanghae.naegahama.dto.event.AnswerLikeEvent;
 import com.hanghae.naegahama.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,8 +18,6 @@ public class AnswerLikeService {
     private final AnswerLikeRepository answerLikeRepository;
     private final UserRepository userRepository;
     private final AnswerRepository answerRepository;
-    private final AlarmRepository alarmRepository;
-    private final AlarmService alarmService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
 
@@ -38,16 +36,14 @@ public class AnswerLikeService {
         //오 좋은 거 배우고 갑니다.
         AnswerLike findAnswerLike = answerLikeRepository.findByUserAndAnswer(user,answer).orElse(null);
 
-
         if(findAnswerLike == null){
             AnswerLikeRequestDto requestDto = new AnswerLikeRequestDto(user, answer);
             AnswerLike answerLike = new AnswerLike(requestDto);
             findAnswerLike = answerLikeRepository.save(answerLike);
-            applicationEventPublisher.publishEvent(new AlarmEventListener(user,answerWriter,answer,AlarmType.likeA));
-            answerWriter.addPoint(5);
+            applicationEventPublisher.publishEvent(new AnswerLikeEvent(answerWriter,user,answer));
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
-            answerWriter.addPoint(-5);
+            answerWriter.addPoint(-25);
         }
 
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));

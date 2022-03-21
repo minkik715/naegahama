@@ -19,6 +19,7 @@
 //import org.springframework.stereotype.Component;
 //
 //
+//import javax.transaction.Transactional;
 //import java.io.File;
 //import java.io.FileOutputStream;
 //import java.io.IOException;
@@ -38,7 +39,7 @@
 //    private FFmpeg ffmpeg;
 //    private FFprobe ffprobe;
 //
-////    @Transactional(Transactional.TxType.REQUIRES_NEW)
+//    @Transactional(Transactional.TxType.REQUIRES_NEW)
 //
 //    public void answerLikeListener(AnswerVideoEncoding answerVideoEncoding) throws IOException {
 //        Answer answer = answerRepository.findById(answerVideoEncoding.getAnswerID()).orElseThrow(

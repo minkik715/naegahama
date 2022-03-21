@@ -3,7 +3,10 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.event.AlarmEventListener;
+
+
+
+import com.hanghae.naegahama.dto.event.PostWriteEvent;
 
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.*;
@@ -50,17 +53,17 @@ public class PostService {
 
 
         // Post 작성 및 저장
-        Long postId = PostWrite(postRequestDto, user);
+
+        Post post = PostWrite(postRequestDto, user);
+        applicationEventPublisher.publishEvent(new PostWriteEvent(post));
 
         // 최초 요청글 작성 업적 획득
-        user.getAchievement().setAchievement3(1);
-
         // 3, 6번째 요청글 작성 시 50 경험치 획득
-        PostWriteAddPoint(user);
 
 
 
-        return ResponseEntity.ok().body(postId);
+        return ResponseEntity.ok().body(post.getId());
+
     }
 
 
@@ -373,7 +376,7 @@ public class PostService {
 
     // Post 작성 및 저장
     @Transactional
-    Long PostWrite(PostRequestDto postRequestDto, User user) {
+    Post PostWrite(PostRequestDto postRequestDto, User user) {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
 
         Post post = postRepository.save(new Post(postRequestDto, user));
@@ -394,18 +397,11 @@ public class PostService {
             post.setDeadLine(deadline);
         }
 
+        return post;
 
-
-        return post.getId();
     }
 
-    @Transactional
-    void PostWriteAddPoint(User user) {
-        Long postCount = postRepository.countByUser(user);
-        if (postCount == 3 || postCount == 6) {
-            user.addPoint(50);
-        }
-    }
+
 
 
     public List<PostResponseDto> getAdminPost() {

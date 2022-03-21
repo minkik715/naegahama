@@ -38,9 +38,6 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
 
-
-
-
     public ResponseEntity<?> nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
@@ -143,8 +140,10 @@ public class UserService {
     //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!
     public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
     {
-        user.setBasicInfo(userInfoRequestDto);
-        userRepository.save(user);
+        if(user.getUserStatus().equals("true")) {
+            user.setBasicInfo(userInfoRequestDto);
+            userRepository.save(user);
+        }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

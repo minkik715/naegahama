@@ -5,7 +5,7 @@ public class HippoResult {
     public static String hippoType2 = "내가 리더 하마";
     public static String hippoType3 = "하마 냄새가 나는 하마";
     public static String hippoType4 = "세상 시원시원한 하마";
-    public static String hippoType5 = "외유내강 하마";
+    public static String hippoType5 = "나그네 하마";
     public static String hippoType6 = "스마트 하마";
     public static String hippoType7 = "스윗하마";
     public static String hippoType8 = "센치 하마";
@@ -61,7 +61,7 @@ public class HippoResult {
 
     private static String[] sentiHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sentisurvey.png",
-            "나만의 시간을 가지며 내 생각을 정리하는 시간이 필요한 나그네하마\n" +
+            "나만의 시간을 가지며 내 생각을 정리하는 시간이 필요한 센치하마\n" +
                     "복잡한 일을 비교적 잘 처리하는 능력을 가지고 있어요.\n" +
                     "봉사활동을 했을 땐 혼자서 조용히 환경 미화를 하는 편입니다."
     };
