@@ -125,8 +125,11 @@ public class User extends Timestamped{
         this.hippoImage = HippoURL.name(hippoName,this.getHippoLevel());
     }
 
-    public List<Alarm> addPoint(Integer point) {
-        this.point += point;
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public List<Alarm> sendAlarm(Integer point) {
         List<Alarm> alarmList = new ArrayList<>();
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
         //도메인에 있어서 어떻게 할수가 없네요 적용 불가...

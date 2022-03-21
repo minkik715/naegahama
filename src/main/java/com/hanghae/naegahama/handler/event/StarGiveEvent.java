@@ -1,23 +1,24 @@
-package com.hanghae.naegahama.dto.event;
+package com.hanghae.naegahama.handler.event;
 
-import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter @NoArgsConstructor
-public class AnswerLikeEvent {
+@Getter @Setter @NoArgsConstructor
+public class StarGiveEvent {
     User receiver;
     User sender;
 
     Answer answer;
 
+    Integer star;
 
-
-    public AnswerLikeEvent(User receiver, User sender, Answer answer) {
+    public StarGiveEvent(User receiver, User sender, Answer answer,Integer star) {
         this.receiver = receiver;
         this.sender = sender;
         this.answer = answer;
+        this.star =star;
     }
 }

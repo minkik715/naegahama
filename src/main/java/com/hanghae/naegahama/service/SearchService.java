@@ -2,7 +2,7 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.event.SearchWordEvent;
+import com.hanghae.naegahama.handler.event.SearchWordEvent;
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
