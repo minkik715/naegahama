@@ -18,48 +18,56 @@ public class HippoURL
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort2circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effortsurvey.png"
     };
 
     private static String[] leaderHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leader3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/leadersurvey.png"
     };
 
     private static String[] smellHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smell1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smell2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smell3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smell3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smellsurvey.png"
     };
 
     private static String[] coolHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/cool1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/cool2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/cool3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/cool3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/coolsurvey.png"
     };
 
     private static String[] travelerHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/traveler1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/traveler2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/traveler3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/traveler3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/travelersurvey.png"
     };
 
     private static String[] smartHippoUrl1 = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smart1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smart2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smart3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smart3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/smartsurvey.png"
     };
 
     private static String[] sweetHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sweet1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sweet2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sweet3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sweet3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sweetsurvey.png"
     };
 
     private static String[] sentiHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/senti1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/senti2circle.png",
-            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/senti3circle.png"
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/senti3circle.png",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/sentisurvey.png"
     };
 
     public static String name(String hippoName, Integer hippoLv)
@@ -112,5 +120,41 @@ public class HippoURL
             default:
                 return basicHippoURL;
         }
+    }
+    public static String result(String hippoName)
+    {
+        if(hippoName.equals(hippoType1))
+        {
+            return effortHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType2))
+        {
+            return leaderHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType3))
+        {
+            return smellHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType4))
+        {
+            return coolHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType5))
+        {
+            return travelerHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType6))
+        {
+            return smartHippoUrl1[3];
+        }
+        else if(hippoName.equals(hippoType7))
+        {
+            return sweetHippoUrl[3];
+        }
+        else if(hippoName.equals(hippoType8))
+        {
+            return sentiHippoUrl[3];
+        }
+        return basicHippoURL;
     }
 }

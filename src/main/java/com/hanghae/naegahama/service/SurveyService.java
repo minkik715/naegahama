@@ -95,8 +95,8 @@ public class SurveyService {
         } else if (emotion2.equals("이성") && plan2.equals("직관") && action2.equals("내향")) {
             hippo = "센치 하마";
         }
+        //하마이름이 만들어질때 이미지와 결과Url이 유저정보에 저장됌.
         user.setHippoName(hippo);
-
 
         // 최초 평가시 업적 6 획득
         User achievementUser = userRepository.findById(user.getId()).orElseThrow(
@@ -112,9 +112,13 @@ public class SurveyService {
     //설문조사 결과
     public SurveyresponseDto getHippo(UserDetailsImpl userDetails) {
         String hippoName = userDetails.getUser().getHippoName();
+        String imgUrl = userDetails.getUser().getHippoImage();
+        String surveyResult = userDetails.getUser().getSurveyResult();
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
-                hippoName
+                hippoName,
+                imgUrl,
+                surveyResult
         );
         return surveyresponseDto;
     }
@@ -144,14 +148,8 @@ public class SurveyService {
         Post post1 = posts.get(random);
         Post post2 = posts.get(random2);
 
-        CommendResponseDto commendResponseDto = new CommendResponseDto(
-                post1.getId(),
-                post1.getTitle(),
-                post2.getId(),
-                post2.getTitle()
-        );
-
-        commendResponseDtos.add(commendResponseDto);
+        CommendResponseDto commendResponseDto = new CommendResponseDto(post1,post2);
+                commendResponseDtos.add(commendResponseDto);
 
         return commendResponseDtos;
     }
