@@ -129,7 +129,7 @@ public class User extends Timestamped{
         this.point = point;
     }
 
-    public List<Alarm> sendAlarm(Integer point) {
+    public List<Alarm> sendAlarm(Integer point, AlarmType alarmType, Object object) {
         List<Alarm> alarmList = new ArrayList<>();
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
         //도메인에 있어서 어떻게 할수가 없네요 적용 불가...
@@ -137,7 +137,7 @@ public class User extends Timestamped{
             if (this.point >= 2000) {
                 this.hippoLevel = 3;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
-                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
+                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
             }
             else if ( this.point >= 1000 && this.hippoLevel !=2)
@@ -145,11 +145,19 @@ public class User extends Timestamped{
                 this.hippoLevel = 2;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
 
-                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, null);
+                Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
             }
         }
-        alarmList.add(new Alarm(this, null, AlarmType.point,(long) point, String.valueOf(point)));
+        if(alarmType.equals(AlarmType.pointR) ||alarmType.equals(AlarmType.pointAL) || (alarmType.equals(AlarmType.pointA))){
+            Answer answer = (Answer) object;
+            Alarm alarm = new Alarm(this, String.valueOf(point), alarmType, answer.getId(), answer.getTitle());
+            alarmList.add(alarm);
+        }else if(alarmType.equals(AlarmType.pointPL)){
+            Post post = (Post) object;
+            Alarm alarm = new Alarm(this, String.valueOf(point), alarmType,post.getId(), post.getTitle());
+            alarmList.add(alarm);
+        }
         return alarmList;
     }
 

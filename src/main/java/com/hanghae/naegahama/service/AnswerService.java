@@ -71,7 +71,7 @@ public class AnswerService
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
 
 
-        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post));
+        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post,saveAnwser));
 
 
         return ResponseEntity.ok().body(saveAnwser.getId());

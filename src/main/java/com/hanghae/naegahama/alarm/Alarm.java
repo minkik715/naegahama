@@ -30,10 +30,14 @@ public class Alarm extends Timestamped {
     private String senderNickName;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
 
     @Column
     private Long id;
+
+    @Column
+    private Integer point =null;
 
     @Column
     private String title;

@@ -22,7 +22,7 @@ public class RedisSubscriber {
         log.info("데이터가 잘왔나요? publishMessage={}", publishMessage);
         try {
             // ChatMessage 객채로 맵핑
-            MessageDto alarm = objectMapper.readValue(publishMessage, MessageDto.class);
+            AlarmResponseDto alarm = objectMapper.readValue(publishMessage, AlarmResponseDto.class);
             // 채팅방을 구독한 클라이언트에게 메시지 발송
             log.info("alarm.getReceiverId() = {}", alarm.getReceiverId());
             log.info("/alarm/{}",alarm.getReceiverId());

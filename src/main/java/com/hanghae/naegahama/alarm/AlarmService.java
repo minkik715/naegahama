@@ -24,8 +24,8 @@ public class AlarmService {
     private final ChannelTopic channelTopic;
     private final AlarmRepository alarmRepository;
 
-    public void alarmByMessage(MessageDto messageDto) {
-        redisTemplate.convertAndSend(channelTopic.getTopic(), messageDto);
+    public void alarmByMessage(AlarmResponseDto AlarmResponseDto) {
+        redisTemplate.convertAndSend(channelTopic.getTopic(), AlarmResponseDto);
     }
 
     //알람 삭제
@@ -54,52 +54,13 @@ public class AlarmService {
 
         for (Alarm alarm : alarms) {
 
-            String timeSet = timeSet(alarm);
 
-            AlarmResponseDto alarmResponseDto = new AlarmResponseDto(
-                    alarm.getAlarmId(),
-                    alarm.getSenderNickName(),
-                    alarm.getAlarmType(),
-                    alarm.getId(),
-                    alarm.getTitle(),
-                    alarm.getModifiedAt(),
-                    alarm.getReadingStatus(),
-                    timeSet
-            );
+            AlarmResponseDto alarmResponseDto = new AlarmResponseDto(alarm);
             response.add(alarmResponseDto);
         }
         return response;
     }
 
-
-    //전체 조회 할때 보여주는 시간.
-    private String timeSet(Alarm alarm) {
-        String timeSet = "";
-        LocalDateTime modifiedAt = alarm.modifiedAt();
-        if (modifiedAt == null) {
-            timeSet = "기한 없음";
-        } else {
-            long minutes = 61;
-            if (modifiedAt.isBefore(LocalDateTime.now())) {
-            } else {
-                minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), modifiedAt);
-                int hour = (int) (minutes / 60);
-                minutes = minutes % 60;
-                timeSet = "마감 " + hour + "시간 " + minutes + "분 전";
-
-                if (hour < 1) {
-                    minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), modifiedAt);
-                    timeSet = "마감 " + minutes + "분 전";
-
-                }
-                if (minutes < 1) {
-                    long seconds = ChronoUnit.SECONDS.between(LocalDateTime.now(), modifiedAt);
-                    timeSet = "마감 " + seconds + "초 전";
-                }
-            }
-        }
-        return timeSet;
-    }
 
     //리딩 안된 알람갯수 카운트.
     public CountAlarmDto countAlarm(UserDetailsImpl userDetails) {
