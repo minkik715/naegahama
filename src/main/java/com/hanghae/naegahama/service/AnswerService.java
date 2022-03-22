@@ -1,14 +1,11 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 
-
-
-import com.hanghae.naegahama.dto.event.StarGiveEvent;
-import com.hanghae.naegahama.dto.event.AnswerWriteEvent;
+import com.hanghae.naegahama.handler.event.StarGiveEvent;
+import com.hanghae.naegahama.handler.event.AnswerWriteEvent;
 
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;

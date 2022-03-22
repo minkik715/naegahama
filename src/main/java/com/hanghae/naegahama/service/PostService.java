@@ -4,9 +4,7 @@ import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 
-
-
-import com.hanghae.naegahama.dto.event.PostWriteEvent;
+import com.hanghae.naegahama.handler.event.PostWriteEvent;
 
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.*;

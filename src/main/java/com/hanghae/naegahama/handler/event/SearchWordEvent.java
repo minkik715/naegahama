@@ -1,12 +1,12 @@
-package com.hanghae.naegahama.dto.event;
+package com.hanghae.naegahama.handler.event;
 
-import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class PostWriteEvent {
-    private Post post;
+public class SearchWordEvent {
+    private User user;
 }

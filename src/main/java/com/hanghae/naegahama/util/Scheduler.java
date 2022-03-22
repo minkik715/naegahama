@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.util;
 
 import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.dto.event.PostClosedEvent;
+import com.hanghae.naegahama.handler.event.PostClosedEvent;
 import com.hanghae.naegahama.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

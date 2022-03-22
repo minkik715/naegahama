@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.dto.event.SurveyEvent;
 import com.hanghae.naegahama.initial.HippoResult;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -14,7 +13,6 @@ import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 

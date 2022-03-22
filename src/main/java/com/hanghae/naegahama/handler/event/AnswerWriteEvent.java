@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.dto.event;
+package com.hanghae.naegahama.handler.event;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
