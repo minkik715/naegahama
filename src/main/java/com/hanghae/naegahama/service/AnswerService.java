@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import java.util.ArrayList;
@@ -266,6 +267,11 @@ public class AnswerService
 
         s3Uploader.upload(file2, "static", true, uuid);
         video.setUrl(s3Uploader.upload(file1, "static", false, uuid));
+
+
+       s3Uploader.deleteS3("static/" + fileName);
+
+
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
