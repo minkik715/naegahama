@@ -1,20 +1,23 @@
-package com.hanghae.naegahama.dto.event;
+package com.hanghae.naegahama.handler.event;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter @NoArgsConstructor
-public class PostClosedEvent {
+@Getter
+@NoArgsConstructor
+public class PostLikeEvent {
     User receiver;
+    User sender;
 
     Post post;
 
 
 
-    public PostClosedEvent(User receiver,  Post post) {
+    public PostLikeEvent(User receiver, User sender, Post post) {
         this.receiver = receiver;
+        this.sender = sender;
         this.post = post;
     }
 }

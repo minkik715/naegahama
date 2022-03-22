@@ -4,7 +4,7 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.dto.event.PostLikeEvent;
+import com.hanghae.naegahama.handler.event.PostLikeEvent;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
 import com.hanghae.naegahama.repository.PostLikeRepository;
@@ -50,7 +50,7 @@ public class PostLikeService {
         } else
         {
             postLikeRepository.deleteById(findPostLike.getId());
-            postWriter.addPoint(-25);
+            postWriter.setPoint(postWriter.getPoint()-25);
         }
         log.info("서비스순서3");
 
