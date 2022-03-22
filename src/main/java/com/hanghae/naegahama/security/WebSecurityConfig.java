@@ -145,8 +145,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/api/rank");
         skipPathList.add("GET,/api/shorts");
         skipPathList.add("GET,/api/survey/{hippoName}");
+//        skipPathList.add("GET,/api/image");
 
-//        skipPathList.add("GET,/api/image/{type}/{id}");
+        skipPathList.add("GET,/api/image/**");
 
         skipPathList.add("GET,/favicon.ico");
 
