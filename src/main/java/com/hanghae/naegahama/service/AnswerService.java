@@ -3,19 +3,34 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
+
 import com.hanghae.naegahama.handler.event.StarGiveEvent;
 import com.hanghae.naegahama.handler.event.AnswerWriteEvent;
+
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
+import com.hanghae.naegahama.util.S3Uploader;
+import com.hanghae.naegahama.util.VideoEncode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -32,8 +47,11 @@ public class AnswerService
     private final AnswerVideoRepository answerVideoRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    private final S3Uploader s3Uploader;
+    private final VideoEncode videoEncode;
+
     // 답변글 작성
-    @Transactional
+
     public ResponseEntity<?> answerWrite(AnswerPostRequestDto answerPostRequestDto, Long postId, User user)
     {
         Post post = postRepository.findPostById(postId);
@@ -72,6 +90,7 @@ public class AnswerService
 
 
         applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post,saveAnwser));
+
 
 
         return ResponseEntity.ok().body(saveAnwser.getId());
@@ -208,4 +227,53 @@ public class AnswerService
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
+    public ResponseEntity<?> answerVideo(Long answerId, UserDetailsImpl userDetails) throws IOException
+    {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+
+        AnswerVideo video = answerVideoRepository.findByAnswer(answer).orElseThrow(
+                () -> new IllegalArgumentException("해당 영상은 존재하지 않습니다."));
+
+        String fileName = URLDecoder.decode(video.getUrl().split("static/")[1], "UTF-8");
+
+        System.out.println(fileName);
+
+        InputStream in = s3Uploader.getObject("static/" + fileName).getObjectContent();
+
+        File tempFile = File.createTempFile(String.valueOf(in.hashCode()),".mp4");
+        tempFile.deleteOnExit();
+
+        FileUtils.copyInputStreamToFile(in,tempFile);
+
+        String uuid = UUID.randomUUID().toString();
+
+        videoEncode.videoEncode(tempFile.getAbsolutePath(),System.getProperty("user.dir") + "/test" + fileName);
+        videoEncode.cutVideo(tempFile.getAbsolutePath(), System.getProperty("user.dir") + "/shorts" + fileName);
+
+        File file1 = new File(System.getProperty("user.dir") + "/test" + fileName);
+        File file2 = new File(System.getProperty("user.dir") + "/shorts" + fileName);
+
+
+//        s3Uploader.upload(tempFile, "static", false, uuid);
+
+
+        //        s3Uploader.removeNewFile(tempFile);
+        if (videoEncode.getVideoLength(tempFile.getAbsolutePath()) < 15)
+        {
+            video.setUrl(s3Uploader.upload(file2, "static", true, uuid));
+//             s3Uploader.upload(tempFile, "static", true, uuid);
+        }
+
+        s3Uploader.upload(file2, "static", true, uuid);
+        video.setUrl(s3Uploader.upload(file1, "static", false, uuid));
+
+
+       s3Uploader.deleteS3("static/" + fileName);
+
+
+
+        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+
+    }
 }

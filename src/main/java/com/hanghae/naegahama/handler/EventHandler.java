@@ -8,8 +8,10 @@ import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -17,6 +19,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
 
 @Component
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -30,7 +33,9 @@ public class EventHandler {
     private final UserRepository userRepository;
 
 
+
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+
     public void answerLikeEvent(AnswerLikeEvent answerLikeEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = answerLikeEvent.getReceiver();
@@ -150,9 +155,12 @@ public class EventHandler {
 
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) //커밋완료 후 작업
+
     public void postLikeEvent(PostLikeEvent postLikeEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
-        User receiver = postLikeEvent.getReceiver();
+        User receiver = userRepository.findById(postLikeEvent.getReceiver().getId()).orElseThrow(
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
         User sender = postLikeEvent.getSender();
         Post post = postLikeEvent.getPost();
         AlarmType alarmType = AlarmType.likeP;
@@ -185,7 +193,10 @@ public class EventHandler {
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다")
         );
+        findUser.setPoint(findUser.getPoint()+i);
         List<Alarm> alarmList = findUser.sendAlarm(i ,alarmType, object);
+
+
         log.info("user point = {}", findUser.getPoint());
         for (Alarm alarm : alarmList) {
             Alarm saveAlarm = alarmRepository.save(alarm);
@@ -193,7 +204,7 @@ public class EventHandler {
         }
 
         log.info("user point = {}", findUser.getPoint());
-        findUser.setPoint(findUser.getPoint()+i);
+
         log.info("user point = {}", findUser.getPoint());
 
 
