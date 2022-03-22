@@ -92,39 +92,37 @@ public class AnswerService
         applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post,saveAnwser));
 
 
-
         return ResponseEntity.ok().body(saveAnwser.getId());
     }
 
 
     // 요청 글에 달린 answerList 조회
-    public List<AnswerGetResponseDto> answerList(Long postId)
-    {
+    public ResponseEntity<List<AnswerGetResponseDto>>answerList(Long postId) {
+
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
         List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
 
-        for ( Answer answer : answerList)
-        {
+        for (Answer answer : answerList) {
             Long commentCount = commentRepository.countByAnswer(answer);
             Long likeCount = answerLikeRepository.countByAnswer(answer);
             int imageCount = answer.getFileList().size();
-            AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer,commentCount,likeCount,imageCount);
+            AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(answer, commentCount, likeCount, imageCount);
             answerGetResponseDtoList.add(answerGetResponseDto);
         }
 
-        return answerGetResponseDtoList;
+        return ResponseEntity.ok().body(answerGetResponseDtoList);
 
     }
 
 
     // 응답글 수정
-    public ResponseEntity<?> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
+    public ResponseEntity<BasicResponseDto> answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
         Post post = postRepository.findPostById(answer.getPost().getId());
         if(post.getStatus().equals("false")){
-            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 수정할 수 없습니다.");
+            return ResponseEntity.badRequest().body(new BasicResponseDto("마감이 된 글에는 답변을 수정할 수 없습니다."));
         }
 
         answer.Update(answerPutRequestDto);
@@ -155,7 +153,7 @@ public class AnswerService
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    public ResponseEntity<?> answerDelete(Long answerId, UserDetailsImpl userDetails)
+    public ResponseEntity<BasicResponseDto> answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
@@ -170,7 +168,7 @@ public class AnswerService
 
 
     // 답변글 상세 조회
-    public AnswerDetailGetResponseDto answerDetail(Long answerId)
+    public ResponseEntity<AnswerDetailGetResponseDto> answerDetail(Long answerId)
     {
         Answer answer =  answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
@@ -198,11 +196,11 @@ public class AnswerService
 
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(answer,likeCount,commentCount,likeUserList,fileList, answer.getPost().getCategory());
 
-        return answerDetailGetResponseDto;
+        return ResponseEntity.ok().body(answerDetailGetResponseDto);
     }
 
     @Transactional
-    public ResponseEntity<?> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
+    public ResponseEntity<BasicResponseDto> answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
     {
         User requestWriter = userDetails.getUser();
 
@@ -227,7 +225,7 @@ public class AnswerService
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 
-    public ResponseEntity<?> answerVideo(Long answerId, UserDetailsImpl userDetails) throws IOException
+    public ResponseEntity<BasicResponseDto> answerVideo(Long answerId, UserDetailsImpl userDetails) throws IOException
     {
         Answer answer = answerRepository.findById(answerId).orElseThrow(
                 () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));

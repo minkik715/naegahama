@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.controller;
 
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.AnswerService;
@@ -30,15 +31,16 @@ public class AnswerController
 
     @ResponseBody
     @GetMapping("/answer/{postId}")
-    public List<AnswerGetResponseDto> answerList(@PathVariable Long postId)
+    public ResponseEntity<List<AnswerGetResponseDto>> answerList(@PathVariable Long postId)
     {
+
         return answerService.answerList(postId);
     }
 
 
     @PutMapping("/answer/{answerId}")
-    public ResponseEntity<?> answerUpdate (@PathVariable Long answerId,@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                           @RequestBody @Validated AnswerPutRequestDto answerPutRequestDto)
+    public ResponseEntity<BasicResponseDto> answerUpdate (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                          @RequestBody @Validated AnswerPutRequestDto answerPutRequestDto)
     {
         return answerService.answerUpdate(answerId, userDetails, answerPutRequestDto);
     }
@@ -51,25 +53,25 @@ public class AnswerController
 //    }
 
     @DeleteMapping("/answer/{answerId}")
-    public ResponseEntity<?> answerDelete ( @PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
+    public ResponseEntity<BasicResponseDto> answerDelete ( @PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return answerService.answerDelete(answerId, userDetails);
     }
 
     @GetMapping("/answer/detail/{answerId}")
-    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId )
+    public ResponseEntity<AnswerDetailGetResponseDto> answerDetail (@PathVariable Long answerId )
     {
         return answerService.answerDetail(answerId);
     }
 
     @PostMapping("/star/{answerId}")
-    public ResponseEntity<?> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
+    public ResponseEntity<BasicResponseDto> answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
     {
         return answerService.answerStar(answerId,userDetails,starPostRequestDto);
     }
 
     @PostMapping("/video/{answerId}")
-    public ResponseEntity<?> answerVideo (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException
+    public ResponseEntity<BasicResponseDto> answerVideo (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException
     {
         return answerService.answerVideo(answerId,userDetails);
     }

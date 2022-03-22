@@ -55,6 +55,16 @@ public class Alarm extends Timestamped {
         this.readingStatus = ReadingStatus.N;
     }
 
+    public Alarm(User receiver, String senderNickName, AlarmType alarmType, Long id, String title,int point) {
+        this.receiver = receiver;
+        this.senderNickName = senderNickName;
+        this.alarmType = alarmType;
+        this.id = id;
+        this.title = title;
+        this.readingStatus = ReadingStatus.N;
+        this.point = point;
+    }
+
     public void changeReadingStatus(ReadingStatus readingStatus) {
         this.readingStatus = readingStatus;
     }
