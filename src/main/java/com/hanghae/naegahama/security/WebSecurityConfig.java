@@ -114,7 +114,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthFilter jwtFilter() throws Exception {
         List<String> skipPathList = new ArrayList<>();
 
-
         //error
         skipPathList.add("GET,/api/error");
 
@@ -135,6 +134,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //댓글
         skipPathList.add("GET,/api/comment/**");
 
+
+
 //        //모든 메소드 허용.
 //        skipPathList.add("GET,/**");
 //        skipPathList.add("POST,/**");
@@ -145,6 +146,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/api/shorts");
         skipPathList.add("GET,/api/survey/{hippoName}");
 
+//        skipPathList.add("GET,/api/image/{type}/{id}");
 
         skipPathList.add("GET,/favicon.ico");
 

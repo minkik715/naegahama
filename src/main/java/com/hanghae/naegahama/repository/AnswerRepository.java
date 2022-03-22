@@ -17,7 +17,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
 
     Long countByUser(User user);
-
+    Answer findAnswerById( Long id);
 
 
     // 검색된 키워드 불러오기.
