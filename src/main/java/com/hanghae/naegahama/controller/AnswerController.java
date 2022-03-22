@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -75,6 +76,18 @@ public class AnswerController
     {
         return answerService.answerVideo(answerId,userDetails);
     }
+
+
+    @PostMapping("/answer2/{postId}")
+    public ResponseEntity<?> answerWrite2 (@RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
+                                           @RequestPart(name = "video",required = false) MultipartFile videoFile,
+                                           @RequestPart(name = "answer") @Validated AnswerPostRequestDto2 answerPostRequestDto,
+                                           @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)  throws IOException
+    {
+        return answerService.answerWrite2(multipartFileList, videoFile, answerPostRequestDto,postId, userDetails.getUser());
+    }
+
+
 
 }
 

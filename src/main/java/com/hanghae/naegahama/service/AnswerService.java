@@ -4,6 +4,7 @@ import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 
+import com.hanghae.naegahama.dto.file.FileResponseDto;
 import com.hanghae.naegahama.handler.event.StarGiveEvent;
 import com.hanghae.naegahama.handler.event.AnswerWriteEvent;
 
@@ -20,6 +21,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
@@ -49,6 +51,7 @@ public class AnswerService
 
     private final S3Uploader s3Uploader;
     private final VideoEncode videoEncode;
+
 
     // 답변글 작성
 
@@ -273,5 +276,76 @@ public class AnswerService
 
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
 
+    }
+
+    public ResponseEntity<?> answerWrite2(List<MultipartFile> multipartFileList, MultipartFile videoFile, AnswerPostRequestDto2 answerPostRequestDto, Long postId, User user)  throws IOException
+    {
+
+        // 파일 혹은 비디오 파일을 넣지 않았을 경우 공백으로 처리.
+        List<String> file = new ArrayList<>();
+        String video = "";
+
+        // 파일이 있을 경우 s3에 넣고 url 값을 받음.
+        if ( multipartFileList != null)
+        {
+            for ( MultipartFile multipartFile : multipartFileList)
+            {
+                String fileUrl = s3Uploader.upload(multipartFile, "static",false);
+                file.add(fileUrl);
+            }
+        }
+
+        // 비디오가 있을 경우 s3에 넣고 url 값을 받음.
+        if ( videoFile != null)
+        {
+            video = s3Uploader.upload(videoFile, "static",true);
+        }
+
+        FileResponseDto fileResponseDto = new FileResponseDto(file, video);
+
+
+
+
+
+        Post post = postRepository.findPostById(postId);
+
+        if(post.getStatus().equals("false"))
+        {
+            return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
+        }
+
+        //저장된 Answer을 꺼내와서
+        Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user));
+
+        for ( String url : fileResponseDto.getFile())
+        {
+            // 이미지 파일 url로 answerFile 객체 생성
+            AnswerFile fileUrl = new AnswerFile(url);
+
+            // answerFile saveanswer를 연관관계 설정
+            fileUrl.setAnswer(saveAnwser);
+
+            // 이미지 파일 url 1개에 해당되는 answerFile을 DB에 저장
+            AnswerFile saveFile = answerFileRepository.save(fileUrl);
+
+            // 저장된 answerFile을 저장된 answer에 한개씩 추가함
+            saveAnwser.getFileList().add(saveFile);
+        }
+
+        AnswerVideo videoUrl = new AnswerVideo(fileResponseDto.getVideo());
+        videoUrl.setAnswer(saveAnwser);
+
+        //빠뜨리신 재균님?
+        answerVideoRepository.save(videoUrl);
+        // 최초 요청글 작성시 업적 5 획득
+        User answerUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+
+
+        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post));
+
+
+
+        return ResponseEntity.ok().body(saveAnwser.getId());
     }
 }

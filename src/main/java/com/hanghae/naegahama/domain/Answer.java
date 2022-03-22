@@ -2,6 +2,7 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto2;
 import com.hanghae.naegahama.dto.answer.AnswerPutRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
@@ -81,6 +82,16 @@ public class Answer extends Timestamped {
         this.user = user;
         this.star = 0;
     }
+
+    public Answer(AnswerPostRequestDto2 answerPostRequestDto2, Post post, User user)
+    {
+        this.title = answerPostRequestDto2.getTitle();
+        this.content = answerPostRequestDto2.getContent();
+        this.post = post;
+        this.user = user;
+        this.star = 0;
+    }
+
 
 
     public void Update(AnswerPutRequestDto answerPutRequestDto)
