@@ -17,7 +17,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -41,7 +40,7 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             answerAlarm(receiver,sender,answer,alarmType);
-            givePointAndSendAlarm(receiver, 50);
+            givePointAndSendAlarm(receiver, 25, AlarmType.pointAL, answer);
         }
 
     }
@@ -51,6 +50,7 @@ public class EventHandler {
         User receiver = AnswerWriteEvent.getReceiver();
         User sender = AnswerWriteEvent.getSender();
         Post post = AnswerWriteEvent.getPost();
+        Answer answer = AnswerWriteEvent.getAnswer();
         AlarmType alarmType = AlarmType.answer;
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
@@ -69,7 +69,7 @@ public class EventHandler {
             long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
             log.info("잔여시간차이 = {}",minutes);
             if(minutes <60){
-                givePointAndSendAlarm(sender, 25);
+                givePointAndSendAlarm(sender, 50, AlarmType.pointA,answer);
             }
         }
     }
@@ -104,22 +104,22 @@ public class EventHandler {
             Integer addPoint = (star) * 150;
             String category = receiver.getCategory();
             if( category.equals( answer.getPost().getCategory())) {
-                givePointAndSendAlarm(receiver, addPoint + 50);
+                givePointAndSendAlarm(receiver, addPoint + 50, AlarmType.pointR,answer);
             }
             else {
-                givePointAndSendAlarm(receiver, addPoint);
+                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointR,answer);
             }
         }else{
             Integer addPoint = (star) * 100;
             String category = receiver.getCategory();
             if( category.equals( answer.getPost().getCategory())) {
-                givePointAndSendAlarm(receiver, addPoint + 50);
+                givePointAndSendAlarm(receiver, addPoint + 50,AlarmType.pointR,answer);
             }
             else {
-                givePointAndSendAlarm(receiver, addPoint);
+                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointR,answer);
             }
         }
-        givePointAndSendAlarm(answer.getPost().getUser(), 50);
+        givePointAndSendAlarm(answer.getPost().getUser(), 50,AlarmType.pointR,answer);
 
 
         findUser.getAchievement().setAchievement2(1);
@@ -159,7 +159,7 @@ public class EventHandler {
 
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
-            givePointAndSendAlarm(receiver, 25);
+            givePointAndSendAlarm(receiver, 25,AlarmType.pointPL,post);
         }
         log.info("이벤트리스너순서");
 
@@ -179,17 +179,17 @@ public class EventHandler {
 
 
 
-    public void givePointAndSendAlarm(User user, int i) {
+    public void givePointAndSendAlarm(User user, int i, AlarmType alarmType, Object object) {
         log.info("에러는여기서1?");
         log.info("에러는여기서2?");
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다")
         );
-        List<Alarm> alarmList = findUser.sendAlarm(i);
+        List<Alarm> alarmList = findUser.sendAlarm(i ,alarmType, object);
         log.info("user point = {}", findUser.getPoint());
         for (Alarm alarm : alarmList) {
             Alarm saveAlarm = alarmRepository.save(alarm);
-            alarmService.alarmByMessage(new MessageDto(saveAlarm));
+            alarmService.alarmByMessage(new AlarmResponseDto(saveAlarm));
         }
 
         log.info("user point = {}", findUser.getPoint());
@@ -233,17 +233,17 @@ public class EventHandler {
 
     private void commentAlarm(User receiver, User sender, Comment object, AlarmType alarmType) {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getContent()));
-        alarmService.alarmByMessage(new MessageDto(save1));
+        alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
 
     private void postAlarm(User receiver, User sender, Post object, AlarmType alarmType) {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getTitle()));
-        alarmService.alarmByMessage(new MessageDto(save1));
+        alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
 
     private void answerAlarm(User receiver, User sender, Answer object, AlarmType alarmType) {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getTitle()));
-        alarmService.alarmByMessage(new MessageDto(save1));
+        alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
 
 

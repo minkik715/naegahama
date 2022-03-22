@@ -8,7 +8,7 @@ public class HippoURL
     public static String hippoType4 = "세상 시원시원한 하마";
     public static String hippoType5 = "나그네 하마";
     public static String hippoType6 = "스마트 하마";
-    public static String hippoType7 = "스윗하마";
+    public static String hippoType7 = "스윗 하마";
     public static String hippoType8 = "센치 하마";
 
     // 기본

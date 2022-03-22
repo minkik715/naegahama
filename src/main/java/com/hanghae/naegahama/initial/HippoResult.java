@@ -7,7 +7,7 @@ public class HippoResult {
     public static String hippoType4 = "세상 시원시원한 하마";
     public static String hippoType5 = "나그네 하마";
     public static String hippoType6 = "스마트 하마";
-    public static String hippoType7 = "스윗하마";
+    public static String hippoType7 = "스윗 하마";
     public static String hippoType8 = "센치 하마";
 
     // 기본
@@ -40,9 +40,9 @@ public class HippoResult {
 
     private static String[] travelerHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/travelersurvey.png",
-            "나만의 시간을 가지며 내 생각을 정리하는 시간이 필요한 센치하마\n" +
-                    "복잡한 일을 비교적 잘 처리하는 능력을 가지고 있어요.\n" +
-                    "봉사활동을 했을 땐 혼자서 조용히 환경 미화를 하는 편입니다."
+            "내가 좋아하는 공간에서 많은 생각을 하는 시간을 보내는게 좋은 나그네하마\n" +
+                    "조용한 편이긴 하지만 가끔 어딘가에서 엄청 나대는 상상을 한답니다.\n" +
+                    "눈치가 빨라서 누가 거짓말을 하는 건 다 티가 난다고 생각해요"
     };
 
     private static String[] smartHippoUrl1 = {

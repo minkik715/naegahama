@@ -84,7 +84,7 @@ public class SurveyService {
         if (emotion2.equals("감성") && plan2.equals("계획") && action2.equals("외향")  ) {
             hippo = "열심히 노력 하마";
         } else if (emotion2.equals("감성") && plan2.equals("계획") && action2.equals("내향")) {
-            hippo = "외유내강 하마";
+            hippo = "나그네 하마";
         } else if (emotion2.equals("감성") && plan2.equals("직관") && action2.equals("외향")) {
             hippo = "하마 냄새가 나는 하마";
         } else if (emotion2.equals("감성") && plan2.equals("직관") && action2.equals("내향")) {
