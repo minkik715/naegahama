@@ -5,6 +5,7 @@ import com.hanghae.naegahama.dto.answer.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class AnswerController
 {
     private final AnswerService answerService;
@@ -84,6 +86,13 @@ public class AnswerController
                                            @RequestPart(name = "answer") @Validated AnswerPostRequestDto2 answerPostRequestDto,
                                            @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)  throws IOException
     {
+        long size = videoFile.getSize();
+        log.info("size= {}", size);
+        long mb = size/1000000;
+        if(mb > 100){
+            return ResponseEntity.ok().body(new BasicResponseDto("사이즈가 너무 커요"));
+        }
+
         return answerService.answerWrite2(multipartFileList, videoFile, answerPostRequestDto,postId, userDetails.getUser());
     }
 

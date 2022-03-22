@@ -280,10 +280,12 @@ public class AnswerService
 
     public ResponseEntity<?> answerWrite2(List<MultipartFile> multipartFileList, MultipartFile videoFile, AnswerPostRequestDto2 answerPostRequestDto, Long postId, User user)  throws IOException
     {
-
+        log.info("answer Write시작");
         // 파일 혹은 비디오 파일을 넣지 않았을 경우 공백으로 처리.
         List<String> file = new ArrayList<>();
         String video = "";
+
+        log.info("answer 인코딩 시작");
 
         // 파일이 있을 경우 s3에 넣고 url 값을 받음.
         if ( multipartFileList != null)
@@ -313,6 +315,7 @@ public class AnswerService
         {
             return ResponseEntity.badRequest().body("마감이 된 글에는 답변을 작성할 수 없습니다.");
         }
+        log.info("answer 인코딩 중");
 
         //저장된 Answer을 꺼내와서
         Answer saveAnwser = answerRepository.save(new Answer(answerPostRequestDto,post,user));
@@ -331,9 +334,11 @@ public class AnswerService
             // 저장된 answerFile을 저장된 answer에 한개씩 추가함
             saveAnwser.getFileList().add(saveFile);
         }
+        log.info("answer 비디오!");
 
         AnswerVideo videoUrl = new AnswerVideo(fileResponseDto.getVideo());
         videoUrl.setAnswer(saveAnwser);
+        log.info("answer 비디오저장!");
 
         //빠뜨리신 재균님?
         answerVideoRepository.save(videoUrl);
@@ -341,8 +346,9 @@ public class AnswerService
         User answerUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
 
+        log.info("알람보내자");
 
-        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post));
+        applicationEventPublisher.publishEvent(new AnswerWriteEvent(post.getUser(), answerUser,post, saveAnwser));
 
 
 

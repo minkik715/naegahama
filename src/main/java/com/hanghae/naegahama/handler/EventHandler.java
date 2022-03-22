@@ -52,12 +52,16 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void AnswerWriteEvent(AnswerWriteEvent AnswerWriteEvent){
+
+        log.info("이벤터 시작");
         User receiver = AnswerWriteEvent.getReceiver();
         User sender = AnswerWriteEvent.getSender();
         Post post = AnswerWriteEvent.getPost();
         Answer answer = AnswerWriteEvent.getAnswer();
         AlarmType alarmType = AlarmType.answer;
+        log.info("알람보내기");
 
+        answerAlarm(answer.getUser(), answer.getUser(), answer, AlarmType.answerC);
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
         }
@@ -65,6 +69,7 @@ public class EventHandler {
                 () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
         );
         findUser.getAchievement().setAchievement1(1);
+        log.info("굳굳굳");
 
 
 
@@ -77,6 +82,8 @@ public class EventHandler {
                 givePointAndSendAlarm(sender, 50, AlarmType.pointA,answer);
             }
         }
+        log.info("완료!");
+
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -256,6 +263,8 @@ public class EventHandler {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getTitle()));
         alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
+
+
 
 
 }
