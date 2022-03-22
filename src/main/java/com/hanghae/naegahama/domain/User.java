@@ -9,6 +9,7 @@ import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor
+@Slf4j
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,9 +135,11 @@ public class User extends Timestamped{
         List<Alarm> alarmList = new ArrayList<>();
         // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
         //도메인에 있어서 어떻게 할수가 없네요 적용 불가...
+        log.info("재균님의 레벨은 ? = {}", this.hippoLevel);
         if (this.hippoLevel != 3) {
             if (this.point >= 2000) {
                 this.hippoLevel = 3;
+                log.info("@@@@@진화@@@@@@@@@@ 2->3");
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
@@ -144,18 +148,19 @@ public class User extends Timestamped{
             {
                 this.hippoLevel = 2;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
-
+                log.info("@@@@@진화@@@@@@@@@@ 1->2");
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
             }
         }
+        log.info("재균님의 레벨은 ? = {}", this.hippoLevel);
         if(alarmType.equals(AlarmType.pointR) ||alarmType.equals(AlarmType.pointAL) || (alarmType.equals(AlarmType.pointA))){
             Answer answer = (Answer) object;
-            Alarm alarm = new Alarm(this, String.valueOf(point), alarmType, answer.getId(), answer.getTitle());
+            Alarm alarm = new Alarm(this, null, alarmType, answer.getId(), answer.getTitle(),point);
             alarmList.add(alarm);
         }else if(alarmType.equals(AlarmType.pointPL)){
             Post post = (Post) object;
-            Alarm alarm = new Alarm(this, String.valueOf(point), alarmType,post.getId(), post.getTitle());
+            Alarm alarm = new Alarm(this, null, alarmType,post.getId(), post.getTitle(),point);
             alarmList.add(alarm);
         }
         return alarmList;

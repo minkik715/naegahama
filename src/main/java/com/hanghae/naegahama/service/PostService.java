@@ -1,8 +1,11 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+
 import com.hanghae.naegahama.handler.event.PostWriteEvent;
+
 import com.hanghae.naegahama.dto.post.*;
 import com.hanghae.naegahama.handler.ex.*;
 import com.hanghae.naegahama.repository.*;
@@ -16,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -53,7 +58,10 @@ public class PostService {
         // 최초 요청글 작성 업적 획득
         // 3, 6번째 요청글 작성 시 50 경험치 획득
 
+
+
         return ResponseEntity.ok().body(post.getId());
+
     }
 
 
@@ -82,16 +90,16 @@ public class PostService {
         post.UpdatePost(postRequestDto);
 
 
-        // 기존에 있던 이미지 파일 S3에서 삭제
-       /* for (PostFile deleteS3 : post.getFileList()) {
-            String[] fileKey = deleteS3.getUrl().split("static/");
-            try {
-                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
-                s3Uploader.deleteS3("static/" + decodeKey);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }*/
+//        // 기존에 있던 이미지 파일 S3에서 삭제
+//        for (PostFile deleteS3 : post.getFileList()) {
+//            String[] fileKey = deleteS3.getUrl().split("static/");
+//            try {
+//                String decodeKey = URLDecoder.decode(fileKey[1], "UTF-8");
+//                s3Uploader.deleteS3("static/" + decodeKey);
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
         // 기존에 있던 포스트파일 제거
@@ -386,7 +394,9 @@ public class PostService {
             LocalDateTime deadline = post.getCreatedAt().plusHours(postRequestDto.getTimeSet());
             post.setDeadLine(deadline);
         }
+
         return post;
+
     }
 
 

@@ -34,6 +34,10 @@ public class AnswerVideo extends Timestamped{
         this.answer = answer;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public AnswerVideo(String url)
     {
         this.url = url;

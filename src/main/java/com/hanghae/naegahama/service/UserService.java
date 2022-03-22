@@ -38,9 +38,6 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
 
-
-
-
     public ResponseEntity<?> nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {

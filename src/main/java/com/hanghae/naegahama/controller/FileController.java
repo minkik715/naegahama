@@ -2,9 +2,7 @@ package com.hanghae.naegahama.controller;
 import com.hanghae.naegahama.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
@@ -22,5 +20,12 @@ public class FileController
        return fileService.fileURL(multipartFileList,videoFile);
     }
 
+
+    // 요청글 전체조회
+    @GetMapping("/api/image/{type}/{id}")
+    public ResponseEntity<?> imgUrlList(@PathVariable String type ,@PathVariable Long id)
+    {
+        return fileService.imgUrlList(type,id);
+    }
 
 }

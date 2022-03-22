@@ -12,7 +12,7 @@ public class HippoURL
     public static String hippoType8 = "센치 하마";
 
     // 기본
-    public static String basicHippoURL = "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/f0fcb249-2cef-4539-a9ff-27dc171194d6%EA%B8%B0%EB%B3%B8%20%ED%95%98%EB%A7%88.PNG";
+    public static String basicHippoURL = "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%E1%84%8B%E1%85%B5%E1%86%AF%E1%84%87%E1%85%A1%E1%86%AB%E1%84%92%E1%85%A1%E1%84%86%E1%85%A1.svg";
 
     private static String[] effortHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort1circle.png",

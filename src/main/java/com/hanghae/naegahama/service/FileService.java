@@ -1,7 +1,11 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.AnswerFile;
+import com.hanghae.naegahama.domain.PostFile;
 import com.hanghae.naegahama.dto.file.FileResponseDto;
+import com.hanghae.naegahama.dto.file.ImageUrlResponseDto;
+import com.hanghae.naegahama.repository.AnswerRepository;
+import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,9 @@ import java.util.List;
 public class FileService
 {
     private final S3Uploader s3Uploader;
+    private final PostRepository postRepository;
+    private final AnswerRepository answerRepository;
+
 
     public ResponseEntity<?> fileURL(List<MultipartFile> multipartFileList, MultipartFile videoFile) throws IOException
     {
@@ -47,5 +54,33 @@ public class FileService
     }
 
 
+    public ResponseEntity<?> imgUrlList(String type, Long id)
+    {
+        List<String> imageUrl = new ArrayList<>();
 
+        if(type.equals("post"))
+        {
+            List<PostFile> fileList = postRepository.findPostById(id).getFileList();
+
+            for ( PostFile file : fileList)
+            {
+                imageUrl.add(file.getUrl());
+            }
+        }
+        else if ( type.equals("answer"))
+        {
+            List<AnswerFile> fileList = answerRepository.findAnswerById(id).getFileList();
+            for ( AnswerFile file : fileList)
+            {
+                imageUrl.add(file.getUrl());
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException("잘못된 타입입니다.");
+        }
+
+        return ResponseEntity.ok().body(new ImageUrlResponseDto(imageUrl));
+
+    }
 }
