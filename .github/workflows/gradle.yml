@@ -45,6 +45,9 @@ jobs:
     - name: Make zip file
       run: zip -r -qq -j ./naegahama-build.zip ./deploy
       
+       # script file Copy
+    - name: Copy shell
+      run: cp ./scripts/* ./deploy/
       
       # AWS credentials
     - name: Configure AWS credentials
