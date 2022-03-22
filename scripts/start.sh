@@ -11,13 +11,13 @@ echo "> cp $REPOSITORY/deploy/*.jar $REPOSITORY/"
 cp $REPOSITORY/deloy/*.jar $REPOSITORY/
 
 echo "> 새 어플리케이션 배포"
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+JAR_NAME=naegahama-0.0.1-SNAPSHOT.jar
 
 echo "> JAR Name: $JAR_NAME"
 
 echo "> $JAR_NAME 에 실행권한 추가"
 
-chmod +x $JAR_NAME
+chmod +x naegahama-0.0.1-SNAPSHOT.jar
 
 echo "> $JAR_NAME 실행"
 
