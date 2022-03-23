@@ -25,7 +25,7 @@ echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /etc/nginx/conf.
 
 echo "> Now Nginx proxies to ${TARGET_PORT}."
 
-# Reload nginx (nginx 서버의 재시작 없이 바로 새로운 설정값으로 서비스를 이어나갈 수 있도록 합니다.)
+# Reload nginx (nginx 서버의 재시작 없이 바로 새로운 설정값으로 서비스를 이어나갈 수 있도록 합니다!.)
 sudo service nginx reload
 
 echo "> Nginx reloaded."
