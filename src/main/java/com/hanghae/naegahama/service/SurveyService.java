@@ -117,9 +117,10 @@ public class SurveyService {
         String hippoName = userDetails.getUser().getHippoName();
         String imgUrl = HippoResult.resultImage(hippoName);
         String surveyResult = HippoResult.resultText(hippoName);
-
+        String nickname = userDetails.getUser().getNickName();
 
         SurveyresponseDto surveyresponseDto = new SurveyresponseDto(
+                nickname,
                 hippoName,
                 imgUrl,
                 surveyResult
@@ -134,8 +135,8 @@ public class SurveyService {
 //        User user = userDetails.getUser();
         List<Post> posts = postRepository.findAllByUser_HippoName(hippoName);
         List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
-        if(posts.size() <3){
-            return null;
+        if(posts.size() <2){
+            return commendResponseDtos;
         }
         //랜덤 숫자 두개를 추출한다.
         int size = posts.size();

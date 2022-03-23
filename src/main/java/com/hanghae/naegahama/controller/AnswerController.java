@@ -87,10 +87,6 @@ public class AnswerController
                                            @RequestPart(name = "answer") @Validated AnswerPostRequestDto2 answerPostRequestDto,
                                            @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)  throws IOException
     {
-        if(videoFile !=null && videoFile.getSize() >= 100){
-            return ResponseEntity.ok().body("파일이 너무 크단다");
-        }
-
         return answerService.answerWrite2(multipartFileList, videoFile, answerPostRequestDto,postId, userDetails.getUser());
     }
 

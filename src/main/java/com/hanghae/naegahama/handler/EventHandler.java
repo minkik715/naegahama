@@ -4,6 +4,7 @@ import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.handler.event.*;
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
+import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -30,6 +32,7 @@ public class EventHandler {
     private final AlarmRepository alarmRepository;
     private final AlarmService alarmService;
 
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
 
@@ -153,7 +156,12 @@ public class EventHandler {
             if(alarmType.equals(AlarmType.comment)) {
                 answerAlarm(receiver, sender, (Answer) object, alarmType);
             }else if(alarmType.equals(AlarmType.child)){
-                commentAlarm(receiver,sender, (Comment) object, alarmType);
+                Comment comment = (Comment) object;
+                Long parentCommentId = comment.getParentCommentId();
+                Optional<Comment> parent = commentRepository.findById(parentCommentId);
+                Comment comment1 = parent.get();
+
+                commentAlarm(receiver,sender, comment1, alarmType);
             }
         }
         findUser.getAchievement().setAchievement6(1);
