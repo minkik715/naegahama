@@ -1,37 +1,34 @@
-ABSPATH=$(readlink -f $0)
-ABSDIR=$(dirname $ABSPATH)
-source ${ABSDIR}/profile.sh
-source ${ABSDIR}/switch.sh
+#!/bin/bash
 
-IDLE_PORT=$(find_idle_port)
+# Crawl current connected port of WAS
+CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1)
+TARGET_PORT=0
 
-echo "> Health Check Start!"
-echo "> IDLE_PORT: $IDLE_PORT"
-echo "> curl -s http://localhost:$IDLE_PORT/profile "
-sleep 10
+# Toggle port Number
+if [ ${CURRENT_PORT} -eq 8081 ]; then
+  TARGET_PORT=8082
+elif [ ${CURRENT_PORT} -eq 8082 ]; then
+  TARGET_PORT=8081
+else
+  echo "> No WAS is connected to nginx"
+  exit 1
+fi
 
-for RETRY_COUNT in {1..10}
+echo "> Start health check of WAS at 'http://127.0.0.1:${TARGET_PORT}' ..."
+
+for RETRY_COUNT in 1 2 3 4 5 6 7 8 9 10
 do
-  RESPONSE=$(curl -s http://localhost:${IDLE_PORT}/profile)
-  UP_COUNT=1
-  echo "Response = ${UP_COUNT}"
-  if [ ${UP_COUNT} -ge 1 ]
-  then # $up_count >= 1 ("real" 문자열이 있는지 검증)
-      echo "> Health check 성공"
-      switch_proxy
-      break
-  else
-      echo "> Health check의 응답을 알 수 없거나 혹은 실행 상태가 아닙니다."
-      echo "> Health check: ${RESPONSE}"
-  fi
 
-  if [ ${RETRY_COUNT} -eq 10 ]
-  then
-    echo "> Health check 실패. "
-    echo "> 엔진엑스에 연결하지 않고 배포를 종료합니다."
+  echo "> #${RETRY_COUNT} trying..."
+  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/health)
+
+  if [ ${RESPONSE_CODE} -eq 200 ]; then
+    echo "> New WAS successfully running"
+    exit 0
+  elif [ ${RETRY_COUNT} -eq 10 ]; then
+    echo "> Health check failed."
+    echo "> aaaa" + ${RESPONSE_CODE};
     exit 1
   fi
-
-  echo "> Health check 연결 실패. 재시도..."
   sleep 10
 done
