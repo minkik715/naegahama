@@ -1,30 +1,30 @@
-ABSPATH=$(readlink -f $0)
-ABSDIR=$(dirname $ABSPATH)
-source ${ABSDIR}/profile.sh
+#!/bin/bash
 
-REPOSITORY=/home/ec2-user/app
-PROJECT_NAME=springboot-intro
+#현재 서비스하고 있는 WAS 포트 번호 읽어오기
+#CURRENT_PORT=$(cat /etc/nginx/conf.d/service-url.inc | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(cat /etc/nginx/conf.d/service_url.inc | grep -Po '[0-9]+' | tail -1)
+TARGET_PORT=0
 
-echo "> Build 파일 복사"
-echo "> cp $REPOSITORY/deploy/*.jar $REPOSITORY/"
+echo "> Current port of running WAS is ${CURRENT_PORT}."
 
-cp $REPOSITORY/deloy/*.jar $REPOSITORY/
+# 현재 포트가 8081이면 새로운 WAS 띄울 타켓은 8082, 혹은 그 반대
+if [ ${CURRENT_PORT} -eq 8081 ]; then
+  TARGET_PORT=8082
+elif [ ${CURRENT_PORT} -eq 8082 ]; then
+  TARGET_PORT=8081
+else
+  echo "> No WAS is connected to nginx"
+fi
 
-echo "> 새 어플리케이션 배포"
-JAR_NAME=naegahama-0.0.1-SNAPSHOT.jar
+TARGET_PID=$(lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
 
-echo "> JAR Name: $JAR_NAME"
+# 만약 타겟포트에도 WAS 떠 있다면 kill하고 새롭게 띄우기
+if [ ! -z ${TARGET_PID} ]; then
+  echo "> Kill WAS running at ${TARGET_PORT}."
+  sudo kill ${TARGET_PID}
+fi
 
-echo "> $JAR_NAME 에 실행권한 추가"
-
-chmod +x naegahama-0.0.1-SNAPSHOT.jar
-
-echo "> $JAR_NAME 실행"
-
-IDLE_PROFILE=$(find_idle_profile)
-
-echo "> $JAR_NAME 를 profile=$IDLE_PROFILE 로 실행합니다."
-nohup java -jar \
-    -Dspring.config.location=classpath:/application-$IDLE_PROFILE.properties,/home/ec2-user/app/application.yml,/home/ec2-user/app/aws.yml \
-    -Dspring.profiles.active=$IDLE_PROFILE \
-    /home/ecs-user/app/naegahama-0.0.1-SNAPSHOT.jar > $REPOSITORY/nohup.out 2>&1 &
+#마지막&는 프로세스가 백그라운드로 실행되도록 해준다.
+nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/app/deploy/naegahama-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/deploy/nohup.out 2>&1 &
+echo "> Now new WAS runs at ${TARGET_PORT}."
+exit 0
