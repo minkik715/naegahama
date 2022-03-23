@@ -25,6 +25,6 @@ if [ ! -z ${TARGET_PID} ]; then
 fi
 
 #마지막&는 프로세스가 백그라운드로 실행되도록 해준다.
-nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/app/deploy/naegahama-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/deploy/nohup${CURRENT_PORT}.out 2>&1 &
+nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/app/deploy/naegahama-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/deploy/nohup$(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S).out 2>&1 &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0
