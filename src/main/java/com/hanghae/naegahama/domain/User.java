@@ -106,7 +106,7 @@ public class User extends Timestamped{
         this.email = email;
         this.role = role;
         this.kakaoId = kakaoId;
-        this.hippoImage = HippoURL.basicHippoURL;
+        this.hippoImage = HippoURL.basicHippoURL[0];
         this.userStatus = "true";
         this.hippoName = "일반 하마";
         this.hippoLevel = 1;

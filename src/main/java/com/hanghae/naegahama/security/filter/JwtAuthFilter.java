@@ -42,12 +42,10 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
         // JWT 값을 담아주는 변수 TokenPayload
         String tokenPayload = request.getHeader("token");
-        log.info("tokenPayload = {}", tokenPayload);
         if (tokenPayload == null) {
             response.sendRedirect("/api/error");
             return null;
         }
-        log.info("tokenPayload = {}", tokenPayload);
         JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
                 extractor.extract(tokenPayload, request));
 

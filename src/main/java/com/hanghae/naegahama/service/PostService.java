@@ -4,6 +4,7 @@ import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 
+import com.hanghae.naegahama.handler.event.PostClosedEvent;
 import com.hanghae.naegahama.handler.event.PostWriteEvent;
 
 import com.hanghae.naegahama.dto.post.*;
@@ -326,8 +327,10 @@ public class PostService {
         if (!findPost.getUser().getId().equals(user.getId())) {
             throw new UserNotFoundException("권한이 존재하지 않습니다");
         }
-
         findPost.setStatus("closed");
+        if(!(answerRepository.countByPost(findPost) ==0)){
+            applicationEventPublisher.publishEvent(new PostClosedEvent(findPost.getUser(),findPost));
+        }
         return ResponseEntity.ok().body(new BasicResponseDto("true"));
     }
 

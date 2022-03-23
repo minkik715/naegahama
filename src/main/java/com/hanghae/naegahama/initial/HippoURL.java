@@ -11,9 +11,15 @@ public class HippoURL
     public static String hippoType7 = "스윗 하마";
     public static String hippoType8 = "센치 하마";
 
+    public static String hippoType9 = "일반 하마";
     // 기본
-    public static String basicHippoURL = "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/%E1%84%8B%E1%85%B5%E1%86%AF%E1%84%87%E1%85%A1%E1%86%AB%E1%84%92%E1%85%A1%E1%84%86%E1%85%A1.svg";
+    
 
+    public static String[] basicHippoURL = {
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/normal1circle.svg",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/normal1circle.svg",
+            "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/normal1circle.svg",
+    };
     private static String[] effortHippoUrl = {
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort1circle.png",
             "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/effort2circle.png",
@@ -95,8 +101,10 @@ public class HippoURL
         else if(hippoName.equals(hippoType8))
         {
             return HippoIndex(sentiHippoUrl, hippoLv);
+        }else 
+        {
+            return HippoIndex(basicHippoURL, hippoLv);
         }
-        return basicHippoURL;
     }
 
     private static String HippoIndex(String[] hippoType, Integer hippoLv)
@@ -110,7 +118,7 @@ public class HippoURL
             case 3:
                 return hippoType[2];
             default:
-                return basicHippoURL;
+                return basicHippoURL[0];
         }
     }
 }

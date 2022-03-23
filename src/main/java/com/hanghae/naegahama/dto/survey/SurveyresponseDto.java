@@ -10,12 +10,14 @@ import lombok.Setter;
 public class SurveyresponseDto {
     private String hippoName;
     private String imgUrl;
+    private String nickname;
     private String surveyResult;
 
-    public SurveyresponseDto(String hippoName, String imgUrl, String surveyResult) {
+    public SurveyresponseDto(String nickname,String hippoName, String imgUrl, String surveyResult) {
         this.hippoName = hippoName;
         this.imgUrl = imgUrl;
         this.surveyResult = surveyResult;
+        this.nickname = nickname;
 
 
     }

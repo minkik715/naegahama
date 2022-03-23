@@ -2,6 +2,7 @@ package com.hanghae.naegahama.controller;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
+import com.hanghae.naegahama.dto.file.FileSizeCheckDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.AnswerService;
 import lombok.RequiredArgsConstructor;
@@ -86,15 +87,10 @@ public class AnswerController
                                            @RequestPart(name = "answer") @Validated AnswerPostRequestDto2 answerPostRequestDto,
                                            @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails)  throws IOException
     {
-        long size = videoFile.getSize();
-        log.info("size= {}", size);
-        long mb = size/1000000;
-        if(mb > 100){
-            return ResponseEntity.ok().body(new BasicResponseDto("사이즈가 너무 커요"));
-        }
-
         return answerService.answerWrite2(multipartFileList, videoFile, answerPostRequestDto,postId, userDetails.getUser());
     }
+
+ 
 
 
 
