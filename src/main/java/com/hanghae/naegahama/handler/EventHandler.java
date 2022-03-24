@@ -119,19 +119,19 @@ public class EventHandler {
             Integer addPoint = (star) * 150;
             String category = receiver.getCategory();
             if( category.equals( answer.getPost().getCategory())) {
-                givePointAndSendAlarm(receiver, addPoint + 50, AlarmType.pointR,answer);
+                givePointAndSendAlarm(receiver, addPoint + 50, AlarmType.pointRD,answer);
             }
             else {
-                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointR,answer);
+                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointRD,answer);
             }
         }else{
             Integer addPoint = (star) * 100;
             String category = receiver.getCategory();
             if( category.equals( answer.getPost().getCategory())) {
-                givePointAndSendAlarm(receiver, addPoint + 50,AlarmType.pointR,answer);
+                givePointAndSendAlarm(receiver, addPoint + 50,AlarmType.pointRD,answer);
             }
             else {
-                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointR,answer);
+                givePointAndSendAlarm(receiver, addPoint,AlarmType.pointRD,answer);
             }
         }
         givePointAndSendAlarm(answer.getPost().getUser(), 50,AlarmType.pointR,answer);
