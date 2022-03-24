@@ -1,5 +1,6 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.handler;
 
+import com.hanghae.naegahama.repository.RedisRepository;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.repository.UserRepository;
 import com.hanghae.naegahama.security.jwt.JwtDecoder;

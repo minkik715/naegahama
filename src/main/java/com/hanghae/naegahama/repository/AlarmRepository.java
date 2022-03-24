@@ -1,5 +1,7 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.repository;
 
+import com.hanghae.naegahama.domain.ReadingStatus;
+import com.hanghae.naegahama.domain.Alarm;
 import com.hanghae.naegahama.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

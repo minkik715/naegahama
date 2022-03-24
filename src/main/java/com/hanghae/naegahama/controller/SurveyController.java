@@ -1,10 +1,12 @@
 package com.hanghae.naegahama.controller;
+import com.hanghae.naegahama.handler.ex.ErrorResponse;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.service.SurveyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -36,4 +38,5 @@ public class SurveyController {
     public ResponseEntity<?> recommend(@PathVariable String hippoName) {
         return ResponseEntity.ok().body(surveyService.recommend(hippoName));
     }
+
 }

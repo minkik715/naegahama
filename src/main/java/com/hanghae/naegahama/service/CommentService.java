@@ -1,7 +1,7 @@
 
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
+import com.hanghae.naegahama.domain.AlarmType;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;

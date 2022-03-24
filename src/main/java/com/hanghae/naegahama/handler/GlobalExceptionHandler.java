@@ -1,10 +1,12 @@
 package com.hanghae.naegahama.handler;
 
 import com.hanghae.naegahama.handler.ex.*;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
@@ -12,6 +14,10 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(TokenInvalidException.class)
+    public ResponseEntity<ErrorResponse> TokenInvalidException(TokenInvalidException e){
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.OK);
+    }
 
     @ExceptionHandler(AnswerFileNotFoundException.class)
     public ResponseEntity<ErrorResponse> AnswerFileNotFoundException(AnswerFileNotFoundException e){

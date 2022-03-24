@@ -1,6 +1,6 @@
 package com.hanghae.naegahama.handler.event;
 
-import com.hanghae.naegahama.alarm.AlarmType;
+import com.hanghae.naegahama.domain.AlarmType;
 import com.hanghae.naegahama.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;

@@ -1,12 +1,12 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.handler.event.PostLikeEvent;
 import com.hanghae.naegahama.dto.postlike.PostLikeRequestDto;
 import com.hanghae.naegahama.dto.postlike.PostLikeResponseDto;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;

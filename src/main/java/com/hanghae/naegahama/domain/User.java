@@ -2,16 +2,11 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hanghae.naegahama.alarm.Alarm;
-import com.hanghae.naegahama.alarm.AlarmType;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;

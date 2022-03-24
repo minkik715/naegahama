@@ -1,11 +1,13 @@
-package com.hanghae.naegahama.handler;
+package com.hanghae.naegahama.handler.event;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import com.hanghae.naegahama.handler.event.*;
 import com.hanghae.naegahama.handler.ex.UserNotFoundException;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,6 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hanghae.naegahama.domain.Timestamped;
-import com.hanghae.naegahama.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
