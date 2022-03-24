@@ -23,7 +23,7 @@ do
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${TARGET_PORT}/health)
 
   if [ ${RESPONSE_CODE} -eq 200 ]; then
-    echo "> New WAS successfully running"
+    echo "> New WAS successfully running!"
     exit 0
   elif [ ${RETRY_COUNT} -eq 10 ]; then
     echo "> Health check failed."
