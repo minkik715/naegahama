@@ -1,5 +1,5 @@
 
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.domain;
 
 public enum ReadingStatus {
     Y, N

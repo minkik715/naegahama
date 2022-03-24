@@ -1,9 +1,9 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 

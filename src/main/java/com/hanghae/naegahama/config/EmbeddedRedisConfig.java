@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.config;
 
 
 import lombok.extern.slf4j.Slf4j;

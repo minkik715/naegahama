@@ -1,8 +1,14 @@
 
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.dto.alarm.AlarmDto;
+import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
+import com.hanghae.naegahama.dto.alarm.CountAlarmDto;
+import com.hanghae.naegahama.domain.Alarm;
+import com.hanghae.naegahama.domain.ReadingStatus;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.repository.AlarmRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 

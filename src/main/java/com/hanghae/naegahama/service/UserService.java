@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.alarm.*;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -10,16 +9,13 @@ import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.MyPage.MyAnswerDto;
 import com.hanghae.naegahama.dto.MyPage.MyPostDto;
 import com.hanghae.naegahama.dto.login.UserResponseDto;
-import com.hanghae.naegahama.dto.signup.SignUpRequestDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
-import com.hanghae.naegahama.handler.ex.PasswordCheckFailException;
 import com.hanghae.naegahama.initial.Category;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

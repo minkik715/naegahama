@@ -1,6 +1,7 @@
 
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.config;
 
+import com.hanghae.naegahama.handler.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

@@ -1,11 +1,12 @@
-package com.hanghae.naegahama.alarm;
+package com.hanghae.naegahama.dto.alarm;
 
+import com.hanghae.naegahama.domain.Alarm;
+import com.hanghae.naegahama.domain.AlarmType;
+import com.hanghae.naegahama.domain.ReadingStatus;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
