@@ -154,7 +154,7 @@ public class User extends Timestamped{
             }
         }
         log.info("재균님의 레벨은 ? = {}", this.hippoLevel);
-        if(alarmType.equals(AlarmType.pointR) ||alarmType.equals(AlarmType.pointAL) || (alarmType.equals(AlarmType.pointA))){
+        if(alarmType.equals(AlarmType.pointR) ||alarmType.equals(AlarmType.pointAL) || (alarmType.equals(AlarmType.pointA) || alarmType.equals(AlarmType.pointRD))){
             Answer answer = (Answer) object;
             Alarm alarm = new Alarm(this, null, alarmType, answer.getId(), answer.getTitle(),point);
             alarmList.add(alarm);
