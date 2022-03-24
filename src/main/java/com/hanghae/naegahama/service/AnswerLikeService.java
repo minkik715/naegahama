@@ -42,7 +42,9 @@ public class AnswerLikeService {
             applicationEventPublisher.publishEvent(new AnswerLikeEvent(answerWriter,user,answer));
         } else {
             answerLikeRepository.deleteById(findAnswerLike.getId());
-            answerWriter.setPoint(answerWriter.getPoint()-25);
+            if(!answerWriter.getNickName().equals(user.getNickName())) {
+                answerWriter.setPoint(answerWriter.getPoint() - 25);
+            }
         }
 
         return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));

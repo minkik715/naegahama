@@ -50,7 +50,9 @@ public class PostLikeService {
         } else
         {
             postLikeRepository.deleteById(findPostLike.getId());
-            postWriter.setPoint(postWriter.getPoint()-25);
+            if(!postWriter.getNickName().equals(user.getNickName())) {
+                postWriter.setPoint(postWriter.getPoint() - 25);
+            }
         }
         log.info("서비스순서3");
 
