@@ -2,4 +2,25 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/app/deploy
+    destination: /home/ec2-user/app/deploy/ # 프로젝트 이름
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: root
+    group: root
+
+
+### 새로 추가한 부분 ###
+hooks:
+ ApplicationStart:
+   - location: run_new_was.sh
+     timeout: 180
+     runas: root
+   - location: health_check.sh
+     timeout: 180
+     runas: root
+   - location: switch.sh
+     timeout: 180
+     runas: root

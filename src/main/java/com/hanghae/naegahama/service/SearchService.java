@@ -46,7 +46,7 @@ public class SearchService {
 
         Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
         if (posts.size() == 0) {
-
+            searchWordEvent(searchWord, userDetails);
             return new SearchPostRequest(searchRequests, answerCount);
         }
         for (Post post : posts) {
@@ -87,6 +87,7 @@ public class SearchService {
                     searchRequests,
                     postCount
             );
+            searchWordEvent(searchWord, userDetails);
             return searchAnswerRequest;
         }
         for (Answer Answer : Answers) {
