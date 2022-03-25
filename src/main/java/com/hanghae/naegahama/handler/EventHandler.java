@@ -1,4 +1,4 @@
-package com.hanghae.naegahama.handler.event;
+package com.hanghae.naegahama.handler;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
@@ -73,7 +73,10 @@ public class EventHandler {
         User findUser = userRepository.findById(sender.getId()).orElseThrow(
                 () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
         );
-        findUser.getAchievement().setAchievement1(1);
+        if(findUser.getAchievement().getAchievement1() == 0) {
+            findUser.getAchievement().setAchievement1(1);
+            achieveAlarm(findUser,"내가HAMA");
+        }
         log.info("굳굳굳");
 
 
@@ -108,14 +111,19 @@ public class EventHandler {
 
         // 1점을 받을 시 업적 1 획득
         if ( star.equals(1)) {
-            findUser.getAchievement().setAchievement8(1);
+            if(findUser.getAchievement().getAchievement8() == 0) {
+                findUser.getAchievement().setAchievement8(1);
+                achieveAlarm(findUser,"더노력HAMA");
+            }
         }
         // 5점을 받을 시 업적 2 획득
         else if (star.equals(5)) {
-            findUser.getAchievement().setAchievement4(1);
+            if(findUser.getAchievement().getAchievement4() == 0) {
+                findUser.getAchievement().setAchievement4(1);
+                achieveAlarm(findUser,"축하HAMA");
+            }
         }
 
-        // 최초 평가시 업적 7 획득
 
         if(answer.getPost().getUser().getRole().equals(UserRoleEnum.ADMIN)){
             Integer addPoint = (star) * 150;
@@ -139,7 +147,10 @@ public class EventHandler {
         givePointAndSendAlarm(answer.getPost().getUser(), 50,AlarmType.pointR,answer);
 
 
-        findUser.getAchievement().setAchievement2(1);
+        if(findUser.getAchievement().getAchievement2() == 0) {
+            findUser.getAchievement().setAchievement2(1);
+            achieveAlarm(findUser,"만족HAMA");
+        }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -166,7 +177,10 @@ public class EventHandler {
                 commentAlarm(receiver,sender, comment1, alarmType);
             }
         }
-        findUser.getAchievement().setAchievement6(1);
+        if(findUser.getAchievement().getAchievement6() == 0) {
+            findUser.getAchievement().setAchievement6(1);
+            achieveAlarm(findUser,"리액션HAMA");
+        }
 
     }
 
@@ -197,7 +211,10 @@ public class EventHandler {
         User findUser = userRepository.findById(post.getUser().getId()).orElseThrow(
                 () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
         );
-        findUser.getAchievement().setAchievement3(1);
+        if(findUser.getAchievement().getAchievement3() == 0) {
+            findUser.getAchievement().setAchievement3(1);
+            achieveAlarm(findUser,"잘부탁HAMA");
+        }
 
     }
 
@@ -234,7 +251,10 @@ public class EventHandler {
         User findUser = userRepository.findById(searchWordEvent.getUser().getId()).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다")
         );
-        findUser.getAchievement().setAchievement7(1);
+        if(findUser.getAchievement().getAchievement7() == 0) {
+            findUser.getAchievement().setAchievement7(1);
+            achieveAlarm(findUser,"서치HAMA");
+        }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -242,7 +262,10 @@ public class EventHandler {
         User findUser = userRepository.findById(surveyEvent.getUser().getId()).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다")
         );
-        findUser.getAchievement().setAchievement5(1);
+        if(findUser.getAchievement().getAchievement5() == 0) {
+            findUser.getAchievement().setAchievement5(1);
+            achieveAlarm(findUser,"분석HAMA");
+        }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -271,6 +294,11 @@ public class EventHandler {
 
     private void answerAlarm(User receiver, User sender, Answer object, AlarmType alarmType) {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getTitle()));
+        alarmService.alarmByMessage(new AlarmResponseDto(save1));
+    }
+
+    private void achieveAlarm(User receiver, String achieveContent) {
+        Alarm save1 = alarmRepository.save(new Alarm(receiver, null, AlarmType.achieve, receiver.getId(), achieveContent));
         alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
 
