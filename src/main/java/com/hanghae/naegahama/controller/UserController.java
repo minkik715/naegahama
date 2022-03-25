@@ -92,6 +92,27 @@ public class UserController {
     }
 
 
+    @GetMapping("/userpost/{userid}")
+    public List<MyPostDto> userPost(@PathVariable Long userid)
+    {
+        return userService.userPost(userid);
+    }
+
+    @GetMapping("/useranswer")
+    public List<MyAnswerDto> userAnswer(@PathVariable Long userid)
+    {
+        return userService.userAnswer(userid);
+    }
+    @GetMapping("/userbanner")
+    public MyBannerDto userBanner(@PathVariable Long userid)
+    {
+        return userService.userBanner(userid);
+    }
+    @GetMapping("/userachievement")
+    public MyAchievementDto userAchievement(@PathVariable Long userid)
+    {
+        return userService.userAchievement(userid);
+    }
 
 
 }
