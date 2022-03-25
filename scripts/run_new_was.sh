@@ -7,7 +7,7 @@ TARGET_PORT=0
 
 echo "> Current port of running WAS is ${CURRENT_PORT}."
 
-# 현재 포트가 8081이면 새로운 WAS 띄울 타켓은 8082, 혹은 그 반대
+# 현재 포트가 8081이면 새로운 WAS 띄울 타켓은 8082, 혹은 그 반대!
 if [ ${CURRENT_PORT} -eq 8081 ]; then
   TARGET_PORT=8082
 elif [ ${CURRENT_PORT} -eq 8082 ]; then
