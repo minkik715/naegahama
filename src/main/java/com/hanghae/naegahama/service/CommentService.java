@@ -116,7 +116,8 @@ public class CommentService {
         for (Comment comment : commentList) {
 
             if(comment.getParentCommentId() == null) {
-                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment,comment.getUser());
+                Long childCnt = commentRepository.countByParentCommentId(comment.getId());
+                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment,comment.getUser(),childCnt);
                 parentCommentListResponseDtoList.add(commentListResponseDto);
             }
         }

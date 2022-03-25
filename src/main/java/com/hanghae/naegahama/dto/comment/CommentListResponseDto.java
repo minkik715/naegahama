@@ -21,8 +21,10 @@ public class CommentListResponseDto {
 
     private String imgUrl;
 
+    private Long childCnt;
 
-    public CommentListResponseDto(Comment comment, User user) {
+
+    public CommentListResponseDto(Comment comment, User user, Long childCnt) {
         this.answerId = comment.getAnswer().getId();
         this.commentId = comment.getId();
         this.commentWriterId = user.getId();
@@ -31,5 +33,6 @@ public class CommentListResponseDto {
         this.modifiedAt = TimeHandler.setModifiedAtComment(comment.getModifiedAt());
         this.timestamp = comment.getTimestamp();
         this.imgUrl = user.getHippoImage();
+        this.childCnt = childCnt;
     }
 }
