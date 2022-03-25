@@ -8,7 +8,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @EnableScheduling
@@ -19,10 +19,11 @@ public class NaegahamaApplication {
 
     //로컬
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
-            /* + "classpath:application.yml,"
-            + "classpath:aws.yml";*/
-        + "/home/ec2-user/app/deploy/application.yml,"
-            + "/home/ec2-user/app/deploy/aws.yml";
+             + "classpath:application-local.yml,"
+            + "classpath:aws.yml";
+
+        /*+ "/home/ec2-user/app/deploy/application-local.yml,"
+            + "/home/ec2-user/app/deploy/aws.yml";*/
 
 
     public static void main(String[] args)

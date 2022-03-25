@@ -4,10 +4,15 @@ package com.hanghae.naegahama.security.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.hanghae.naegahama.security.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
-
-public final class JwtTokenUtils {
+@Component
+@Slf4j
+public class JwtTokenUtils {
 
     private static final int SEC = 1;
     private static final int MINUTE = 60 * SEC;
@@ -22,7 +27,12 @@ public final class JwtTokenUtils {
     public static final String CLAIM_EXPIRED_DATE = "EXPIRED_DATE";
     public static final String CLAIM_USER_NAME = "USER_NAME";
 
-    public static final String JWT_SECRET = "jwt_secret_!@#$%";
+    public static String JWT_SECRET;
+
+    @Autowired
+    public JwtTokenUtils(@Value("${jwt.secret}") String secret) {
+        JWT_SECRET = secret;
+    }
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
         String token = null;

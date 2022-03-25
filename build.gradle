@@ -13,13 +13,7 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-processResources.dependsOn('copyJava')
 
-
-task copyJava(type: Copy) {
-    from '../naegahamaSecret'
-    into 'src/main/resources'
-}
 repositories {
     mavenCentral()
 }
