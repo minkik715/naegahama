@@ -51,4 +51,5 @@ public class Achievement extends Timestamped
         this.user = user;
     }
 
+
 }
