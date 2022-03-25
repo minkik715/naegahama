@@ -1,0 +1,32 @@
+spring.h2.console.enabled: true
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: hippomaster
+#    password: hippo123456
+#    url: jdbc:mysql://hippo-database.cmrmeuo3816y.ap-northeast-2.rds.amazonaws.com:3306/hippo?serverTimezone=Asia/Seoul&autoReconnection=true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate.format_sql: truels
+
+
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+
+  redis:
+    port: 6379
+    host: 3.38.119.136
+    password: hippo123456
+
+jwt:
+  secret: jwt_secret_!@#$%

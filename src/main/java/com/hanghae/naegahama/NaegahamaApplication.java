@@ -19,11 +19,11 @@ public class NaegahamaApplication {
 
     //로컬
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
-           /*  + "classpath:application-local.yml,"
+
+             + "classpath:application.yml,"
             + "classpath:aws.yml";
-*/
-        + "/home/ec2-user/app/deploy/application-local.yml,"
-        + "/home/ec2-user/app/deploy/aws.yml";
+//        + "/home/ec2-user/app/deploy/application.yml,"
+//            + "/home/ec2-user/app/deploy/aws.yml";
 
 
 
