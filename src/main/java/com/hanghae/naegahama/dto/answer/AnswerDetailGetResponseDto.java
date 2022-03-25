@@ -41,7 +41,7 @@ public class AnswerDetailGetResponseDto
     private String videoUrl;
     
     private String imgUrl;
-
+    private Long userId;
 
     public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList,
                                       List<String> fileList, String category) {
@@ -60,6 +60,7 @@ public class AnswerDetailGetResponseDto
         this.category = category;
         this.videoUrl = answer.getAnswerVideo().getUrl();
         this.imgUrl = answer.getUser().getHippoImage();
+        this.userId = answer.getUser().getId();
     }
 
     

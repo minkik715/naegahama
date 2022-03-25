@@ -24,6 +24,7 @@ public class PostResponseDto {
     private String writer;
 
     private String imgUrl;
+    private Long userId;
 
     public PostResponseDto(Post post,
                            Integer answerCount, Long postLikeCount, String timeSet, User user) {
@@ -37,6 +38,7 @@ public class PostResponseDto {
         this.status = post.getStatus();
         this.writer = user.getNickName();
         this.imgUrl = user.getHippoImage();
+        this.userId = user.getId();
 
     }
 }

@@ -31,6 +31,8 @@ public class AnswerGetResponseDto
     private String imgUrl;
     
     private int star;
+    
+    private Long userId;
 
     public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
     {
@@ -43,5 +45,6 @@ public class AnswerGetResponseDto
         this.imageCount = imageCount;
         this.star = answer.getStar();
         this.imgUrl = answer.getUser().getHippoImage();
+        this.userId = answer.getUser().getId();
     }
 }

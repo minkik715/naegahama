@@ -13,6 +13,8 @@ public class MyCountDto
     private Long postCount;
     private Long answerCount;
     private String hippoImage;
+    
+    private Long userId;
 
     public MyCountDto(User user, Long postCount, Long answerCount )
     {
@@ -21,7 +23,7 @@ public class MyCountDto
         this.postCount = postCount;
         this.answerCount = answerCount;
         this.hippoImage = user.getHippoImage();
-
+        this.userId = user.getId();
 
     }
 }

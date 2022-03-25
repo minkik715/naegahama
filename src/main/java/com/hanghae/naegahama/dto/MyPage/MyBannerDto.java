@@ -28,6 +28,7 @@ public class MyBannerDto
     private ArrayList<String> expert;
 
     private String imgUrl;
+    private Long userId;
 
     public MyBannerDto(User user,ArrayList<String> expert,int point)
     {
@@ -39,5 +40,6 @@ public class MyBannerDto
         this.category = user.getCategory();
         this.imgUrl = user.getHippoImage();
         this.expert = expert;
+        this.userId = user.getId();
     }
 }
