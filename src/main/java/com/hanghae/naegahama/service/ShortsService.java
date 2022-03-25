@@ -8,6 +8,7 @@ import com.hanghae.naegahama.dto.shorts.ShortsResponseDto;
 import com.hanghae.naegahama.handler.ex.AnswerFileNotFoundException;
 import com.hanghae.naegahama.repository.AnswerFileRepository;
 import com.hanghae.naegahama.repository.AnswerVideoRepository;
+import com.hanghae.naegahama.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,9 @@ import java.util.*;
 public class ShortsService {
 
     private final AnswerVideoRepository answerVideoRepository;
-
+    private final CommentRepository commentRepository;
     public ResponseEntity<?> getOneShorts() {
         List<AnswerVideo> mp4File = answerVideoRepository.findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc("mp4", "short");
-
         int size = mp4File.size();
         if(size == 0){
             throw new AnswerFileNotFoundException("동영상이 존재하지 않습니다.");
@@ -38,7 +38,8 @@ public class ShortsService {
             if(url.substring(url.lastIndexOf(".")+1).equals("mp4")){
                 url = url.replace("mp4", "short");
             }
-            shortsResponseDtoList.add(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId(),postId,user.getHippoImage()));
+            Long commentCnt = commentRepository.countByAnswer(answer);
+            shortsResponseDtoList.add(new ShortsResponseDto(url,answer.getTitle(), user.getNickName(), user.getHippoName(), answer.getId(),postId,user.getHippoImage(),commentCnt));
         }
 
         return ResponseEntity.ok().body(shortsResponseDtoList);

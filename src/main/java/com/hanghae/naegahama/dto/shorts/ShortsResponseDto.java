@@ -13,8 +13,8 @@ public class ShortsResponseDto {
     private Long answerId;
     private Long postId;
     private String imgUrl;
-
-    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl) {
+    private Long commentCnt;
+    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, Long commentCnt) {
         this.videoUrl = videoUrl;
         this.title = title;
         this.nickname = nickname;
@@ -22,5 +22,6 @@ public class ShortsResponseDto {
         this.answerId = answerId;
         this.postId = postId;
         this.imgUrl = imgUrl;
+        this.commentCnt = commentCnt;
     }
 }
