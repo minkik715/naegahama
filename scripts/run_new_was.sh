@@ -2,7 +2,7 @@
 
 #현재 서비스하고 있는 WAS 포트 번호 읽어오기
 #CURRENT_PORT=$(cat /etc/nginx/conf.d/service-url.inc | grep -Po '[0-9]+' | tail -1)
-CURRENT_PORT=$(cat /etc/nginx/conf.d/service-url.inc | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(sudo cat /etc/nginx/conf.d/service-url.inc | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 
 echo "> Current port of running WAS is ${CURRENT_PORT}."
@@ -16,10 +16,9 @@ else
   echo "> No WAS is connected to nginx!!"
 fi
 
-TARGET_PID=$(sudo lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
-
+TARGET_PID=$( sudo lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
 # 만약 타겟포트에도 WAS 떠 있다면 kill하고 새롭게 띄우기
-if [ ! -z ${TARGET_PID} ]; then
+if [ ! -z "${TARGET_PID}" ]; then
   echo "> Kill WAS running at ${TARGET_PORT}."
   sudo kill ${TARGET_PID}
 fi
