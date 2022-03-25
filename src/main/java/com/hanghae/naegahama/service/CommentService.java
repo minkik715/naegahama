@@ -176,14 +176,34 @@ public class CommentService {
         UserComment save = userCommentRepository.save(comment);
         UserCommentResponseDto commentResponseDto = new UserCommentResponseDto(save, pageUser.getId());
 
-
         // 최초 평가시 업적 7 획득
-
-
-
 
         return ResponseEntity.ok().body(commentResponseDto);
 
+    }
+
+    public ResponseEntity<?> getUserPageComment(Long userId)
+    {
+
+        User pageUser = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("해당 유저가 존재하지 않습니다.") );
+        //답변글에 달린 모든 댓글
+
+        List<UserComment> commentList = pageUser.getMycomment();
+
+        // 날라갈 댓글 글 리스트
+        List<UserCommentListResponseDto> parentCommentListResponseDtoList = new ArrayList<>();
+        if (commentList == null) {
+            throw new CommentNotFoundException("해당 글에는 댓글이 존재하지 않습니다.");
+        }
+        for (UserComment comment : commentList) {
+
+            if(comment.getParentCommentId() == null) {
+                UserCommentListResponseDto commentListResponseDto = new UserCommentListResponseDto(comment,comment.getWriter());
+                parentCommentListResponseDtoList.add(commentListResponseDto);
+            }
+        }
+        return ResponseEntity.ok().body(parentCommentListResponseDtoList);
     }
 }
 

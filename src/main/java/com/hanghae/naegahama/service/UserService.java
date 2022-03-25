@@ -217,5 +217,14 @@ public class UserService {
     }
 
 
+    public MyCountDto usercount(Long userid)
+    {
+        User user = userRepository.findById(userid).orElseThrow(
+                () -> new UserNotFoundException("해당 글은 존재하지 않습니다."));
 
+        Long postCount = postRepository.countByUser(user);
+        Long answerCount = answerRepository.countByUser(user);
+
+        return new MyCountDto(user,postCount,answerCount);
+    }
 }

@@ -129,12 +129,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //요청글
         skipPathList.add("GET,/api/post/**");
 
-
         //답변글
         skipPathList.add("GET,/api/answer/**");
 
         //댓글
         skipPathList.add("GET,/api/comment/**");
+
+        skipPathList.add("GET,/api/userpage/**");
+
+        skipPathList.add("GET,/api/userpage/post/{userid}");
+        skipPathList.add("GET,/api/userpage/answer/{userid}");
+        skipPathList.add("GET,/api/userpage/count/{userid}");
+        skipPathList.add("GET,/api/userpage/banner/{userid}");
+        skipPathList.add("GET,/api/userpage/achievement/{userid}");
 
 
 
@@ -179,9 +186,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-         configuration.addAllowedOrigin("https://i-hama.xyz");
-         configuration.addAllowedOrigin("https://www.i-hama.xyz/");
-       configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://i-hama.xyz");
+        configuration.addAllowedOrigin("https://www.i-hama.xyz/");
+        configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("*");
