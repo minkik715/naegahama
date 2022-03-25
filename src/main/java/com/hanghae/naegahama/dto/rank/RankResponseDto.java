@@ -15,6 +15,7 @@ public class RankResponseDto {
     private RankStatus Status;
     private Boolean is_changed;
     private String imgUrl;
+    private Long userId;
     public RankResponseDto(User user, int i, RankStatus status, Boolean is_changed ) {
         this.rank = i;
         this.nickname = user.getNickName();
@@ -23,6 +24,6 @@ public class RankResponseDto {
         this.is_changed = is_changed;
         this.hippoName = user.getHippoName();
         this.imgUrl = user.getHippoImage();
-
+        this.userId = user.getId();
     }
 }

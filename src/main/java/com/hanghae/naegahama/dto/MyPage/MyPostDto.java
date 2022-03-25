@@ -22,6 +22,7 @@ public class MyPostDto
     private String category;
     private Long likes;
     private String img;
+    private Long userId;
 
 //    private Long likeCount;
 //    private Integer answerCount ;
@@ -36,7 +37,7 @@ public class MyPostDto
         this.category = post.getCategory();
         this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
         this.likes = likeCount;
-
+        this.userId = user.getId();
     }
 
 

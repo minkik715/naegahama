@@ -22,6 +22,8 @@ public class CommentListResponseDto {
     private String imgUrl;
 
     private Long childCnt;
+    
+    private Long userId;
 
 
     public CommentListResponseDto(Comment comment, User user, Long childCnt) {
@@ -34,5 +36,6 @@ public class CommentListResponseDto {
         this.timestamp = comment.getTimestamp();
         this.imgUrl = user.getHippoImage();
         this.childCnt = childCnt;
+        this.userId = user.getId();
     }
 }

@@ -16,7 +16,7 @@ public class CommentResponseDto {
     private String modifiedAt;
     private String timestamp;
     private String imgUrl;
-
+    private Long userId;
 
     public CommentResponseDto(Comment save,Long answerId) {
         this.commentWriter= save.getUser().getNickName();
@@ -27,6 +27,7 @@ public class CommentResponseDto {
         this.commentWriterId = save.getUser().getId();
         this.timestamp = save.getTimestamp();
         this.imgUrl = save.getUser().getHippoImage();
+        this.userId = save.getUser().getId();
 
     }
 }

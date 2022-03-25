@@ -20,8 +20,9 @@ public class MyAnswerDto
     private String nickname;
     private String imgUrl;
     private String category;
-    private Long likes ;
+    private Long likes;
     private String img;
+    private Long userId;
 
     public MyAnswerDto(Answer answer, User user, Long likes)
     {
@@ -33,6 +34,7 @@ public class MyAnswerDto
         this.imgUrl = HippoURL.name(user.getHippoName(), user.getHippoLevel() );
         this.category = answer.getPost().getCategory();
         this.likes = likes;
+        this.userId = user.getId();
     }
 
 
