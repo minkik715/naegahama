@@ -19,7 +19,7 @@ fi
 TARGET_PID=$(sudo lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
 
 # 만약 타겟포트에도 WAS 떠 있다면 kill하고 새롭게 띄우기
-if [ ! -z ${TARGET_PID} ]; then
+if [ ! -z "${TARGET_PID}" ]; then
   echo "> Kill WAS running at ${TARGET_PORT}."
   sudo kill ${TARGET_PID}
 fi
