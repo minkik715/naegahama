@@ -22,6 +22,7 @@
 hs_err_pid*
 JwtAuthenticationProvider
 application-local.yml
+application.yml
 jwt.yml
 aws.yml
 *.exe

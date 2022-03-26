@@ -306,9 +306,9 @@ public class PostService {
                 if(minutes > 60){
                     long hour = minutes/60;
                     minutes = minutes%60;
-                    timeSet = hour+"시간"+minutes+"분 전";
+                    timeSet = hour+":"+minutes+"남음";
                 }else{
-                    timeSet = minutes+"분 전";
+                    timeSet = "00:"+minutes+"남음";
                 }
             }
         }
