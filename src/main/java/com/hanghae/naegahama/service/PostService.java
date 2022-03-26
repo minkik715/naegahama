@@ -7,7 +7,7 @@ import com.hanghae.naegahama.handler.event.PostClosedEvent;
 import com.hanghae.naegahama.handler.event.PostWriteEvent;
 
 import com.hanghae.naegahama.dto.post.*;
-import com.hanghae.naegahama.handler.ex.*;
+import com.hanghae.naegahama.ex.*;
 import com.hanghae.naegahama.repository.*;
 
 
@@ -298,18 +298,17 @@ public class PostService {
         if (deadLine.getYear() == 2100) {
             timeSet = "기한 없음";
         } else {
-            long minutes = 61;
             if (deadLine.isBefore(LocalDateTime.now())) {
                 post.setStatus("closed");
                 timeSet = "마감";
             } else {
-                long hour = ChronoUnit.HOURS.between(LocalDateTime.now(), deadLine);
-                timeSet = hour + "시간전";
-
-                if (hour < 1) {
-                    minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
-                    timeSet = minutes + "분전";
-
+                long minutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), deadLine);
+                if(minutes > 60){
+                    long hour = minutes/60;
+                    minutes = minutes%60;
+                    timeSet = hour+"시간"+minutes+"분 전";
+                }else{
+                    timeSet = minutes+"분 전";
                 }
             }
         }

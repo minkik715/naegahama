@@ -88,6 +88,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
          *	인증이 성공하지 못한 단계 이기 때문에 잘못된 Token값을 제거합니다.
          *	모든 인증받은 Context 값이 삭제 됩니다.
          */
+
         SecurityContextHolder.clearContext();
 
         super.unsuccessfulAuthentication(

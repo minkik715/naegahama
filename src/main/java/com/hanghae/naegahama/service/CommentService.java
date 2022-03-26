@@ -1,17 +1,16 @@
 
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.domain.AlarmType;
-import com.hanghae.naegahama.domain.Answer;
-import com.hanghae.naegahama.domain.Comment;
-import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
 import com.hanghae.naegahama.handler.event.CommentWriteEvent;
-import com.hanghae.naegahama.handler.ex.AnswerNotFoundException;
-import com.hanghae.naegahama.handler.ex.CommentNotFoundException;
+import com.hanghae.naegahama.ex.AnswerNotFoundException;
+import com.hanghae.naegahama.ex.CommentNotFoundException;
+import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.CommentRepository;
+import com.hanghae.naegahama.repository.UserCommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserCommentRepository userCommentRepository;
 
 
 
@@ -141,6 +141,70 @@ public class CommentService {
         }
         AllCommentResponseDto allCommentResponseDto = new AllCommentResponseDto(new CommentResponseDto(parentComment, parentComment.getAnswer().getId()), kidsCommentListResponseDtoList);
         return ResponseEntity.ok().body(allCommentResponseDto);
+    }
+
+
+    public ResponseEntity<?> writeUserPageComment(Long userId, CommentUserPageRequestDto commentUserPageRequestDto, User user)
+    {
+
+        User pageUser = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("해당 유저가 존재하지 않습니다.")
+        );
+        String commentContent = commentUserPageRequestDto.getComment();
+        Long parentCommentId = commentUserPageRequestDto.getParentCommentId();
+        UserComment comment = null;
+        User writer = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
+        if (parentCommentId == null)
+        {
+            comment = userCommentRepository.save(new UserComment(commentContent, pageUser, user));
+//            user.getMycomment().add(comment);
+            //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
+//            applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), findUser,findAnswer, AlarmType.comment));
+
+        } else {
+            comment = userCommentRepository.save(new UserComment(commentContent, parentCommentId, pageUser, user));
+//            user.getMycomment().add(comment);
+
+            //댓글에 대댓글을 단 사람에게 주는 알람.
+
+            UserComment findcomment = userCommentRepository.findById(parentCommentId).orElseThrow(
+                    () -> new CommentNotFoundException("댓글 없습니다.")
+            );
+//            applicationEventPublisher.publishEvent(new CommentWriteEvent(findcomment.getUser(), findUser, comment, AlarmType.child));
+
+        }
+        UserComment save = userCommentRepository.save(comment);
+        UserCommentResponseDto commentResponseDto = new UserCommentResponseDto(save, pageUser.getId());
+
+        // 최초 평가시 업적 7 획득
+
+        return ResponseEntity.ok().body(commentResponseDto);
+
+    }
+
+    public ResponseEntity<?> getUserPageComment(Long userId)
+    {
+
+        User pageUser = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("해당 유저가 존재하지 않습니다.") );
+        //답변글에 달린 모든 댓글
+
+        List<UserComment> commentList = pageUser.getMycomment();
+
+        // 날라갈 댓글 글 리스트
+        List<UserCommentListResponseDto> parentCommentListResponseDtoList = new ArrayList<>();
+        if (commentList == null) {
+            throw new CommentNotFoundException("해당 글에는 댓글이 존재하지 않습니다.");
+        }
+        for (UserComment comment : commentList) {
+
+            if(comment.getParentCommentId() == null) {
+                UserCommentListResponseDto commentListResponseDto = new UserCommentListResponseDto(comment,comment.getWriter());
+                parentCommentListResponseDtoList.add(commentListResponseDto);
+            }
+        }
+        return ResponseEntity.ok().body(parentCommentListResponseDtoList);
     }
 }
 

@@ -30,13 +30,15 @@ public class RankService {
         List<User> previousUserRankList = new ArrayList<>();
         List<User> top5ByOrderByPointDesc = userRepository.findTop5ByOrderByPointDesc();
         List<RankResponseDto> rankResponseDtoList = new ArrayList<>();
-        if (previousTop5Rank == null) {
+        if (previousTop5Rank == null)
+        {
             for (int i = 0; i < top5ByOrderByPointDesc.size(); i++) {
                 checkRank(top5ByOrderByPointDesc, rankResponseDtoList, i, RankStatus.up, true);
             }
             return ResponseEntity.ok().body(rankResponseDtoList);
         }
-        for (Rank rank : previousTop5Rank) {
+        for (Rank rank : previousTop5Rank)
+        {
             previousUserRankList.add(rank.getUser());
         }
         //과거 5개 삭제
