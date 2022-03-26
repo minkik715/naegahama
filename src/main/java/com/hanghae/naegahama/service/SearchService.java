@@ -7,7 +7,7 @@ import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
 import com.hanghae.naegahama.dto.search.SearchWords;
-import com.hanghae.naegahama.handler.ex.SearchNotFoundException;
+import com.hanghae.naegahama.ex.SearchNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;

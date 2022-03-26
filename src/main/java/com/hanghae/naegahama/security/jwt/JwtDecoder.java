@@ -4,8 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.hanghae.naegahama.handler.ex.TokenInvalidException;
-import lombok.extern.slf4j.Slf4j;
+import com.hanghae.naegahama.ex.TokenInvalidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,6 +23,8 @@ public class JwtDecoder {
 
     public String decodeUsername(String token) {
         log.info("token = {}", token);
+        String username;
+        try {
             DecodedJWT decodedJWT = isValidToken(token)
                     .orElseThrow(() -> new TokenInvalidException("유효한 토큰이 아닙니다."));
 
@@ -36,10 +37,13 @@ public class JwtDecoder {
                 throw new TokenInvalidException("토큰의 유효시간이 끝났습니다.");
             }
 
-            String username = decodedJWT
+            username = decodedJWT
                     .getClaim(CLAIM_USER_NAME)
                     .asString();
-        return username;
+        }catch (TokenInvalidException e){
+            throw  new TokenInvalidException("유효한 토큰이 아닙니다.");
+        }
+            return username;
     }
 
 

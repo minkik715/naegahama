@@ -7,7 +7,7 @@ import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.signup.NickNameDuplicateCheckDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
-import com.hanghae.naegahama.handler.ex.ErrorResponse;
+import com.hanghae.naegahama.ex.ErrorResponse;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.KakaoUserService;
 import com.hanghae.naegahama.service.UserService;
@@ -19,9 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -90,8 +88,5 @@ public class UserController {
     {
         return userService.mycount(userDetails);
     }
-
-
-
 
 }

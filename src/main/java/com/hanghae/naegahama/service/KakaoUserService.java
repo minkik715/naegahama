@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.domain.UserComment;
 import com.hanghae.naegahama.domain.UserRoleEnum;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
 import com.hanghae.naegahama.repository.AchievementRepository;
+import com.hanghae.naegahama.repository.UserCommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.security.jwt.JwtTokenUtils;
@@ -39,6 +41,7 @@ public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AchievementRepository achievementRepository;
+    private final UserCommentRepository userCommentRepository;
 
 
 
@@ -128,7 +131,11 @@ public class KakaoUserService {
 
             kakaoUser = userRepository.save(new User(encodedPassword, email, role, kakaoId));
             Achievement save1 = achievementRepository.save(new Achievement(kakaoUser));
+
             kakaoUser.setAchievement(save1);
+
+
+
             userRepository.save(kakaoUser);
         }
         return kakaoUser;

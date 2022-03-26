@@ -5,11 +5,10 @@ import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 
 import com.hanghae.naegahama.dto.file.FileResponseDto;
-import com.hanghae.naegahama.dto.file.FileSizeCheckDto;
 import com.hanghae.naegahama.handler.event.StarGiveEvent;
 import com.hanghae.naegahama.handler.event.AnswerWriteEvent;
 
-import com.hanghae.naegahama.handler.ex.UserNotFoundException;
+import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.util.S3Uploader;
@@ -28,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import java.util.ArrayList;

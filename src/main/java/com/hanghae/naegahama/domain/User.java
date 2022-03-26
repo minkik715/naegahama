@@ -67,6 +67,7 @@ public class User extends Timestamped{
     private UserRoleEnum role;
 
 
+    // 내가 쓴 댓글
     @JsonBackReference
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> commentList = new ArrayList<>();
@@ -84,6 +85,10 @@ public class User extends Timestamped{
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
 
+    // 나에게 달린 댓글
+    @JsonBackReference
+    @OneToMany(mappedBy = "writer")
+    private final List<UserComment> mycomment = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "user")
@@ -92,9 +97,6 @@ public class User extends Timestamped{
     @JsonBackReference
     @OneToMany(mappedBy = "receiver")
     private List<Alarm> alarmList = new ArrayList<>();
-
-
-
 
     public User(String encodedPassword, String email, UserRoleEnum role, Long kakaoId) {
         this.password = encodedPassword;
@@ -168,5 +170,6 @@ public class User extends Timestamped{
     {
         this.achievement = achievement;
     }
+
 
 }

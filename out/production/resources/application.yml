@@ -1,0 +1,70 @@
+#server:
+#  port: 8080 # ????
+#  servlet:
+#    context-path: /
+#    encoding:
+#      charset: UTF-8
+#
+#spring:
+#  # mysql
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://hama.cq9ifvpof03k.ap-northeast-2.rds.amazonaws.com:3306/naegahama?serverTimezone=Asia/Seoul
+#    username: rkdnjsxpzm # mysql id
+#    password: coin8317 # mysql pw
+#
+#  # swagger
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#
+#   jpa
+#  jpa:
+#    open-in-view: true
+#    hibernate:
+#      ddl-auto: create # update
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#      use-new-id-generator-mappings: false
+#    show-sql: false
+#    properties:
+#      hibernate.format_sql: true
+#
+##   upload
+#  servlet:
+#    multipart:
+#      max-file-size: 100MB
+#      max-request-size: 100MB
+
+
+spring.h2.console.enabled: true
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  output:
+    ansi:
+      enabled: always
+  redis:
+    port: 6379
+    host: 15.164.219.84
+    password: minki
+
+    #   upload
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+logging:
+  level:
+    org.hibernate.type: trace
+
