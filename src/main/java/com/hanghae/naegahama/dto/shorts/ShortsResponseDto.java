@@ -14,9 +14,10 @@ public class ShortsResponseDto {
     private Long postId;
     private String imgUrl;
     private Long commentCnt;
-
     private Long userId;
+
     public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, Long commentCnt, Long userId) {
+
 
         this.videoUrl = videoUrl;
         this.title = title;
