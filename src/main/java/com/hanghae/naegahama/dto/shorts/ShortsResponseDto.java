@@ -14,8 +14,9 @@ public class ShortsResponseDto {
     private Long postId;
     private String imgUrl;
     private Long commentCnt;
+    private Long userId;
 
-    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, Long commentCnt) {
+    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, Long commentCnt, Long userId) {
         this.videoUrl = videoUrl;
         this.title = title;
         this.nickname = nickname;
@@ -24,5 +25,6 @@ public class ShortsResponseDto {
         this.postId = postId;
         this.imgUrl = imgUrl;
         this.commentCnt = commentCnt;
+        this.userId = userId;
     }
 }
