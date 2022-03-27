@@ -1,10 +1,9 @@
-# naegahama!
-# 오늘의 일기장 - 오일(Dayily Diary)
-![KakaoTalk_Photo_2022-02-17-18-27-50](https://user-images.githubusercontent.com/97504973/154446288-a3b27461-95eb-4c9a-974d-6f0f1ba5ec9f.jpeg)
+# 내가하마!(naegahama!)
+//이미지 유알 넣기.
 
 
 # 팀원 정보
-![팀원](https://user-images.githubusercontent.com/97504973/154441744-8e09d90b-9922-4fea-8ab0-102e76c71c8b.png)
+![팀원] //팀원정보 사진으로 넣기.
 
 # 1. 프로젝트 개요(Project).🎵
 
@@ -142,4 +141,3 @@ Notion link : www.notion.so/Dayily-Diary-e3d8f48497bf4eb28d533bdbbdd2704f
 4. 용량이 큰 이미지 파일은 업로드 되지 않은 문제.**
 
 # 6. 개인회고록(자유롭게 작성)💬.
-이규진 : https://rbwls44.tistory.com/68?category=1018562
