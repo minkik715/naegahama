@@ -7,7 +7,6 @@ import com.hanghae.naegahama.dto.rank.RankResponseDto;
 import com.hanghae.naegahama.repository.RankRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class RankService {
     //이전 top 5에 존재하고 같은 자리일 경우 Status는 -
     //이전 top 5에 존재하고 더 높은 자리일 경우 status는 up
     //이전 top 5에 존재하고 더 낮은 자리일 경우 status는 down
-    public ResponseEntity<?> getTop5Rank() {
+    public List<RankResponseDto> getTop5Rank() {
         //과거 5개 가져오기
         List<Rank> previousTop5Rank = rankRepository.findAllByOrderByRankAsc();
         List<User> previousUserRankList = new ArrayList<>();
@@ -35,7 +34,7 @@ public class RankService {
             for (int i = 0; i < top5ByOrderByPointDesc.size(); i++) {
                 checkRank(top5ByOrderByPointDesc, rankResponseDtoList, i, RankStatus.up, true);
             }
-            return ResponseEntity.ok().body(rankResponseDtoList);
+            return rankResponseDtoList;
         }
         for (Rank rank : previousTop5Rank)
         {
@@ -68,7 +67,7 @@ public class RankService {
         }
 
 
-        return ResponseEntity.ok().body(rankResponseDtoList);
+        return rankResponseDtoList;
     }
 
     private void checkRank(List<User> top5ByOrderByPointDesc, List<RankResponseDto> rankResponseDtoList, int i, RankStatus down, Boolean is_changed) {

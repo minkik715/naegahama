@@ -23,6 +23,7 @@ public class AnswerFile extends Timestamped{
     public AnswerFile(String url, Answer answer) {
         this.url = url;
         this.answer = answer;
+        answer.getFileList().add(this);
     }
 
     @JsonManagedReference
@@ -30,9 +31,6 @@ public class AnswerFile extends Timestamped{
     @ManyToOne
     private Answer answer;
 
-    public AnswerFile(String url) {
-        this.url = url;
-    }
 
 
     public void setAnswer(Answer answer) {

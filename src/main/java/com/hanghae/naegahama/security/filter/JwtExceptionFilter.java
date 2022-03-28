@@ -1,10 +1,8 @@
+/*
 package com.hanghae.naegahama.security.filter;
 
 import com.hanghae.naegahama.ex.TokenInvalidException;
-import org.apache.catalina.filters.ExpiresFilter;
-import org.springframework.security.web.server.authorization.ExceptionTranslationWebFilter;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ExceptionTypeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -24,3 +22,4 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         }
     }
 }
+*/

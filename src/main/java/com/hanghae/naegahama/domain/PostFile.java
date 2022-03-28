@@ -24,18 +24,10 @@ public class PostFile extends Timestamped{
     @ManyToOne
     private Post post;
 
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public PostFile(String url)
-    {
-        this.url = url;
-    }
-
     public PostFile(String url, Post post) {
         this.url = url;
         this.post = post;
+        post.getFileList().add(this);
     }
 }
 

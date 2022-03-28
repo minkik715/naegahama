@@ -19,10 +19,12 @@ public class UserCommentResponseDto {
     private String content;
     private String modifiedAt;
     private String imgUrl;
+    private String nickname;
     private ArrayList<UserCommentResponseDto> childComments = new ArrayList<>();
 
     public UserCommentResponseDto(UserComment userComment) {
         this.userId = userComment.getPageUser().getId();
+        this.nickname = userComment.getPageUser().getNickName();
         this.commentId = userComment.getId();
         this.commentWriterId = userComment.getWriter().getId();
         this.commentWriter = userComment.getWriter().getNickName();

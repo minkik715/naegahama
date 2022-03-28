@@ -24,8 +24,6 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final AlarmRepository alarmRepository;
-    private final AlarmService alarmService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional

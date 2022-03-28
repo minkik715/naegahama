@@ -16,7 +16,6 @@ import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,12 +34,12 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
 
-    public ResponseEntity<?> nicknameCheck(String nickname) {
+    public BasicResponseDto nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
-            return ResponseEntity.ok().body(new BasicResponseDto("false"));
+            return new BasicResponseDto("false");
         }
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 
     public List<MyPostDto> myPost(UserDetailsImpl userDetails) {
@@ -91,20 +90,20 @@ public class UserService {
     }
 
 
-    public ResponseEntity<?> userprofile(User user) {
+    public UserResponseDto userprofile(User user) {
         UserResponseDto userResponse = new UserResponseDto(user);
-        return ResponseEntity.ok().body(userResponse);
+        return userResponse;
     }
 
     // 하나의 트랜젝션이 끝나면 1차 영속성 컨텍스트는 초기화된다.
     //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!
-    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
+    public BasicResponseDto setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
     {
         if(user.getUserStatus().equals("true")) {
             user.setBasicInfo(userInfoRequestDto);
             userRepository.save(user);
         }
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 
     public MyCountDto mycount(UserDetailsImpl userDetails)

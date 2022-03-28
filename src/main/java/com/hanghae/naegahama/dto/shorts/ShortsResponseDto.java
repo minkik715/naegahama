@@ -13,10 +13,10 @@ public class ShortsResponseDto {
     private Long answerId;
     private Long postId;
     private String imgUrl;
-    private Long commentCnt;
+    private int commentCnt;
     private Long userId;
 
-    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, Long commentCnt, Long userId) {
+    public ShortsResponseDto(String videoUrl, String title, String nickname, String profileUrl, Long answerId, Long postId,String imgUrl, int commentCnt, Long userId) {
 
 
         this.videoUrl = videoUrl;

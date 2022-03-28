@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.controller;
 
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.*;
 import com.hanghae.naegahama.dto.userpagecommentdto.UserCommentRequestDto;
 import com.hanghae.naegahama.dto.userpagecommentdto.UserCommentResponseDto;
@@ -8,7 +9,6 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.UserPageService;
 import com.hanghae.naegahama.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,22 +53,22 @@ public class UserPageController {
     }
 
     @PostMapping("/userpage/comment/{userId}")
-    public ResponseEntity<UserCommentResponseDto> writeUserPageComment(@RequestBody UserCommentRequestDto userCommentRequestDto, @PathVariable Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public UserCommentResponseDto writeUserPageComment(@RequestBody UserCommentRequestDto userCommentRequestDto, @PathVariable Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userPageService.writeUserPageComment(userId, userDetails, userCommentRequestDto);
     }
 
     @GetMapping("/userpage/comment/{userId}")
-    public ResponseEntity<UserPageCommentListResponseDto> getUserPageCommentList(@PathVariable Long userId){
+    public UserPageCommentListResponseDto getUserPageCommentList(@PathVariable Long userId){
         return userPageService.getUserPageCommentList(userId);
     }
 
     @PutMapping("/userpage/comment/{commentId}")
-    public ResponseEntity<?> modifyUserPageCommentList(@RequestBody UserCommentRequestDto userCommentRequestDto, @PathVariable Long commentId){
+    public UserCommentResponseDto modifyUserPageCommentList(@RequestBody UserCommentRequestDto userCommentRequestDto, @PathVariable Long commentId){
         return userPageService.modifyUserPageCommentList(userCommentRequestDto, commentId);
     }
 
     @DeleteMapping("/userpage/comment/{commentId}")
-    public ResponseEntity<?> deleteUserPageCommentList(@PathVariable Long commentId){
+    public BasicResponseDto deleteUserPageCommentList(@PathVariable Long commentId){
         return userPageService.deleteUserPageCommentList(commentId);
     }
 

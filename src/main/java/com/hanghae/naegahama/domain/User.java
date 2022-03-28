@@ -67,36 +67,11 @@ public class User extends Timestamped{
     private UserRoleEnum role;
 
 
-    // 내가 쓴 댓글
-    @JsonBackReference
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
-    private List<Comment> commentList = new ArrayList<>();
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "user")
-    private List<PostLike> postLikeList = new ArrayList<>();
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "user")
-    private List<Answer> answerList = new ArrayList<>();
-
     @JsonManagedReference
     @OneToOne
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
 
-    // 나에게 달린 댓글
-    @JsonBackReference
-    @OneToMany(mappedBy = "writer")
-    private final List<UserComment> mycomment = new ArrayList<>();
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "user")
-    private List<Search> searchWord = new ArrayList<>();
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "receiver")
-    private List<Alarm> alarmList = new ArrayList<>();
 
     public User(String encodedPassword, String email, UserRoleEnum role, Long kakaoId) {
         this.password = encodedPassword;
@@ -130,13 +105,9 @@ public class User extends Timestamped{
 
     public List<Alarm> sendAlarm(Integer point, AlarmType alarmType, Object object) {
         List<Alarm> alarmList = new ArrayList<>();
-        // 하마 레벨이 3(최대레벨) 이라면 if문을 타지 않고 끝
-        //도메인에 있어서 어떻게 할수가 없네요 적용 불가...
-        log.info("재균님의 레벨은 ? = {}", this.hippoLevel);
         if (this.hippoLevel != 3) {
             if (this.point >= 2000) {
                 this.hippoLevel = 3;
-                log.info("@@@@@진화@@@@@@@@@@ 2->3");
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
@@ -145,12 +116,10 @@ public class User extends Timestamped{
             {
                 this.hippoLevel = 2;
                 this.hippoImage=HippoURL.name(this.getHippoName(),this.getHippoLevel());
-                log.info("@@@@@진화@@@@@@@@@@ 1->2");
                 Alarm alarm = new Alarm(this, null, AlarmType.level, (long) this.hippoLevel, "레벨업!");
                 alarmList.add(alarm);
             }
         }
-        log.info("재균님의 레벨은 ? = {}", this.hippoLevel);
         if(alarmType.equals(AlarmType.pointR) ||alarmType.equals(AlarmType.pointAL) || (alarmType.equals(AlarmType.pointA) || alarmType.equals(AlarmType.pointRD))){
             Answer answer = (Answer) object;
             Alarm alarm = new Alarm(this, null, alarmType, answer.getId(), answer.getTitle(),point);

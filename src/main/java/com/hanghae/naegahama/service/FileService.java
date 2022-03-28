@@ -8,7 +8,6 @@ import com.hanghae.naegahama.repository.AnswerRepository;
 import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,7 @@ public class FileService
     private final AnswerRepository answerRepository;
 
 
-    public ResponseEntity<?> fileURL(List<MultipartFile> multipartFileList, MultipartFile videoFile) throws IOException
+    public FileResponseDto fileURL(List<MultipartFile> multipartFileList, MultipartFile videoFile) throws IOException
     {
         // 파일 혹은 비디오 파일을 넣지 않았을 경우 공백으로 처리.
         List<String> file = new ArrayList<>();
@@ -49,12 +48,12 @@ public class FileService
 
         FileResponseDto fileResponseDto = new FileResponseDto(file, video);
 
-        return ResponseEntity.ok().body(fileResponseDto);
+        return fileResponseDto;
 
     }
 
 
-    public ResponseEntity<?> imgUrlList(String type, Long id)
+    public ImageUrlResponseDto imgUrlList(String type, Long id)
     {
         List<String> imageUrl = new ArrayList<>();
 
@@ -80,7 +79,7 @@ public class FileService
             throw new IllegalArgumentException("잘못된 타입입니다.");
         }
 
-        return ResponseEntity.ok().body(new ImageUrlResponseDto(imageUrl));
+        return new ImageUrlResponseDto(imageUrl);
 
     }
 }

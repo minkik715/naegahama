@@ -35,23 +35,6 @@ public class UserComment extends Timestamped{
     @ManyToOne
     private User writer;
 
-    //일반 댓글 생성
-    public UserComment(String commentContent, User pageUser, User user) {
-        this.content = commentContent;
-        this.pageUser = pageUser;
-        this.writer = user;
-        this.parentCommentId = null;
-        pageUser.getMycomment().add(this);
-    }
-
-    //대댓글 생성
-    public UserComment(String commentContent, Long parentCommentId, User pageUser, User user) {
-        this.content = commentContent;
-        this.parentCommentId = parentCommentId;
-        this.pageUser = pageUser;
-        this.writer = user;
-        pageUser.getMycomment().add(this);
-    }
 
     public UserComment(UserCommentRequestDto commentRequestDto, User pageUser, User writer) {
         this.content = commentRequestDto.getContent();

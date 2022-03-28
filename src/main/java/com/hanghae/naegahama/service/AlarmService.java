@@ -13,7 +13,6 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +33,18 @@ public class AlarmService {
 
     //알람 삭제
     @Transactional
-    public ResponseEntity deleteAlarm(Long alarmId, UserDetailsImpl userDetails) {
+    public BasicResponseDto deleteAlarm(Long alarmId, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         alarmRepository.deleteByAlarmIdAndReceiver(alarmId, user);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 
     //알람 전체 삭제
     @Transactional
-    public ResponseEntity<?> deleteAllAlarm(UserDetailsImpl userDetails) {
+    public BasicResponseDto deleteAllAlarm(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         alarmRepository.deleteByReceiver(user);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 
 
@@ -58,9 +57,7 @@ public class AlarmService {
 
         for (Alarm alarm : alarms) {
 
-
-            AlarmResponseDto alarmResponseDto = new AlarmResponseDto(alarm);
-            response.add(alarmResponseDto);
+            response.add(new AlarmResponseDto(alarm));
         }
         return response;
     }
@@ -86,9 +83,8 @@ public class AlarmService {
         List <Alarm> alarms = alarmRepository.findAllByReceiver(user);
 
         for (Alarm alarm : alarms) {
-            AlarmDto alarmDto = new AlarmDto(alarm);
             alarm.changeReadingStatus(ReadingStatus.Y);
-            alarmDtos.add(alarmDto);
+            alarmDtos.add(new AlarmDto(alarm));
         }
         return alarmDtos;
     }

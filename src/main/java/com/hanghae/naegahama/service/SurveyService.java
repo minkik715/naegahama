@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.initial.HippoResult;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -32,7 +33,7 @@ public class SurveyService {
 
     //설문을 바탕으로 유저에게 하마 만들어주기.
     @Transactional
-    public void createHippo(SurveyRequestDto surveyRequestDto, User user)
+    public BasicResponseDto createHippo(SurveyRequestDto surveyRequestDto, User user)
     {
 
         ArrayList<Long> longs = new ArrayList<>();
@@ -108,6 +109,8 @@ public class SurveyService {
 
 
         userRepository.save(user);
+
+        return new BasicResponseDto("success");
 
     }
 

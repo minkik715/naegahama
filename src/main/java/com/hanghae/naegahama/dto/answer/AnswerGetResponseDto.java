@@ -22,9 +22,9 @@ public class AnswerGetResponseDto
 
     private String modifiedAt;
 
-    private Long answerLikeCount;
+    private int answerLikeCount;
 
-    private Long commentCount;
+    private int commentCount;
 
     private int imageCount;
 
@@ -34,7 +34,7 @@ public class AnswerGetResponseDto
     
     private Long userId;
 
-    public AnswerGetResponseDto(Answer answer, Long commentCount, Long likeCount,int imageCount)
+    public AnswerGetResponseDto(Answer answer, int commentCount, int likeCount,int imageCount)
     {
         this.answerId = answer.getId();
         this.answerWriter = answer.getUser().getNickName();
