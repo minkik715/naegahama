@@ -1,5 +1,6 @@
 # 내가하마!(naegahama!)
-//이미지 유알 넣기.
+![logo_final](https://user-images.githubusercontent.com/97504973/160319283-2c994fce-9f94-46e1-b3c3-d8df6b1b5d4b.svg)
+
 
 
 # 팀원 정보
