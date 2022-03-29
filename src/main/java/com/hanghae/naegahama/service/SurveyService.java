@@ -1,5 +1,7 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.handler.event.SurveyEvent;
 import com.hanghae.naegahama.initial.HippoResult;
 import com.hanghae.naegahama.repository.PostLikeRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
@@ -13,10 +15,11 @@ import com.hanghae.naegahama.repository.PostRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +29,13 @@ import java.util.List;
 @Slf4j
 public class SurveyService {
 
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
 
-    //설문을 바탕으로 유저에게 하마 만들어주기.
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     @Transactional
-    public void createHippo(SurveyRequestDto surveyRequestDto, User user)
+    public BasicResponseDto createHippo(SurveyRequestDto surveyRequestDto, User user)
     {
 
         ArrayList<Long> longs = new ArrayList<>();
@@ -98,17 +101,9 @@ public class SurveyService {
         } else if (emotion2.equals("이성") && plan2.equals("직관") && action2.equals("내향")) {
             hippo = "센치 하마";
         }
-        //하마이름이 만들어질때 이미지와 결과Url이 유저정보에 저장됌.
-        user.setHippoName(hippo);
+        applicationEventPublisher.publishEvent(new SurveyEvent(user,hippo));
 
-        // 최초 평가시 업적 6 획득
-        User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-        achievementUser.getAchievement().setAchievement5(1);
-
-
-        userRepository.save(user);
-
+        return new BasicResponseDto("success");
     }
 
 
@@ -128,21 +123,16 @@ public class SurveyService {
         return surveyresponseDto;
     }
 
-    //같은 하마의 요청글 추천.
+    @Transactional(readOnly = true)
     public List<CommendResponseDto> recommend(String hippoName) {
-
-        //하마 이름이 같은 게시글을 포스트 레포지토리에서 가져온다.
-//        User user = userDetails.getUser();
         List<Post> posts = postRepository.findAllByUser_HippoName(hippoName);
         List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
         if(posts.size() <2){
             return commendResponseDtos;
         }
-        //랜덤 숫자 두개를 추출한다.
         int size = posts.size();
         int min = 0;
         int random = (int) ((Math.random() * (size - min)) + min);
-
         int random2 = -1;
         while (true) {
             random2 = (int) ((Math.random() * (size - min)) + min);
@@ -151,16 +141,12 @@ public class SurveyService {
                 break;
             }
         }
-
-        //요청게시글에서 램덤으로 두개를 가져온다.
         Post post1 = posts.get(random);
         Post post2 = posts.get(random2);
         Long countByPost1 = postLikeRepository.countByPost(post1);
-        CommendResponseDto commendResponseDto = new CommendResponseDto(post1,countByPost1);
-        commendResponseDtos.add(commendResponseDto);
         Long countByPost2 = postLikeRepository.countByPost(post2);
-        CommendResponseDto commendResponseDto2 = new CommendResponseDto(post2,countByPost2);
-        commendResponseDtos.add(commendResponseDto2);
+        commendResponseDtos.add(new CommendResponseDto(post1,countByPost1));
+        commendResponseDtos.add(new CommendResponseDto(post2,countByPost2));
 
         return commendResponseDtos;
     }

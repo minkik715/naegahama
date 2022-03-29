@@ -2,12 +2,10 @@ package com.hanghae.naegahama.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto2;
+import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.dto.answer.AnswerPutRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
-
-import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 
 import lombok.NoArgsConstructor;
 
@@ -73,20 +71,14 @@ public class Answer extends Timestamped {
     private AnswerVideo answerVideo;
 
 
+    public void changeAnswerVideo(AnswerVideo answerVideo) {
+        this.answerVideo = answerVideo;
+    }
 
     public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user)
     {
         this.title = answerPostRequestDto.getTitle();
         this.content = answerPostRequestDto.getContent();
-        this.post = post;
-        this.user = user;
-        this.star = 0;
-    }
-
-    public Answer(AnswerPostRequestDto2 answerPostRequestDto2, Post post, User user)
-    {
-        this.title = answerPostRequestDto2.getTitle();
-        this.content = answerPostRequestDto2.getContent();
         this.post = post;
         this.user = user;
         this.star = 0;

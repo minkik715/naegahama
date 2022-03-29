@@ -21,8 +21,8 @@ public class JwtDecoder {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public String decodeUsername(String token) {
-        log.info("token = {}", token);
+    public String decodeUsername(String token) throws TokenInvalidException {
+
         String username;
         try {
             DecodedJWT decodedJWT = isValidToken(token)
@@ -41,7 +41,7 @@ public class JwtDecoder {
                     .getClaim(CLAIM_USER_NAME)
                     .asString();
         }catch (TokenInvalidException e){
-            throw  new TokenInvalidException("유효한 토큰이 아닙니다.");
+            throw new TokenInvalidException("유효한 토큰이 아닙니다.");
         }
             return username;
     }

@@ -19,11 +19,6 @@ public class AnswerVideo extends Timestamped{
     @Column(nullable = false, length = 1000)
     private String url;
 
-    public AnswerVideo(String url, Answer answer) {
-        this.url = url;
-        this.answer = answer;
-    }
-
 
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
@@ -38,8 +33,10 @@ public class AnswerVideo extends Timestamped{
         this.url = url;
     }
 
-    public AnswerVideo(String url)
+    public AnswerVideo(String url, Answer answer)
     {
+        this.answer = answer;
         this.url = url;
+        answer.changeAnswerVideo(this);
     }
 }

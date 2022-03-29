@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.comfortmethod.ComfortMethods;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -16,7 +17,6 @@ import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +26,7 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -35,104 +35,76 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final AnswerLikeRepository answerLikeRepository;
 
-    public ResponseEntity<?> nicknameCheck(String nickname) {
+    public BasicResponseDto nicknameCheck(String nickname) {
         Optional<User> findNickname = userRepository.findByNickName(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
-            return ResponseEntity.ok().body(new BasicResponseDto("false"));
+            return new BasicResponseDto("false");
         }
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("true");
     }
 
     public List<MyPostDto> myPost(UserDetailsImpl userDetails) {
         List<MyPostDto> myPageDtoList = new ArrayList<>();
-
         User user = userDetails.getUser();
-
         return getMyPostDtos(myPageDtoList, user);
     }
 
     public List<MyAnswerDto> myAnswer(UserDetailsImpl userDetails) {
         List<MyAnswerDto> myAnswerDtoList = new ArrayList<>();
         User user = userDetails.getUser();
-
         return getMyAnswerDtos(myAnswerDtoList, user);
     }
 
 
+    @Transactional
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails) {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = userDetails.getUser().getAchievement();
-
-        myAchievementDto.getAchievement()[0] = achievement.getAchievement1();
-        myAchievementDto.getAchievement()[1] = achievement.getAchievement2();
-        myAchievementDto.getAchievement()[2] = achievement.getAchievement3();
-        myAchievementDto.getAchievement()[3] = achievement.getAchievement4();
-        myAchievementDto.getAchievement()[4] = achievement.getAchievement5();
-        myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
-        myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
-        myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
-
-
-        // 업적 1 : answerService.answerStar      [ 최초 answer 글 1점 획득 ]
-        // 업적 2 : answerService.answerStar      [ 최초 answer 글 5점 획득 ]
-        // 업적 3 :                               [ 최초 검색기능 사용 - 미구현 ]
-        // 업적 4 : commentService.writeComment   [ 최초 comment 작성 ]
-        // 업적 5 : postService.createPost        [ 최초 post 글 작성 ]
-        // 업적 6 : surveyService.createHippo     [ 최초 survay 설문조사 완료 ]
-        // 업적 7 : answerService.answerStar      [ 최초 answer 글 평가 ]
-        // 업적 8 : answerService.answerWrite;    [ 최초 answer 글 작성 ]
-
+        ArrayList<Integer> achievementList = achievement.getAchievementList();
+        for(int i =0; i<achievementList.size(); i++){
+            myAchievementDto.getAchievement()[i] = achievementList.get(i);
+        }
         return myAchievementDto;
     }
 
     public MyBannerDto myBanner(UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
-        return getMyBannerDto(user);
+        return getMyBannerDto(userDetails.getUser());
     }
 
 
-    public ResponseEntity<?> userprofile(User user) {
-        UserResponseDto userResponse = new UserResponseDto(user);
-        return ResponseEntity.ok().body(userResponse);
+    public UserResponseDto userprofile(User user) {
+        return new UserResponseDto(user);
     }
 
-    // 하나의 트랜젝션이 끝나면 1차 영속성 컨텍스트는 초기화된다.
-    //1차 영속성 컨텍스트에 안들어 가있기 떄문에 save를 해줘야 하는거였네요!
-    public ResponseEntity<?> setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
+    @Transactional
+    public BasicResponseDto setUserInfo(User user,UserInfoRequestDto userInfoRequestDto)
     {
         if(user.getUserStatus().equals("true")) {
             user.setBasicInfo(userInfoRequestDto);
             userRepository.save(user);
         }
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("true");
     }
 
     public MyCountDto mycount(UserDetailsImpl userDetails)
     {
         User user = userDetails.getUser();
-
-        Long postCount = postRepository.countByUser(user);
-        Long answerCount = answerRepository.countByUser(user);
-
-        return new MyCountDto(user,postCount,answerCount);
+        return new MyCountDto(
+                user,postRepository.
+                countByUser(user),answerRepository.
+                countByUser(user));
     }
 
     public List<MyPostDto> userPost(Long userid)
     {
         List<MyPostDto> myPageDtoList = new ArrayList<>();
-
-        User user = userRepository.findById(userid).orElseThrow(
-            () -> new UserNotFoundException("해당 글은 존재하지 않습니다."));
-
+        User user = ComfortMethods.getUser(userid);
         return getMyPostDtos(myPageDtoList, user);
     }
 
 
-
-
     private List<MyPostDto> getMyPostDtos(List<MyPostDto> myPageDtoList, User user) {
         List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
-
         for (Post post : postList)
         {
             MyPostDto postMyPageDto = new MyPostDto(post, user,postLikeRepository.countByPost(post));
@@ -143,16 +115,13 @@ public class UserService {
             }
             myPageDtoList.add(postMyPageDto);
         }
-
         return myPageDtoList;
     }
 
     public List<MyAnswerDto> userAnswer(Long userid)
     {
         List<MyAnswerDto> myAnswerDtoList = new ArrayList<>();
-        User user = userRepository.findById(userid).orElseThrow(
-                () -> new UserNotFoundException("해당 글은 존재하지 않습니다."));
-
+        User user = ComfortMethods.getUser(userid);
         return getMyAnswerDtos(myAnswerDtoList, user);
     }
 
@@ -174,9 +143,7 @@ public class UserService {
 
     public MyBannerDto userBanner(Long userid)
     {
-        User user = userRepository.findById(userid).orElseThrow(
-                () -> new UserNotFoundException("해당 글은 존재하지 않습니다."));
-        return getMyBannerDto(user);
+        return getMyBannerDto(ComfortMethods.getUser(userid));
     }
 
     private MyBannerDto getMyBannerDto(User user) {
@@ -202,28 +169,19 @@ public class UserService {
 
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = user.getAchievement();
-
-        myAchievementDto.getAchievement()[0] = achievement.getAchievement1();
-        myAchievementDto.getAchievement()[1] = achievement.getAchievement2();
-        myAchievementDto.getAchievement()[2] = achievement.getAchievement3();
-        myAchievementDto.getAchievement()[3] = achievement.getAchievement4();
-        myAchievementDto.getAchievement()[4] = achievement.getAchievement5();
-        myAchievementDto.getAchievement()[5] = achievement.getAchievement6();
-        myAchievementDto.getAchievement()[6] = achievement.getAchievement7();
-        myAchievementDto.getAchievement()[7] = achievement.getAchievement8();
-
+        ArrayList<Integer> achievementList = achievement.getAchievementList();
+        for(int i =0; i<achievementList.size(); i++){
+            myAchievementDto.getAchievement()[i] = achievementList.get(i);
+        }
         return myAchievementDto;
     }
 
 
     public MyCountDto usercount(Long userid)
     {
-        User user = userRepository.findById(userid).orElseThrow(
-                () -> new UserNotFoundException("해당 글은 존재하지 않습니다."));
-
-        Long postCount = postRepository.countByUser(user);
-        Long answerCount = answerRepository.countByUser(user);
-
-        return new MyCountDto(user,postCount,answerCount);
+        User user = ComfortMethods.getUser(userid);
+        return new MyCountDto(user,
+                postRepository.countByUser(user),
+                answerRepository.countByUser(user));
     }
 }

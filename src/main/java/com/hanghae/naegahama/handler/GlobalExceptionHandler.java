@@ -32,14 +32,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> passwordCheckFailException(PasswordCheckFailException e){
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-    /*@ExceptionHandler({
-            MethodArgumentNotValidException.class
-            })
-    public ResponseEntity<ErrorResponse> validException(
-            MethodArgumentNotValidException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", "유효성 검사 실패 : " + e.getBindingResult().getAllErrors().get(0).getDefaultMessage()), HttpStatus.BAD_REQUEST); // 2
-
-    }*/
 
     @ExceptionHandler(EmailNotFoundException.class)
     public ResponseEntity<ErrorResponse> EmailNotFoundException(EmailNotFoundException e) {

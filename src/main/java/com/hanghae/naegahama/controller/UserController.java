@@ -2,9 +2,12 @@ package com.hanghae.naegahama.controller;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.MyPage.MyAchievementDto;
 import com.hanghae.naegahama.dto.MyPage.MyBannerDto;
 import com.hanghae.naegahama.dto.MyPage.*;
+import com.hanghae.naegahama.dto.login.LoginResponseDto;
+import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.NickNameDuplicateCheckDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.ex.ErrorResponse;
@@ -34,18 +37,18 @@ public class UserController {
 
 
     @PostMapping("/user/nickname")
-    public ResponseEntity<?> emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
+    public BasicResponseDto emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
         return userService.nicknameCheck(nickNameDuplicateCheckDto.getNickname());
     }
 
     @PostMapping("/user/kakaoLogin")
-    public ResponseEntity<?> login(@RequestBody @Validated Map<String, Object> param, HttpServletResponse response) throws JsonProcessingException {
-        return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(),response);
+    public LoginResponseDto login(@RequestBody @Validated Map<String, Object> param, HttpServletResponse response) throws JsonProcessingException {
+        return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(), response);
     }
 
     @PostMapping("/userinfo")
-    public ResponseEntity<?> setUserInfo(@RequestBody @Validated UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.setUserInfo(userDetails.getUser(),userInfoRequestDto);
+    public BasicResponseDto setUserInfo(@RequestBody @Validated UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.setUserInfo(userDetails.getUser(), userInfoRequestDto);
     }
     @GetMapping("/mypost")
     public List<MyPostDto> myPost(@AuthenticationPrincipal UserDetailsImpl userDetails)
@@ -54,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/user/profile")
-    public ResponseEntity<?> getMyProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public UserResponseDto getMyProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         log.info("user = {}", userDetails.getUser().getNickName());
         return userService.userprofile(userDetails.getUser());
     }

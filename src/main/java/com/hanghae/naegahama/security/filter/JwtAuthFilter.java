@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 /**
  * Token 을 내려주는 Filter 가 아닌  client 에서 받아지는 Token 을 서버 사이드에서 검증하는 클레스 SecurityContextHolder 보관소에 해당
  * Token 값의 인증 상태를 보관 하고 필요할때 마다 인증 확인 후 권한 상태 확인 하는 기능
@@ -24,13 +25,11 @@ import java.io.IOException;
 public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     private final HeaderTokenExtractor extractor;
-
     public JwtAuthFilter(
             RequestMatcher requiresAuthenticationRequestMatcher,
             HeaderTokenExtractor extractor
     ) {
         super(requiresAuthenticationRequestMatcher);
-
         this.extractor = extractor;
     }
 
@@ -41,18 +40,26 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     ) throws AuthenticationException, IOException {
 
         // JWT 값을 담아주는 변수 TokenPayload
-        String tokenPayload = request.getHeader("token");
-        if (tokenPayload == null || tokenPayload.equals("false") || tokenPayload.equals("null") || tokenPayload.equals("undefined")) {
-            response.sendRedirect("/api/error");
-            return null;
-        }
-        JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
-                extractor.extract(tokenPayload, request));
+            String tokenPayload = request.getHeader("token");
+            if (tokenPayload == null || tokenPayload.equals("false") || tokenPayload.equals("null") || tokenPayload.equals("undefined")) {
+                response.sendRedirect("/api/error");
+                return null;
+            }
+            JwtPreProcessingToken jwtToken = new JwtPreProcessingToken(
+                    extractor.extract(tokenPayload, request));
 
-        return super
-                .getAuthenticationManager()
-                .authenticate(jwtToken);
+            try {
+                return super
+                        .getAuthenticationManager()
+                        .authenticate(jwtToken);
+            }catch (Exception e){
+                //response.sendRedirect("/api/error");
+                response.setStatus(400);
+                return null;
+            }
+
     }
+
 
     @Override
     protected void successfulAuthentication(
@@ -77,24 +84,66 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
         );
     }
 
+    /*@Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
+        String token = httpServletRequest.getHeader("token");
+        try {
+            DecodedJWT decodedJWT = (DecodedJWT) isValidToken(token)
+                    .orElseThrow(() -> new TokenInvalidException("유효한 토큰이 아닙니다."));
+
+            Date expiredDate = decodedJWT
+                    .getClaim(CLAIM_EXPIRED_DATE)
+                    .asDate();
+
+            Date now = new Date();
+            if (expiredDate.before(now)) {
+                throw new TokenInvalidException("토큰의 유효시간이 끝났습니다.");
+            }
+        }catch (TokenInvalidException e){
+            httpServletResponse.sendError(400);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }*/
+
+    /*private <T> Optional isValidToken(String token )  {
+        DecodedJWT jwt = null;
+        log.info("여기서오류1");
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+            JWTVerifier verifier = JWT
+                    .require(algorithm)
+                    .build();
+
+            jwt = verifier.verify(token);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        log.info("여기서오류2");
+        return Optional.ofNullable(jwt);
+    }
+*/
     @Override
     protected void unsuccessfulAuthentication(
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException failed
     ) throws IOException, ServletException {
-        /*
-         *	로그인을 한 상태에서 Token값을 주고받는 상황에서 잘못된 Token값이라면
-         *	인증이 성공하지 못한 단계 이기 때문에 잘못된 Token값을 제거합니다.
-         *	모든 인증받은 Context 값이 삭제 됩니다.
-         */
 
-        SecurityContextHolder.clearContext();
 
-        super.unsuccessfulAuthentication(
-                request,
-                response,
-                failed
-        );
+
+
+            SecurityContextHolder.clearContext();
+
+            super.unsuccessfulAuthentication(
+                    request,
+                    response,
+                    failed
+            );
+        }
     }
-}
+

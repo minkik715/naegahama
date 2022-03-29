@@ -15,10 +15,9 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class UserPageService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public ResponseEntity<UserCommentResponseDto> writeUserPageComment(Long userId, UserDetailsImpl userDetails, UserCommentRequestDto commentRequestDto) {
+    public UserCommentResponseDto writeUserPageComment(Long userId, UserDetailsImpl userDetails, UserCommentRequestDto commentRequestDto) {
 
         User pageUser = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다.")
@@ -51,58 +50,45 @@ public class UserPageService {
 
         applicationEventPublisher.publishEvent(new MyPageCommentEvent(pageUser,writer,userComment));
 
-        return ResponseEntity.ok().body(new UserCommentResponseDto(userComment));
-
-
+        return new UserCommentResponseDto(userComment);
     }
-
-    public ResponseEntity<UserPageCommentListResponseDto> getUserPageCommentList(Long userId) {
+    @Transactional(readOnly = true)
+    public UserPageCommentListResponseDto getUserPageCommentList(Long userId) {
         User pageUser = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다.")
         );
-
-        List<UserComment> byPageUserOrderByModifiedAt = userPageCommentRepository.findByPageUserOrderByModifiedAt(pageUser);
-
         List<UserCommentResponseDto> allUserPageCommentResponseDtos = new ArrayList<>();
-        for (UserComment userComment : byPageUserOrderByModifiedAt) {
+        for (UserComment userComment :  userPageCommentRepository.findByPageUserOrderByModifiedAt(pageUser)) {
 
             if(userComment.getParentCommentId() == null){
-                UserCommentResponseDto userCommentResponseDto = new UserCommentResponseDto(userComment);
-
-                List<UserComment> byParentCommentIdOrderByModifiedAt = userPageCommentRepository.findByParentCommentIdOrderByModifiedAt(userComment.getId());
                 ArrayList<UserCommentResponseDto> childUserCommentResponseDtos = new ArrayList<>();
-                for (UserComment comment : byParentCommentIdOrderByModifiedAt) {
+                for (UserComment comment : userPageCommentRepository.findByParentCommentIdOrderByModifiedAt(userComment.getId())) {
                     childUserCommentResponseDtos.add(new UserCommentResponseDto(comment));
                 }
-                userCommentResponseDto.setChildComments(childUserCommentResponseDtos);
+                UserCommentResponseDto userCommentResponseDto = new UserCommentResponseDto(userComment,childUserCommentResponseDtos);
                 allUserPageCommentResponseDtos.add(userCommentResponseDto);
             }
 
         }
-
-
-        return ResponseEntity.ok().body(new UserPageCommentListResponseDto(userId, allUserPageCommentResponseDtos));
-
-
-
+        return new UserPageCommentListResponseDto(userId,pageUser.getNickName(), allUserPageCommentResponseDtos);
     }
 
-    public ResponseEntity<?> modifyUserPageCommentList(UserCommentRequestDto userCommentRequestDto,Long commentId) {
+    public UserCommentResponseDto modifyUserPageCommentList(UserCommentRequestDto userCommentRequestDto,Long commentId) {
         UserComment findComment = userPageCommentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("댓글을 찾을 수 없습니다.")
         );
         findComment.setComment(userCommentRequestDto.getContent());
 
-        return ResponseEntity.ok().body(new UserCommentResponseDto(findComment));
+        return new UserCommentResponseDto(findComment);
 
     }
 
-    public ResponseEntity<?> deleteUserPageCommentList(Long commentId) {
+    public BasicResponseDto deleteUserPageCommentList(Long commentId) {
         userPageCommentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
         userPageCommentRepository.deleteAll(userPageCommentRepository.findByParentCommentIdOrderByModifiedAt(commentId));
         userPageCommentRepository.deleteById(commentId);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 }

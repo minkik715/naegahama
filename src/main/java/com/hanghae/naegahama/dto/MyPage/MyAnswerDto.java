@@ -20,11 +20,11 @@ public class MyAnswerDto
     private String nickname;
     private String imgUrl;
     private String category;
-    private Long likes;
+    private int likes;
     private String img;
     private Long userId;
 
-    public MyAnswerDto(Answer answer, User user, Long likes)
+    public MyAnswerDto(Answer answer, User user, int likes)
     {
         this.answerId = answer.getId();
         this.title = answer.getTitle();

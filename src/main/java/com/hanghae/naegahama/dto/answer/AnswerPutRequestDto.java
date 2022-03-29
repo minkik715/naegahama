@@ -17,8 +17,5 @@ public class AnswerPutRequestDto
     private String content;
     private List<String> file;
     private String video;
-
-
-
 }
 

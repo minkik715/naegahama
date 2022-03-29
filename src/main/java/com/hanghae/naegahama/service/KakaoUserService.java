@@ -5,18 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.domain.UserComment;
 import com.hanghae.naegahama.domain.UserRoleEnum;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
 import com.hanghae.naegahama.repository.AchievementRepository;
-import com.hanghae.naegahama.repository.UserCommentRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.security.jwt.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -41,11 +37,11 @@ public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AchievementRepository achievementRepository;
-    private final UserCommentRepository userCommentRepository;
 
 
 
-    public ResponseEntity<?> kakaoLogin(String accessToken,HttpServletResponse response) throws JsonProcessingException {
+    @Transactional
+    public LoginResponseDto kakaoLogin(String accessToken,HttpServletResponse response) throws JsonProcessingException {
         log.info("accessToken = {}",accessToken);
         // 2. 토큰으로 카카오 API 호출
         KakaoUserInfoDto kakaoUserInfoDto;
@@ -72,7 +68,7 @@ public class KakaoUserService {
 
         // 4. 강제 로그인 처리
         return forceLogin(kakaoUser,response);
-       // return getLoginResponseDtoResponseEntity(kakaoUser);
+        // return getLoginResponseDtoResponseEntity(kakaoUser);
 
     }
    /* private ResponseEntity<?> getLoginResponseDtoResponseEntity(User user) {
@@ -141,13 +137,13 @@ public class KakaoUserService {
         return kakaoUser;
     }
 
-    private ResponseEntity<?> forceLogin(User kakaoUser, HttpServletResponse response) {
+    private LoginResponseDto forceLogin(User kakaoUser, HttpServletResponse response) {
         UserDetailsImpl userDetails = new UserDetailsImpl(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = JwtTokenUtils.generateJwtToken(userDetails);
         response.addHeader("Authorization", "Bearer " +token);
         LoginResponseDto loginResponseDto = new LoginResponseDto(kakaoUser.getId(),token,kakaoUser.getUserStatus() );
-        return ResponseEntity.ok().body(loginResponseDto);
+        return loginResponseDto;
     }
 }

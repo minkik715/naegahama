@@ -28,9 +28,9 @@ public class AnswerDetailGetResponseDto
 
     private int star;
 
-    private Long answerLikeCount;
+    private int answerLikeCount;
 
-    private Long commentCount;
+    private int commentCount;
 
     private String answerWriter;
 
@@ -43,7 +43,7 @@ public class AnswerDetailGetResponseDto
     private String imgUrl;
     private Long userId;
 
-    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList,
+    public AnswerDetailGetResponseDto(Answer answer, int likeCount, int commentCount, List<Long> likeUserList,
                                       List<String> fileList, String category) {
         this.answerId = answer.getId();
         this.requestWriterId = answer.getPost().getUser().getId();

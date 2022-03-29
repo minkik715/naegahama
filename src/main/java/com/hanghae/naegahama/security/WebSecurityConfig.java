@@ -2,7 +2,6 @@ package com.hanghae.naegahama.security;
 
 import com.hanghae.naegahama.security.filter.FormLoginFilter;
 import com.hanghae.naegahama.security.filter.JwtAuthFilter;
-import com.hanghae.naegahama.security.filter.JwtExceptionFilter;
 import com.hanghae.naegahama.security.jwt.HeaderTokenExtractor;
 import com.hanghae.naegahama.security.provider.FormLoginAuthProvider;
 import com.hanghae.naegahama.security.provider.JWTAuthProvider;

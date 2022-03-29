@@ -13,7 +13,6 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,6 +127,7 @@ public class SearchService {
     }
 
     //최근검색어 조회.
+    @Transactional(readOnly = true)
     public List<SearchWords> SearchList(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         List<Search> searches = searchRepository.findAllByUserOrderByCreatedAtDesc(user);
@@ -146,16 +146,16 @@ public class SearchService {
     }
 
     //검색어 삭제
-    public ResponseEntity deleteSearch(Long searchId, UserDetailsImpl userDetails) {
+    public BasicResponseDto deleteSearch(Long searchId, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         searchRepository.deleteByIdAndUser(searchId, user);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 
     //검색어 전체삭제
-    public ResponseEntity<?> deleteAllSearch(UserDetailsImpl userDetails) {
+    public BasicResponseDto deleteAllSearch(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         searchRepository.deleteByUser(user);
-        return ResponseEntity.ok().body(new BasicResponseDto("true"));
+        return new BasicResponseDto("success");
     }
 }
