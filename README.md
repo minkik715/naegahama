@@ -2,10 +2,12 @@
 <img src="https://user-images.githubusercontent.com/97504973/160697352-e59ea41b-cd20-4055-a965-027fc793e4e8.svg" height="300px" width="300px">
 <br>
 <br>
+
 # 팀원 정보
 <img src="https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png" height="100%" width="100%">
 <br>
 <br>
+
 # 1. 프로젝트 개요(Project).🎵
 
 ### 프로젝트 소개(Introduction).
