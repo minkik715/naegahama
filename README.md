@@ -3,7 +3,7 @@
 <br>
 <br>
 # 팀원 정보
-![팀원](https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png)
+<img src="https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png" height="100%" width="100%">
 <br>
 <br>
 # 1. 프로젝트 개요(Project).🎵
