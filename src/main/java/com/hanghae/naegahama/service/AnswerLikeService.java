@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.comfortmethod.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
@@ -24,9 +25,7 @@ public class AnswerLikeService {
     public AnswerLikeResponseDto AnswerLike(Long answerId, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
 
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                ()->new IllegalArgumentException("답변글이 없습니다.")
-        );
+        Answer answer = ComfortMethods.getAnswer(answerId);
 
         User answerWriter = answer.getUser();
 

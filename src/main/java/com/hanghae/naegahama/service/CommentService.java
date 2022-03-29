@@ -1,6 +1,7 @@
 
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.comfortmethod.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.comment.*;
@@ -28,19 +29,12 @@ public class CommentService {
 
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-    
-    @Transactional
+
     public CommentResponseDto writeComment(Long answerId, CommentRequestDto commentRequestDto, User user) {
-        Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
-                () -> new AnswerNotFoundException("해당 답글이 존재하지 않습니다.")
-        );
-        String commentContent = commentRequestDto.getComment();
+        Answer findAnswer = ComfortMethods.getAnswer(answerId);
         Long parentCommentId = commentRequestDto.getParentCommentId();
         Comment comment = null;
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
         if (parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
             comment = new Comment(
@@ -50,16 +44,17 @@ public class CommentService {
                     timestamp
             );
             //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
-            applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), findUser,findAnswer, AlarmType.comment));
+            applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), user,findAnswer, AlarmType.comment));
 
         } else {
-            comment = new Comment(commentContent, parentCommentId, findAnswer, user);
-            //댓글에 대댓글을 단 사람에게 주는 알람.
-
+            comment = new Comment(commentRequestDto.getComment(),
+                    parentCommentId,
+                    findAnswer,
+                    user);
                 Comment findcomment = commentRepository.findById(parentCommentId).orElseThrow(
                         () -> new CommentNotFoundException("댓글 없습니다.")
                 );
-            applicationEventPublisher.publishEvent(new CommentWriteEvent(findcomment.getUser(), findUser, comment, AlarmType.child));
+            applicationEventPublisher.publishEvent(new CommentWriteEvent(findcomment.getUser(), user, comment, AlarmType.child));
 
         }
         Comment save = commentRepository.save(comment);
@@ -88,23 +83,18 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> getCommentList(Long answerId) {
-        //글에 대한 댓글
-        Answer findAnswer = answerRepository.findById(answerId).orElseThrow(
-                () -> new AnswerNotFoundException("해당 답글이 존재하지 않습니다.")
-        );
-        //답변글에 달린 모든 댓글
-        List<Comment> commentList = findAnswer.getCommentList();
-
-        // 날라갈 댓글 글 리스트
+        Answer findAnswer = ComfortMethods.getAnswer(answerId);
         List<CommentListResponseDto> parentCommentListResponseDtoList = new ArrayList<>();
-        if (commentList == null) {
-            throw new CommentNotFoundException("해당 글에는 댓글이 존재하지 않습니다.");
-        }
-        for (Comment comment : commentList) {
+
+        for (Comment comment : findAnswer.getCommentList()) {
 
             if(comment.getParentCommentId() == null) {
-                Long childCnt = commentRepository.countByParentCommentId(comment.getId());
-                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(comment,comment.getUser(),childCnt);
+
+                CommentListResponseDto commentListResponseDto = new CommentListResponseDto(
+                        comment,
+                        comment.getUser(),
+                        commentRepository.countByParentCommentId(comment.getId())
+                );
                 parentCommentListResponseDtoList.add(commentListResponseDto);
             }
         }
@@ -112,22 +102,19 @@ public class CommentService {
 
     }
 
+    @Transactional(readOnly = true)
     public AllCommentResponseDto getKidsCommentList(Long commentId) {
         Comment parentComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("해당 댓글은 존재하지 않습니다.")
         );
-        List<Comment> kidsCommentList = commentRepository.findAllByParentCommentId(commentId);
         List<KidsCommentListResponseDto> kidsCommentListResponseDtoList = new ArrayList<>();
-        if (kidsCommentList == null) {
-            throw new CommentNotFoundException("해당 댓글에는 대댓글이 존재하지 않습니다.");
-        }
-        for (Comment comment : kidsCommentList) {
+
+        for (Comment comment : commentRepository.findAllByParentCommentId(commentId)) {
             KidsCommentListResponseDto kidsCommentListResponseDto = new KidsCommentListResponseDto(comment, comment.getUser());
             kidsCommentListResponseDtoList.add(kidsCommentListResponseDto);
 
         }
-        AllCommentResponseDto allCommentResponseDto = new AllCommentResponseDto(new CommentResponseDto(parentComment, parentComment.getAnswer().getId()), kidsCommentListResponseDtoList);
-        return allCommentResponseDto;
+        return new AllCommentResponseDto(new CommentResponseDto(parentComment, parentComment.getAnswer().getId()), kidsCommentListResponseDtoList);
     }
 
     

@@ -17,7 +17,7 @@ public class PostLikeController {
 
     @PostMapping("/api/post/like/{postId}")
     public PostLikeResponseDto postLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return postLikeService.PostLike(postId, userDetails.getUser().getId());
+        return postLikeService.PostLike(postId, userDetails);
     }
 
 }

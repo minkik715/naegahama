@@ -15,12 +15,12 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+
 public class ShortsService {
 
     private final AnswerVideoRepository answerVideoRepository;
     private final CommentRepository commentRepository;
-
+    @Transactional(readOnly = true)
     public List<ShortsResponseDto> getOneShorts() {
         List<AnswerVideo> mp4File = answerVideoRepository.findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc("mp4", "short");
         int size = mp4File.size();

@@ -249,7 +249,6 @@ public class PostService {
 
 
     // Post 작성 및 저장
-    @Transactional
     Post PostWrite(PostRequestDto postRequestDto, User user) {
         // 파라미터 값을 통해 post 기본 칼럼 ( 제목, 내용, 범주, 난이도 ) 적용 후 생성 및 저장
 

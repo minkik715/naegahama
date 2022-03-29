@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,39 +51,26 @@ public class UserPageService {
         applicationEventPublisher.publishEvent(new MyPageCommentEvent(pageUser,writer,userComment));
 
         return new UserCommentResponseDto(userComment);
-
-
     }
-
+    @Transactional(readOnly = true)
     public UserPageCommentListResponseDto getUserPageCommentList(Long userId) {
         User pageUser = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("유저를 찾을 수 없습니다.")
         );
-
-        List<UserComment> byPageUserOrderByModifiedAt = userPageCommentRepository.findByPageUserOrderByModifiedAt(pageUser);
-
         List<UserCommentResponseDto> allUserPageCommentResponseDtos = new ArrayList<>();
-        for (UserComment userComment : byPageUserOrderByModifiedAt) {
+        for (UserComment userComment :  userPageCommentRepository.findByPageUserOrderByModifiedAt(pageUser)) {
 
             if(userComment.getParentCommentId() == null){
-                UserCommentResponseDto userCommentResponseDto = new UserCommentResponseDto(userComment);
-
-                List<UserComment> byParentCommentIdOrderByModifiedAt = userPageCommentRepository.findByParentCommentIdOrderByModifiedAt(userComment.getId());
                 ArrayList<UserCommentResponseDto> childUserCommentResponseDtos = new ArrayList<>();
-                for (UserComment comment : byParentCommentIdOrderByModifiedAt) {
+                for (UserComment comment : userPageCommentRepository.findByParentCommentIdOrderByModifiedAt(userComment.getId())) {
                     childUserCommentResponseDtos.add(new UserCommentResponseDto(comment));
                 }
-                userCommentResponseDto.setChildComments(childUserCommentResponseDtos);
+                UserCommentResponseDto userCommentResponseDto = new UserCommentResponseDto(userComment,childUserCommentResponseDtos);
                 allUserPageCommentResponseDtos.add(userCommentResponseDto);
             }
 
         }
-
-
         return new UserPageCommentListResponseDto(userId, allUserPageCommentResponseDtos);
-
-
-
     }
 
     public UserCommentResponseDto modifyUserPageCommentList(UserCommentRequestDto userCommentRequestDto,Long commentId) {

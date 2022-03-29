@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.handler;
 
+import com.hanghae.naegahama.comfortmethod.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import com.hanghae.naegahama.handler.event.*;
@@ -71,26 +72,21 @@ public class EventHandler {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void AnswerWriteEvent(AnswerWriteEvent AnswerWriteEvent){
 
-        log.info("이벤터 시작");
         User receiver = AnswerWriteEvent.getReceiver();
         User sender = AnswerWriteEvent.getSender();
         Post post = AnswerWriteEvent.getPost();
         Answer answer = AnswerWriteEvent.getAnswer();
         AlarmType alarmType = AlarmType.answer;
-        log.info("알람보내기");
 
         answerAlarm(answer.getUser(), answer.getUser(), answer, AlarmType.answerC);
         if (!receiver.getNickName().equals(sender.getNickName())) {
             postAlarm(receiver,sender,post,alarmType);
         }
-        User findUser = userRepository.findById(sender.getId()).orElseThrow(
-                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
-        );
+        User findUser = ComfortMethods.getUser(sender.getId());
         if(findUser.getAchievement().getAchievement1() == 0) {
             findUser.getAchievement().setAchievement1(1);
             achieveAlarm(findUser,"내가HAMA");
         }
-        log.info("굳굳굳");
 
 
 
@@ -118,9 +114,7 @@ public class EventHandler {
         if (!receiver.getNickName().equals(sender.getNickName())) {
             answerAlarm(receiver,sender,answer,alarmType);
         }
-        User findUser = userRepository.findById(receiver.getId()).orElseThrow(
-                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
-        );
+        User findUser = ComfortMethods.getUser(receiver.getId());
 
         // 1점을 받을 시 업적 1 획득
         if ( star.equals(1)) {
@@ -175,9 +169,7 @@ public class EventHandler {
         AlarmType alarmType = commentWriteEvent.getAlarmType();
 
 
-        User findUser = userRepository.findById(sender.getId()).orElseThrow(
-                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
-        );
+
         if (!receiver.getNickName().equals(sender.getNickName())) {
             if(alarmType.equals(AlarmType.comment)) {
                 answerAlarm(receiver, sender, (Answer) object, alarmType);
@@ -190,6 +182,7 @@ public class EventHandler {
                 commentAlarm(receiver,sender, comment1, alarmType);
             }
         }
+        User findUser = ComfortMethods.getUser(sender.getId());
         if(findUser.getAchievement().getAchievement6() == 0) {
             findUser.getAchievement().setAchievement6(1);
             achieveAlarm(findUser,"리액션HAMA");
@@ -202,9 +195,7 @@ public class EventHandler {
 
     public void postLikeEvent(PostLikeEvent postLikeEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
-        User receiver = userRepository.findById(postLikeEvent.getReceiver().getId()).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-
+        User receiver = postLikeEvent.getReceiver();
         User sender = postLikeEvent.getSender();
         Post post = postLikeEvent.getPost();
         AlarmType alarmType = AlarmType.likeP;
@@ -221,9 +212,7 @@ public class EventHandler {
     public void postWriteEvent(PostWriteEvent postWriteEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         Post post = postWriteEvent.getPost();
-        User findUser = userRepository.findById(post.getUser().getId()).orElseThrow(
-                () -> new UserNotFoundException("재균님을 찾을 수 없습니다. 도망쳐~")
-        );
+        User findUser = ComfortMethods.getUser(post.getUser().getId());
         if(findUser.getAchievement().getAchievement3() == 0) {
             findUser.getAchievement().setAchievement3(1);
             achieveAlarm(findUser,"잘부탁HAMA");
@@ -235,35 +224,20 @@ public class EventHandler {
 
 
     public void givePointAndSendAlarm(User user, int i, AlarmType alarmType, Object object) {
-        log.info("에러는여기서1?");
-        log.info("에러는여기서2?");
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
-        );
+        User findUser = ComfortMethods.getUser(user.getId());
         findUser.setPoint(findUser.getPoint()+i);
         List<Alarm> alarmList = findUser.sendAlarm(i ,alarmType, object);
-
-
-        log.info("user point = {}", findUser.getPoint());
         for (Alarm alarm : alarmList) {
             Alarm saveAlarm = alarmRepository.save(alarm);
             alarmService.alarmByMessage(new AlarmResponseDto(saveAlarm));
         }
-
-        log.info("user point = {}", findUser.getPoint());
-
-        log.info("user point = {}", findUser.getPoint());
-
-
 
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void searchWordEvent(SearchWordEvent searchWordEvent) {
         //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
-        User findUser = userRepository.findById(searchWordEvent.getUser().getId()).orElseThrow(
-                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
-        );
+        User findUser = ComfortMethods.getUser(searchWordEvent.getUser().getId());
         if(findUser.getAchievement().getAchievement7() == 0) {
             findUser.getAchievement().setAchievement7(1);
             achieveAlarm(findUser,"서치HAMA");
@@ -272,9 +246,8 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void surveyEvent(SurveyEvent surveyEvent) {
-        User findUser = userRepository.findById(surveyEvent.getUser().getId()).orElseThrow(
-                () -> new UserNotFoundException("유저를 찾을 수 없습니다")
-        );
+        User findUser = ComfortMethods.getUser(surveyEvent.getUser().getId());
+        findUser.setHippoName(surveyEvent.getHippoName());
         if(findUser.getAchievement().getAchievement5() == 0) {
             findUser.getAchievement().setAchievement5(1);
             achieveAlarm(findUser,"분석HAMA");

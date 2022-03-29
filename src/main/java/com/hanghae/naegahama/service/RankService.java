@@ -8,6 +8,7 @@ import com.hanghae.naegahama.repository.RankRepository;
 import com.hanghae.naegahama.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class RankService {
     //이전 top 5에 존재하고 같은 자리일 경우 Status는 -
     //이전 top 5에 존재하고 더 높은 자리일 경우 status는 up
     //이전 top 5에 존재하고 더 낮은 자리일 경우 status는 down
+    @Transactional
     public List<RankResponseDto> getTop5Rank() {
         //과거 5개 가져오기
         List<Rank> previousTop5Rank = rankRepository.findAllByOrderByRankAsc();

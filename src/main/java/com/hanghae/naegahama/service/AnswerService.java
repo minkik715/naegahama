@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.service;
 
+import com.hanghae.naegahama.comfortmethod.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
@@ -43,7 +44,6 @@ public class AnswerService
     private final CommentRepository commentRepository;
     private final AnswerLikeRepository answerLikeRepository;
     private final AnswerFileRepository answerFileRepository;
-    private final UserRepository userRepository;
     private final AnswerVideoRepository answerVideoRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -56,6 +56,7 @@ public class AnswerService
 
 
     // 요청 글에 달린 answerList 조회
+    @Transactional(readOnly = true)
     public List<AnswerGetResponseDto>answerList(Long postId) {
 
         List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
@@ -78,8 +79,7 @@ public class AnswerService
     // 응답글 수정
     public BasicResponseDto answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
     {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+        Answer answer = ComfortMethods.getAnswer(answerId);
         Post post = postRepository.findPostById(answer.getPost().getId());
         if(post.getStatus().equals("closed")){
             return (new BasicResponseDto("마감이 된 글에는 답변을 수정할 수 없습니다."));
@@ -99,8 +99,7 @@ public class AnswerService
 
     public BasicResponseDto answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+        Answer answer = ComfortMethods.getAnswer(answerId);
         if (answer.getUser().getId().equals(userDetails.getUser().getId())) {
             return (new BasicResponseDto("작성자만 삭제할 수 있습니다."));
         }
@@ -110,10 +109,10 @@ public class AnswerService
 
 
     // 답변글 상세 조회
+    @Transactional(readOnly = true)
     public AnswerDetailGetResponseDto answerDetail(Long answerId)
     {
-        Answer answer =  answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+        Answer answer =  ComfortMethods.getAnswer(answerId);
         List<Long> likeUserList = new ArrayList<>();
         List<String> fileList = new ArrayList<>();
         for (AnswerFile answerFile : answerFileRepository.findAllByAnswerOrderByCreatedAt(answer)) {
@@ -135,11 +134,9 @@ public class AnswerService
         return answerDetailGetResponseDto;
     }
 
-    @Transactional
     public BasicResponseDto answerStar(Long answerId, UserDetailsImpl userDetails, StarPostRequestDto starPostRequestDto)
     {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+        Answer answer = ComfortMethods.getAnswer(answerId);
         if( answer.getStar() != 0 )
         {
             throw new IllegalArgumentException("이미 평가한 답글입니다.");
@@ -151,8 +148,7 @@ public class AnswerService
 
     public BasicResponseDto answerVideo(Long answerId, UserDetailsImpl userDetails) throws IOException
     {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(
-                () -> new IllegalArgumentException("해당 답글은 존재하지 않습니다."));
+        Answer answer = ComfortMethods.getAnswer(answerId);
         AnswerVideo video = answerVideoRepository.findByAnswer(answer).orElseThrow(
                 () -> new IllegalArgumentException("해당 영상은 존재하지 않습니다."));
         String fileName = URLDecoder.decode(video.getUrl().split("static/")[1], "UTF-8");

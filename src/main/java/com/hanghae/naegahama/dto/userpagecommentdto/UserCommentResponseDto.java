@@ -22,6 +22,18 @@ public class UserCommentResponseDto {
     private String nickname;
     private ArrayList<UserCommentResponseDto> childComments = new ArrayList<>();
 
+    public UserCommentResponseDto(UserComment userComment, ArrayList<UserCommentResponseDto>  childComments) {
+        this.userId = userComment.getPageUser().getId();
+        this.nickname = userComment.getPageUser().getNickName();
+        this.commentId = userComment.getId();
+        this.commentWriterId = userComment.getWriter().getId();
+        this.commentWriter = userComment.getWriter().getNickName();
+        this.content = userComment.getContent();
+        this.modifiedAt = TimeHandler.setModifiedAtComment(userComment.getModifiedAt());
+        this.imgUrl = userComment.getWriter().getHippoImage();
+        this.childComments =childComments;
+    }
+
     public UserCommentResponseDto(UserComment userComment) {
         this.userId = userComment.getPageUser().getId();
         this.nickname = userComment.getPageUser().getNickName();

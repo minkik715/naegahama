@@ -127,6 +127,7 @@ public class SearchService {
     }
 
     //최근검색어 조회.
+    @Transactional(readOnly = true)
     public List<SearchWords> SearchList(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         List<Search> searches = searchRepository.findAllByUserOrderByCreatedAtDesc(user);
