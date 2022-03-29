@@ -12,7 +12,7 @@ import java.util.List;
 public class UserPageCommentListResponseDto {
 
     private Long userId;
-
+    private String nickname;
     private List<UserCommentResponseDto> comments = new ArrayList<>();
 
 

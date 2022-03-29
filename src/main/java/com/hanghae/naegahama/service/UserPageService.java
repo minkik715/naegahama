@@ -70,7 +70,7 @@ public class UserPageService {
             }
 
         }
-        return new UserPageCommentListResponseDto(userId, allUserPageCommentResponseDtos);
+        return new UserPageCommentListResponseDto(userId,pageUser.getNickName(), allUserPageCommentResponseDtos);
     }
 
     public UserCommentResponseDto modifyUserPageCommentList(UserCommentRequestDto userCommentRequestDto,Long commentId) {

@@ -40,7 +40,7 @@ public class UserService {
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
             return new BasicResponseDto("false");
         }
-        return new BasicResponseDto("success");
+        return new BasicResponseDto("true");
     }
 
     public List<MyPostDto> myPost(UserDetailsImpl userDetails) {
@@ -60,7 +60,7 @@ public class UserService {
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails) {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = userDetails.getUser().getAchievement();
-        ArrayList<Integer> achievementList = (ArrayList<Integer>) achievement.getAchievementList();
+        ArrayList<Integer> achievementList = achievement.getAchievementList();
         for(int i =0; i<achievementList.size(); i++){
             myAchievementDto.getAchievement()[i] = achievementList.get(i);
         }
@@ -83,7 +83,7 @@ public class UserService {
             user.setBasicInfo(userInfoRequestDto);
             userRepository.save(user);
         }
-        return new BasicResponseDto("success");
+        return new BasicResponseDto("true");
     }
 
     public MyCountDto mycount(UserDetailsImpl userDetails)
@@ -169,7 +169,7 @@ public class UserService {
 
         MyAchievementDto myAchievementDto = new MyAchievementDto();
         Achievement achievement = user.getAchievement();
-        ArrayList<Integer> achievementList = (ArrayList<Integer>) achievement.getAchievementList();
+        ArrayList<Integer> achievementList = achievement.getAchievementList();
         for(int i =0; i<achievementList.size(); i++){
             myAchievementDto.getAchievement()[i] = achievementList.get(i);
         }

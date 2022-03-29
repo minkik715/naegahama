@@ -54,9 +54,9 @@ public class Achievement extends Timestamped
         this.user = user;
     }
 
-    public List<Integer> getAchievementList(){
-        return Arrays.asList(achievement1,achievement2,achievement3,achievement4,achievement5,
-                achievement6,achievement7,achievement8);
+    public ArrayList<Integer> getAchievementList(){
+        return new ArrayList<Integer>(Arrays.asList(achievement1, achievement2, achievement3, achievement4, achievement5,
+                achievement6, achievement7, achievement8));
 
 
     }

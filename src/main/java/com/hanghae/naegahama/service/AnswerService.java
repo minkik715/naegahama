@@ -84,7 +84,7 @@ public class AnswerService
         if(post.getStatus().equals("closed")){
             return (new BasicResponseDto("마감이 된 글에는 답변을 수정할 수 없습니다."));
         }
-        if (answer.getUser().getId().equals(userDetails.getUser().getId())) {
+        if (!answer.getUser().getId().equals(userDetails.getUser().getId())) {
             return (new BasicResponseDto("작성자만 수정할 수 있습니다."));
         }
         answer.Update(answerPutRequestDto);
@@ -100,7 +100,7 @@ public class AnswerService
     public BasicResponseDto answerDelete(Long answerId, UserDetailsImpl userDetails)
     {
         Answer answer = ComfortMethods.getAnswer(answerId);
-        if (answer.getUser().getId().equals(userDetails.getUser().getId())) {
+        if (!answer.getUser().getId().equals(userDetails.getUser().getId())) {
             return (new BasicResponseDto("작성자만 삭제할 수 있습니다."));
         }
         answerRepository.deleteById(answerId);
