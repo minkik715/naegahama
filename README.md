@@ -27,14 +27,13 @@
 # 2. 개발환경( Development).❤️
 
 ### 와이어 프레임(Wireframe)
-<img src="https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1" height="80%" width="80%">
 피그마 링크 : https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1
 
 ## API 설계(API Table)
-
 노션 링크 : https://www.notion.so/c2c92742873b49a99e76d13c2468fc24?v=67e6eec90b79480cb5729d395656f302
 <br>
 <br>
+
 # 3. 기술 스택(Tech Stack).🙅🏻‍♂️
 
 ## 핵심기능(Function).
