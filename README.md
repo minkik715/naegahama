@@ -1,5 +1,6 @@
 # 내가하마!(naegahama!)
 ![logo_final](https://user-images.githubusercontent.com/97504973/160697352-e59ea41b-cd20-4055-a965-027fc793e4e8.svg)
+<img src="https://user-images.githubusercontent.com/51365114/119627750-716f3100-be47-11eb-8e83-686b23c2c161.png  width="200" height="400"/>
 <br>
 <br>
 # 팀원 정보
