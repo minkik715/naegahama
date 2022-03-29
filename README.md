@@ -25,25 +25,15 @@
 
 2022년 2월 25일 ~ 2022년 4월 8일
 
-- 2월 11일 금: 프로젝트 주제선정, 와이드프레임 작성 및 API 설계
-- 2월 12일 토: DB선정, 로그인, 회원가입 구현
-- 2월 14일 월: 게시글 CURD 구현, 1차배포
-- 2월 15일 화: 댓글 CRUD 구현 및 오류 수정.
-- 2월 16일 수: 테스트 후 수정 및 2차 배포
-- 2월 17일 목: 프론트와 연결 및 최종 배포
 
 # 2. 개발환경( Development).❤️
 
 ### 와이어 프레임(Wireframe)
-
-![팀원1](https://user-images.githubusercontent.com/97504973/154443516-7859226c-570e-47f9-a498-7ac1edc1ccad.png)
-![팀원3](https://user-images.githubusercontent.com/97504973/154443527-d53685a6-e588-452a-aed4-e3be4a1edc5f.png)
-![팀원2](https://user-images.githubusercontent.com/97504973/154443537-cbcbd86c-9b57-4fea-beba-4c309beb7e4f.png)
+피그마  : https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1
 
 ## API 설계(API Table)
 
-![111111](https://user-images.githubusercontent.com/97504973/154630156-8eda365e-5293-4706-9cd1-5729a5e0ab1b.png)
-![2222222](https://user-images.githubusercontent.com/97504973/154630174-66e4c4f6-379a-4cc6-b25e-497b42228c63.png)
+노션 링크 : https://www.notion.so/c2c92742873b49a99e76d13c2468fc24?v=67e6eec90b79480cb5729d395656f302
 
 ## 테이블 도표(Entity Diagram)
 
