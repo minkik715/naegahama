@@ -23,7 +23,6 @@ public class JwtDecoder {
 
     public String decodeUsername(String token) throws TokenInvalidException {
 
-        log.info("디코드유저내임 순서 token = {}", token);
         String username;
         try {
             DecodedJWT decodedJWT = isValidToken(token)

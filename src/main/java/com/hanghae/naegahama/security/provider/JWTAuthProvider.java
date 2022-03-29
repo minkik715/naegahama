@@ -28,7 +28,6 @@ public class JWTAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
         String token = (String) authentication.getPrincipal();
-        log.info("여기는 어쓰 프로바이더");
         String username = jwtDecoder.decodeUsername(token);
 
         // TODO: API 사용시마다 매번 User DB 조회 필요
