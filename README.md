@@ -1,5 +1,5 @@
 # 내가하마!(naegahama!)
-<img src="https://user-images.githubusercontent.com/97504973/160697352-e59ea41b-cd20-4055-a965-027fc793e4e8.svg" height="500px" width="300px">
+<img src="https://user-images.githubusercontent.com/97504973/160697352-e59ea41b-cd20-4055-a965-027fc793e4e8.svg" height="1000px" width="300px">
 <br>
 <br>
 # 팀원 정보
