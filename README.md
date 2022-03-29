@@ -4,7 +4,7 @@
 <br>
 
 # 팀원 정보
-<img src="https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png" height="100%" width="100%">
+<img src="https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png" height="80%" width="80%">
 <br>
 <br>
 
@@ -23,9 +23,11 @@
 2022년 2월 25일 ~ 2022년 4월 8일
 <br>
 <br>
+
 # 2. 개발환경( Development).❤️
 
 ### 와이어 프레임(Wireframe)
+<img src="https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1" height="80%" width="80%">
 피그마 링크 : https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1
 
 ## API 설계(API Table)
