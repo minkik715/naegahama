@@ -1,24 +1,24 @@
 # 내가하마!(naegahama!)
 ![logo_final](https://user-images.githubusercontent.com/97504973/160319283-2c994fce-9f94-46e1-b3c3-d8df6b1b5d4b.svg)
-
-
-
+<br>
+<br>
+<br>
 # 팀원 정보
 ![팀원](https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png)
-
-
+<br>
+<br>
 # 1. 프로젝트 개요(Project).🎵
-
+<br>
 ### 프로젝트 소개(Introduction).
-    
-먹방, 여행브이로그, 게임영상, 전자기기 리뷰 등/n
-유투버들의 컨텐츠에서 대리만족을 찾고 계시나요?!/n
-저희 내가HAMA 서비스는 유투버들의 대리만족/n
-컨텐츠들과 달리 개인이 대리만족하고싶은 것들을/n
-공개적으로 요청하고 모든 유저가 블로거이자/n
-스트리머가 되어서 답변으로 컨텐츠를 만들어가는 서비스입니다!/n
-내가 원하는 부분을 간접경험으로 대리만족하고/n
-다른 분들의 요청에 답변을해주면서 내가 경험한것을/n
+ <br>
+먹방, 여행브이로그, 게임영상, 전자기기 리뷰 등<br>
+유투버들의 컨텐츠에서 대리만족을 찾고 계시나요?!<br>
+저희 내가HAMA 서비스는 유투버들의 대리만족<br>
+컨텐츠들과 달리 개인이 대리만족하고싶은 것들을<br>
+공개적으로 요청하고 모든 유저가 블로거이자<br>
+스트리머가 되어서 답변으로 컨텐츠를 만들어가는 서비스입니다!<br>
+내가 원하는 부분을 간접경험으로 대리만족하고<br>
+다른 분들의 요청에 답변을해주면서 내가 경험한것을<br>
 자랑도하고 타인을 행복하게하는 보람도 얻어가세요 :)
 
 ### 프로젝트 기간(Schedule).
@@ -29,15 +29,13 @@
 # 2. 개발환경( Development).❤️
 
 ### 와이어 프레임(Wireframe)
-피그마  : https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1
+피그마 링크 : https://www.figma.com/file/5664OUWKkhs03kyxIg7S1l/%EC%9D%B4%EA%B1%B4%EB%82%B4%EA%B0%80HAMA?node-id=0%3A1
 
 ## API 설계(API Table)
 
 노션 링크 : https://www.notion.so/c2c92742873b49a99e76d13c2468fc24?v=67e6eec90b79480cb5729d395656f302
 
-## 테이블 도표(Entity Diagram)
 
-![도표](https://user-images.githubusercontent.com/97504973/154630803-493d0081-4b84-434c-bb47-769733e6cf6f.png)
 
 # 3. 기술 스택(Tech Stack).🙅🏻‍♂️
 
