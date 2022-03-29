@@ -24,7 +24,7 @@ public class NaegahamaApplication {
             + "/home/ec2-user/app/deploy/aws.yml";
 
            /*  + "classpath:application-local.yml,"
-            + "classpath:aws.yml";/*
+            + "classpath:aws.yml";*/
 
 
 
