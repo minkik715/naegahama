@@ -21,7 +21,7 @@ public class PostFile extends Timestamped{
 
     @JsonManagedReference
     @JoinColumn(name = "post_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
     public PostFile(String url, Post post) {

@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.security;
 
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

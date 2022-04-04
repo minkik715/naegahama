@@ -1,13 +1,12 @@
 package com.hanghae.naegahama.handler;
 
-import com.hanghae.naegahama.comfortmethod.ComfortMethods;
+import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
-import com.hanghae.naegahama.handler.event.*;
-import com.hanghae.naegahama.ex.UserNotFoundException;
-import com.hanghae.naegahama.repository.AlarmRepository;
-import com.hanghae.naegahama.repository.CommentRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.event.*;
+import com.hanghae.naegahama.repository.alarmrepository.AlarmRepository;
+import com.hanghae.naegahama.repository.commentrepository.CommentRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -175,7 +174,7 @@ public class EventHandler {
                 answerAlarm(receiver, sender, (Answer) object, alarmType);
             }else if(alarmType.equals(AlarmType.child)){
                 Comment comment = (Comment) object;
-                Long parentCommentId = comment.getParentCommentId();
+                Long parentCommentId = comment.getParentComment().getId();
                 Optional<Comment> parent = commentRepository.findById(parentCommentId);
                 Comment comment1 = parent.get();
 

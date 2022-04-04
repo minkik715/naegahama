@@ -4,8 +4,9 @@ import com.hanghae.naegahama.domain.AnswerFile;
 import com.hanghae.naegahama.domain.PostFile;
 import com.hanghae.naegahama.dto.file.FileResponseDto;
 import com.hanghae.naegahama.dto.file.ImageUrlResponseDto;
-import com.hanghae.naegahama.repository.AnswerRepository;
-import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
+import com.hanghae.naegahama.repository.postrepository.PostRepository;
+import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class FileService
 
         if(type.equals("post"))
         {
-            List<PostFile> fileList = postRepository.findPostById(id).getFileList();
+            List<PostFile> fileList = ComfortMethods.getPost(id).getFileList();
 
             for ( PostFile file : fileList)
             {
@@ -68,7 +69,7 @@ public class FileService
         }
         else if ( type.equals("answer"))
         {
-            List<AnswerFile> fileList = answerRepository.findAnswerById(id).getFileList();
+            List<AnswerFile> fileList = ComfortMethods.getAnswer(id).getFileList();
             for ( AnswerFile file : fileList)
             {
                 imageUrl.add(file.getUrl());

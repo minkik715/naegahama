@@ -1,5 +1,6 @@
 package com.hanghae.naegahama.dto.search;
 
+import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,21 @@ public class SearchRequest {
         this.file =file;
         this.modifiedAt = TimeHandler.setModifiedAtLIst(modifiedAt);
         this.category = category;
+    }
+    public SearchRequest(Answer answer) {
+        this.id = answer.getId();
+        this.title = answer.getTitle();
+        this.content = answer.getContent();
+        this.file =answer.getFileList().get(0).getUrl();
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(answer.getModifiedAt());
+        this.category = answer.getPost().getCategory();
+    }
+    public SearchRequest(Answer answer, String emptyFile) {
+        this.id = answer.getId();
+        this.title = answer.getTitle();
+        this.content = answer.getContent();
+        this.file =emptyFile;
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(answer.getModifiedAt());
+        this.category = answer.getPost().getCategory();
     }
 }

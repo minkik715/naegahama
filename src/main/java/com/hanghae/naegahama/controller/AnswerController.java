@@ -23,6 +23,20 @@ public class AnswerController
 {
     private final AnswerService answerService;
 
+    @GetMapping("/answer/{postId}")
+    public List<AnswerGetResponseDto> answerList(@PathVariable Long postId)
+    {
+        return answerService.answerList(postId);
+    }
+
+
+    @GetMapping("/answer/detail/{answerId}")
+    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId )
+    {
+        return answerService.answerDetail(answerId);
+    }
+
+
     // 답변글 작성
     @PostMapping("/answer2/{postId}")
     public Long answerWrite (@RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
@@ -38,13 +52,16 @@ public class AnswerController
         }
     }
 
-
-    @ResponseBody
-    @GetMapping("/answer/{postId}")
-    public List<AnswerGetResponseDto> answerList(@PathVariable Long postId)
+    @PostMapping("/star/{answerId}")
+    public BasicResponseDto answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
     {
+        return answerService.answerStar(answerId, userDetails, starPostRequestDto);
+    }
 
-        return answerService.answerList(postId);
+    @PostMapping("/video/{answerId}")
+    public BasicResponseDto answerVideo (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException
+    {
+        return answerService.answerVideo(answerId, userDetails);
     }
 
 
@@ -63,23 +80,7 @@ public class AnswerController
         return answerService.answerDelete(answerId, userDetails);
     }
 
-    @GetMapping("/answer/detail/{answerId}")
-    public AnswerDetailGetResponseDto answerDetail (@PathVariable Long answerId )
-    {
-        return answerService.answerDetail(answerId);
-    }
 
-    @PostMapping("/star/{answerId}")
-    public BasicResponseDto answerStar (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody @Validated StarPostRequestDto starPostRequestDto)
-    {
-        return answerService.answerStar(answerId, userDetails, starPostRequestDto);
-    }
-
-    @PostMapping("/video/{answerId}")
-    public BasicResponseDto answerVideo (@PathVariable Long answerId, @AuthenticationPrincipal UserDetailsImpl userDetails ) throws IOException
-    {
-        return answerService.answerVideo(answerId, userDetails);
-    }
 
 }
 

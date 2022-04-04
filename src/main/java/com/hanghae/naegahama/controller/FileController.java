@@ -15,18 +15,17 @@ public class FileController
 {
     private final FileService fileService;
 
-    @PostMapping("/api/upload")
-    public FileResponseDto fileURL(@RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
-                                                   @RequestPart(name = "video",required = false) MultipartFile videoFile) throws IOException {
-        return fileService.fileURL(multipartFileList, videoFile);
-    }
-
-
     // 요청글 전체조회
     @GetMapping("/api/image/{type}/{id}")
     public ImageUrlResponseDto imgUrlList(@PathVariable String type , @PathVariable Long id)
     {
         return fileService.imgUrlList(type, id);
+    }
+
+    @PostMapping("/api/upload")
+    public FileResponseDto fileURL(@RequestPart(name = "file", required = false) List<MultipartFile> multipartFileList,
+                                                   @RequestPart(name = "video",required = false) MultipartFile videoFile) throws IOException {
+        return fileService.fileURL(multipartFileList, videoFile);
     }
 
 }

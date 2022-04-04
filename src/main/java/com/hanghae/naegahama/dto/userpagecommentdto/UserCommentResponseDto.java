@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor @Getter @Setter
 public class UserCommentResponseDto {
@@ -20,9 +21,9 @@ public class UserCommentResponseDto {
     private String modifiedAt;
     private String imgUrl;
     private String nickname;
-    private ArrayList<UserCommentResponseDto> childComments = new ArrayList<>();
+    private List<UserCommentResponseDto> childComments = new ArrayList<>();
 
-    public UserCommentResponseDto(UserComment userComment, ArrayList<UserCommentResponseDto>  childComments) {
+    public UserCommentResponseDto(UserComment userComment, List<UserCommentResponseDto> childComments) {
         this.userId = userComment.getPageUser().getId();
         this.nickname = userComment.getPageUser().getNickName();
         this.commentId = userComment.getId();

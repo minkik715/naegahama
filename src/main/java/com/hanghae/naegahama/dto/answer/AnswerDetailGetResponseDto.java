@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -28,9 +27,9 @@ public class AnswerDetailGetResponseDto
 
     private int star;
 
-    private int answerLikeCount;
+    private Long answerLikeCount;
 
-    private int commentCount;
+    private Long commentCount;
 
     private String answerWriter;
 
@@ -43,8 +42,8 @@ public class AnswerDetailGetResponseDto
     private String imgUrl;
     private Long userId;
 
-    public AnswerDetailGetResponseDto(Answer answer, int likeCount, int commentCount, List<Long> likeUserList,
-                                      List<String> fileList, String category) {
+    public AnswerDetailGetResponseDto(Answer answer, Long likeCount, Long commentCount, List<Long> likeUserList,
+                                      List<String> fileList, String category,String url) {
         this.answerId = answer.getId();
         this.requestWriterId = answer.getPost().getUser().getId();
         this.answerWriterId = answer.getUser().getId();
@@ -58,7 +57,7 @@ public class AnswerDetailGetResponseDto
         this.likeUserList = likeUserList;
         this.fileList = fileList;
         this.category = category;
-        this.videoUrl = answer.getAnswerVideo().getUrl();
+        this.videoUrl = url;
         this.imgUrl = answer.getUser().getHippoImage();
         this.userId = answer.getUser().getId();
     }

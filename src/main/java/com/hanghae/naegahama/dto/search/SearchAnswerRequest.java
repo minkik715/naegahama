@@ -10,9 +10,9 @@ import java.util.List;
 public class SearchAnswerRequest {
 
     private List<SearchRequest> searchRequest;
-    private Integer postCount;
+    private Long postCount;
 
-    public SearchAnswerRequest(List<SearchRequest> searchRequest, Integer postCount) {
+    public SearchAnswerRequest(List<SearchRequest> searchRequest, Long postCount) {
         this.searchRequest = searchRequest;
         this.postCount = postCount;
     }

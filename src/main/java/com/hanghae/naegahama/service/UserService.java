@@ -1,6 +1,11 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.comfortmethod.ComfortMethods;
+import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
+import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
+import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
+import com.hanghae.naegahama.repository.userrepository.UserQuerydslRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
+import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.Achievement;
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
@@ -13,7 +18,6 @@ import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.initial.Category;
-import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +34,11 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
-    private final AnswerRepository answerRepository;
-    private final PostLikeRepository postLikeRepository;
-    private final AnswerLikeRepository answerLikeRepository;
-
+    private final PostQuerydslRepository postQuerydslRepository;
+    private final UserQuerydslRepository userQuerydslRepository;
+    private final AnswerQuerydslRepository answerQuerydslRepository;
     public BasicResponseDto nicknameCheck(String nickname) {
-        Optional<User> findNickname = userRepository.findByNickName(nickname);
+        Optional<User> findNickname = userQuerydslRepository.findUserByNickanme(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
             return new BasicResponseDto("false");
         }
@@ -90,9 +92,9 @@ public class UserService {
     {
         User user = userDetails.getUser();
         return new MyCountDto(
-                user,postRepository.
-                countByUser(user),answerRepository.
-                countByUser(user));
+                user,
+                postQuerydslRepository.countPostByUser(user),
+                answerQuerydslRepository.countAnswerByUser(user));
     }
 
     public List<MyPostDto> userPost(Long userid)
@@ -104,10 +106,10 @@ public class UserService {
 
 
     private List<MyPostDto> getMyPostDtos(List<MyPostDto> myPageDtoList, User user) {
-        List<Post> postList = postRepository.findAllByUserOrderByModifiedAtDesc(user);
+        List<Post> postList = postQuerydslRepository.findPostByUser(user.getId());
         for (Post post : postList)
         {
-            MyPostDto postMyPageDto = new MyPostDto(post, user,postLikeRepository.countByPost(post));
+            MyPostDto postMyPageDto = new MyPostDto(post, user, (long) post.getPostLikes().size());
 
             if ( post.getFileList().size() != 0)
             {
@@ -126,12 +128,11 @@ public class UserService {
     }
 
     private List<MyAnswerDto> getMyAnswerDtos(List<MyAnswerDto> myAnswerDtoList, User user) {
-        List<Answer> answerList = answerRepository.findAllByUserOrderByModifiedAtDesc(user);
+        List<Answer> answerList = answerQuerydslRepository.findAnswersByUser(user.getId());
         for (Answer answer : answerList)
         {
 
-            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user,answerLikeRepository.countByAnswer(answer));
-
+            MyAnswerDto myAnswerDto = new MyAnswerDto(answer, user,answer.getLikeList().size());
             if ( answer.getFileList().size() != 0)
             {
                 myAnswerDto.setImg(answer.getFileList().get(0).getUrl());
@@ -149,7 +150,8 @@ public class UserService {
     private MyBannerDto getMyBannerDto(User user) {
         ArrayList<String> expert = new ArrayList<>();
         for (String cate : Category.category) {
-            if(answerRepository.countByUserAndPost_CategoryAndStarGreaterThanEqual(user, cate, 4) >=5){
+            //요기는 N+1문제가 아니다 단지 카테고리수 만큼 확인해야할뿐임
+            if(answerQuerydslRepository.countByUserPostCate(user.getId(), cate) >=5){
                 expert.add(cate);
             }
         }
@@ -181,7 +183,7 @@ public class UserService {
     {
         User user = ComfortMethods.getUser(userid);
         return new MyCountDto(user,
-                postRepository.countByUser(user),
-                answerRepository.countByUser(user));
+                postQuerydslRepository.countPostByUser(user),
+                answerQuerydslRepository.countAnswerByUser(user));
     }
 }

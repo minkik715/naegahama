@@ -35,21 +35,6 @@ public class UserController {
     private final UserService userService;
     private final KakaoUserService kakaoUserService;
 
-
-    @PostMapping("/user/nickname")
-    public BasicResponseDto emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
-        return userService.nicknameCheck(nickNameDuplicateCheckDto.getNickname());
-    }
-
-    @PostMapping("/user/kakaoLogin")
-    public LoginResponseDto login(@RequestBody @Validated Map<String, Object> param, HttpServletResponse response) throws JsonProcessingException {
-        return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(), response);
-    }
-
-    @PostMapping("/userinfo")
-    public BasicResponseDto setUserInfo(@RequestBody @Validated UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.setUserInfo(userDetails.getUser(), userInfoRequestDto);
-    }
     @GetMapping("/mypost")
     public List<MyPostDto> myPost(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
@@ -90,6 +75,22 @@ public class UserController {
     public MyCountDto mycount(@AuthenticationPrincipal UserDetailsImpl userDetails)
     {
         return userService.mycount(userDetails);
+    }
+
+
+    @PostMapping("/user/nickname")
+    public BasicResponseDto emailCheck(@RequestBody @Validated NickNameDuplicateCheckDto nickNameDuplicateCheckDto){
+        return userService.nicknameCheck(nickNameDuplicateCheckDto.getNickname());
+    }
+
+    @PostMapping("/user/kakaoLogin")
+    public LoginResponseDto login(@RequestBody @Validated Map<String, Object> param, HttpServletResponse response) throws JsonProcessingException {
+        return kakaoUserService.kakaoLogin(param.get("kakaoToken").toString(), response);
+    }
+
+    @PostMapping("/userinfo")
+    public BasicResponseDto setUserInfo(@RequestBody @Validated UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.setUserInfo(userDetails.getUser(), userInfoRequestDto);
     }
 
 }

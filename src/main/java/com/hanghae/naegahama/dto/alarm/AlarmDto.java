@@ -24,6 +24,7 @@ public class AlarmDto implements Serializable {
     private ReadingStatus readingStatus;
 
     public AlarmDto(Alarm alarm) {
+        alarm.changeReadingStatus(ReadingStatus.Y);
         this.alarmId = alarm.getAlarmId();
         this.senderNickName = alarm.getSenderNickName();
         this.alarmType = alarm.getAlarmType();

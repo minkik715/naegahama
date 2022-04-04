@@ -19,13 +19,13 @@ public class KidsCommentListResponseDto {
     private String imgUrl;
 
     private Long userId;
-    public KidsCommentListResponseDto(Comment comment, User user) {
+    public KidsCommentListResponseDto(Comment comment) {
         this.commentId = comment.getId();
-        this.commentWriterId = user.getId();
-        this.commentWriter = user.getNickName();
+        this.commentWriterId = comment.getUser().getId();
+        this.commentWriter = comment.getUser().getNickName();
         this.content = comment.getContent();
         this.modifiedAt = TimeHandler.setModifiedAtComment(comment.getModifiedAt());
-        this.imgUrl = user.getHippoImage();
-        this.userId = user.getId();
+        this.imgUrl = comment.getUser().getHippoImage();
+        this.userId = comment.getUser().getId();
     }
 }

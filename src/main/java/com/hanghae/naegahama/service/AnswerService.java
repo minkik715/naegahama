@@ -1,16 +1,23 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.comfortmethod.ComfortMethods;
+import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileQuerydslRepository;
+import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileRepository;
+import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
+import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeRepository;
+import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
+import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
+import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoQuerydslRepository;
+import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoRepository;
+import com.hanghae.naegahama.repository.commentrepository.CommentQuerydslRepository;
+import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.answer.*;
 
 import com.hanghae.naegahama.dto.file.FileResponseDto;
-import com.hanghae.naegahama.handler.event.StarGiveEvent;
-import com.hanghae.naegahama.handler.event.AnswerWriteEvent;
+import com.hanghae.naegahama.event.StarGiveEvent;
+import com.hanghae.naegahama.event.AnswerWriteEvent;
 
-import com.hanghae.naegahama.ex.UserNotFoundException;
-import com.hanghae.naegahama.repository.*;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.util.S3Uploader;
 import com.hanghae.naegahama.util.VideoEncode;
@@ -32,6 +39,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -40,13 +48,14 @@ import java.util.UUID;
 public class AnswerService
 {
     private final AnswerRepository answerRepository;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final AnswerLikeRepository answerLikeRepository;
+    private final AnswerQuerydslRepository answerQuerydslRepository;
+   private final AnswerFileQuerydslRepository answerFileQuerydslRepository;
+    private final AnswerLikeQuerydslRepository answerLikeQuerydslRepository;
+    private final CommentQuerydslRepository commentQuerydslRepository;
     private final AnswerFileRepository answerFileRepository;
     private final AnswerVideoRepository answerVideoRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-
+    private final AnswerVideoQuerydslRepository answerVideoQuerydslRepository;
     private final S3Uploader s3Uploader;
     private final VideoEncode videoEncode;
 
@@ -58,21 +67,9 @@ public class AnswerService
     // 요청 글에 달린 answerList 조회
     @Transactional(readOnly = true)
     public List<AnswerGetResponseDto>answerList(Long postId) {
-
-        List<Answer> answerList = answerRepository.findAllByPostIdOrderByCreatedAt(postId);
-        List<AnswerGetResponseDto> answerGetResponseDtoList = new ArrayList<>();
-        for (Answer answer : answerList) {
-            AnswerGetResponseDto answerGetResponseDto = new AnswerGetResponseDto(
-                    answer,
-                    commentRepository.countByAnswer(answer),
-                    answerLikeRepository.countByAnswer(answer),
-                    answer.getFileList().size()
-            );
-            answerGetResponseDtoList.add(answerGetResponseDto);
-        }
-
-        return answerGetResponseDtoList;
-
+        return answerQuerydslRepository.findAnswersByPostId(postId).stream().
+                map(AnswerGetResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 
@@ -80,7 +77,7 @@ public class AnswerService
     public BasicResponseDto answerUpdate(Long answerId, UserDetailsImpl userDetails, AnswerPutRequestDto answerPutRequestDto )
     {
         Answer answer = ComfortMethods.getAnswer(answerId);
-        Post post = postRepository.findPostById(answer.getPost().getId());
+        Post post = ComfortMethods.getPost(answer.getPost().getId());
         if(post.getStatus().equals("closed")){
             return (new BasicResponseDto("마감이 된 글에는 답변을 수정할 수 없습니다."));
         }
@@ -92,7 +89,7 @@ public class AnswerService
         answerVideoRepository.deleteByAnswer(answer);
         createfileUrl(answer, answerPutRequestDto.getFile());
         AnswerVideo videoUrl = new AnswerVideo(answerPutRequestDto.getVideo(),answer);
-        ;
+
         answerVideoRepository.save(videoUrl);
         return new BasicResponseDto("success");
     }
@@ -115,21 +112,26 @@ public class AnswerService
         Answer answer =  ComfortMethods.getAnswer(answerId);
         List<Long> likeUserList = new ArrayList<>();
         List<String> fileList = new ArrayList<>();
-        for (AnswerFile answerFile : answerFileRepository.findAllByAnswerOrderByCreatedAt(answer)) {
+        for (AnswerFile answerFile : answerFileQuerydslRepository.findFilesByAnswer(answer.getId())) {
             fileList.add(answerFile.getUrl());
         }
         for ( AnswerLike likeUser : answer.getLikeList())
         {
             likeUserList.add(likeUser.getUser().getId());
         }
+        AnswerVideo answerVideo = answerVideoQuerydslRepository.findVideoByAnswer(answer.getId()).orElseThrow(
+                () -> new IllegalArgumentException(" ")
+        );
         AnswerDetailGetResponseDto answerDetailGetResponseDto = new AnswerDetailGetResponseDto(
                 answer,
-                answerLikeRepository.countByAnswer(answer),
-                commentRepository.countByAnswer(answer),
+                answerLikeQuerydslRepository.countAnsLikes(answer.getId()),
+                commentQuerydslRepository.countCommentByAnswer(answer.getId()),
                 likeUserList,
                 fileList,
-                answer.getPost().getCategory()
-        );
+                answer.getPost().getCategory(),
+                answerVideo.getUrl()
+
+                );
 
         return answerDetailGetResponseDto;
     }
@@ -149,7 +151,7 @@ public class AnswerService
     public BasicResponseDto answerVideo(Long answerId, UserDetailsImpl userDetails) throws IOException
     {
         Answer answer = ComfortMethods.getAnswer(answerId);
-        AnswerVideo video = answerVideoRepository.findByAnswer(answer).orElseThrow(
+        AnswerVideo video = answerVideoQuerydslRepository.findVideoByAnswer(answer.getId()).orElseThrow(
                 () -> new IllegalArgumentException("해당 영상은 존재하지 않습니다."));
         String fileName = URLDecoder.decode(video.getUrl().split("static/")[1], "UTF-8");
         InputStream in = s3Uploader.getObject("static/" + fileName).getObjectContent();
@@ -189,7 +191,7 @@ public class AnswerService
             video = s3Uploader.upload(videoFile, "static",true);
         }
         FileResponseDto fileResponseDto = new FileResponseDto(file, video);
-        Post post = postRepository.findPostById(postId);
+        Post post = ComfortMethods.getPost(postId);
         if(post.getStatus().equals("false"))
         {
             return 0L;

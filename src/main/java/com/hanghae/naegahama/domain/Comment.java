@@ -1,10 +1,13 @@
 package com.hanghae.naegahama.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,17 +22,24 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String content;
 
-    @Column
-    private Long parentCommentId;
+
+    @JsonManagedReference
+    @JoinColumn(name="parent_comment_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment parentComment;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "parentComment")
+    private List<Comment> childCommentList = new ArrayList<>();
 
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Answer answer;
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column
@@ -41,14 +51,14 @@ public class Comment extends Timestamped{
         this.answer = findAnswer;
         this.user = user;
         this.timestamp = timestamp;
-        this.parentCommentId = null;
+        this.parentComment = null;
         findAnswer.getCommentList().add(this);
     }
 
     //대댓글 생성
-    public Comment(String commentContent,Long parentCommentId, Answer findAnswer, User user) {
+    public Comment(String commentContent,Comment parentComment, Answer findAnswer, User user) {
         this.content = commentContent;
-        this.parentCommentId = parentCommentId;
+        this.parentComment = parentComment;
         this.answer = findAnswer;
         this.user = user;
         this.timestamp = null;

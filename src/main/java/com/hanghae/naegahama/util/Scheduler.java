@@ -1,8 +1,8 @@
 package com.hanghae.naegahama.util;
 
 import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.handler.event.PostClosedEvent;
-import com.hanghae.naegahama.repository.PostRepository;
+import com.hanghae.naegahama.event.PostClosedEvent;
+import com.hanghae.naegahama.repository.postrepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,7 +25,7 @@ public class Scheduler {
     @Transactional
     @Scheduled(cron = "*/30 * * * * *")
     public void changeTime() {
-        List<Post> posts = postRepository.findAll();
+       /* List<Post> posts = postRepository.findAll();
         for (Post post : posts) {
             if (post.getDeadLine().getYear() != 2100) {
                 if (post.getStatus().equals("opened") && post.getDeadLine().isBefore(LocalDateTime.now())) {
@@ -33,7 +33,7 @@ public class Scheduler {
                     applicationEventPublisher.publishEvent(new PostClosedEvent(post.getUser(),post));
                 }
             }
-        }
+        }*/
     }
 
 //락을 건다 -> 레디스  -> 레디스에 알람보내기 레디스

@@ -19,13 +19,6 @@ public class SurveyController {
 
     private final SurveyService surveyService;
 
-    //설문조사 제출
-    @PostMapping("/api/survey")
-    public BasicResponseDto createHippo(@RequestBody @Validated SurveyRequestDto surveyRequestDto,
-                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return  surveyService.createHippo(surveyRequestDto, userDetails.getUser());
-    }
-
     //설문조사 결과
     @GetMapping("/api/survey")
     public SurveyresponseDto getHippo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -37,5 +30,13 @@ public class SurveyController {
     public List<CommendResponseDto> recommend(@PathVariable String hippoName) {
         return surveyService.recommend(hippoName);
     }
+
+    //설문조사 제출
+    @PostMapping("/api/survey")
+    public BasicResponseDto createHippo(@RequestBody @Validated SurveyRequestDto surveyRequestDto,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return  surveyService.createHippo(surveyRequestDto, userDetails.getUser());
+    }
+
 
 }

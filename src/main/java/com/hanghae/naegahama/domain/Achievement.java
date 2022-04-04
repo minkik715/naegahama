@@ -21,38 +21,22 @@ public class Achievement extends Timestamped
     private Long id;
 
     @Column
-    private Integer achievement1;
+    private Integer achievement1=0;
     @Column
-    private Integer achievement2;
+    private Integer achievement2=0;
     @Column
-    private Integer achievement3;
+    private Integer achievement3=0;
     @Column
-    private Integer achievement4;
+    private Integer achievement4=0;
     @Column
-    private Integer achievement5;
+    private Integer achievement5=0;
     @Column
-    private Integer achievement6;
+    private Integer achievement6=0;
     @Column
-    private Integer achievement7;
+    private Integer achievement7=0;
     @Column
-    private Integer achievement8;
+    private Integer achievement8=0;
 
-
-    @OneToOne ( mappedBy = "achievement") // user entity의 achievement 변수에 종속 당하겠다.
-    User user;
-
-    public Achievement(User user)
-    {
-        this.achievement1 = 0;
-        this.achievement2 = 0;
-        this.achievement3 = 0;
-        this.achievement4 = 0;
-        this.achievement5 = 0;
-        this.achievement6 = 0;
-        this.achievement7 = 0;
-        this.achievement8 = 0;
-        this.user = user;
-    }
 
     public ArrayList<Integer> getAchievementList(){
         return new ArrayList<Integer>(Arrays.asList(achievement1, achievement2, achievement3, achievement4, achievement5,

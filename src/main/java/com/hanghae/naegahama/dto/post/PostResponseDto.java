@@ -17,7 +17,7 @@ public class PostResponseDto {
     private String content;
     private String modifiedAt;
     private Integer answerCount;
-    private Long postLikeCount;
+    private Integer postLikeCount;
     private String timeSet;
     private String status;
 
@@ -27,7 +27,7 @@ public class PostResponseDto {
     private Long userId;
 
     public PostResponseDto(Post post,
-                           Integer answerCount, Long postLikeCount, String timeSet, User user) {
+                           Integer answerCount, Integer postLikeCount, String timeSet, User user) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
@@ -39,6 +39,20 @@ public class PostResponseDto {
         this.writer = user.getNickName();
         this.imgUrl = user.getHippoImage();
         this.userId = user.getId();
+
+    }
+    public PostResponseDto(Post post, String timeSet) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.answerCount = post.getAnswerList().size();
+        this.postLikeCount = post.getPostLikes().size();
+        this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
+        this.timeSet = timeSet;
+        this.status = post.getStatus();
+        this.writer = post.getUser().getNickName();
+        this.imgUrl = post.getUser().getHippoImage();
+        this.userId = post.getUser().getId();
 
     }
 }

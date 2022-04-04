@@ -21,12 +21,12 @@ public class AnswerLike {
 
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Answer answer;
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Builder

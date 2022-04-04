@@ -20,14 +20,6 @@ public class PostController {
 
     private final PostService postService;
 
-    // 요청글 작성
-    @PostMapping("/api/post")
-    public Long createPost(@RequestBody @Validated PostRequestDto postRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
-        return postService.createPost(postRequestDto, userDetails);
-    }
-
     // 요청글 전체조회
     @GetMapping("/api/post")
     public List<PostResponseDto> getPost() {
@@ -40,15 +32,6 @@ public class PostController {
         return postService.getCategory(category);
     }
 
-    // 요청글 수정
-    @PutMapping("/api/post/{postId}")
-    public BasicResponseDto updatePost(@PathVariable Long postId, @RequestBody @Validated PutRequestDto putRequestDto,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails)
-    {
-        return postService.updatePost(postId, putRequestDto, userDetails);
-    }
-
-
     // 요청글 상세조회
     @GetMapping("/api/post/{postId}")
     public ResponseDto getPost1(@PathVariable Long postId) {
@@ -59,6 +42,31 @@ public class PostController {
     public List<PostResponseDto>  getPostByCategoryAndSort(@PathVariable String category, @PathVariable String sort){
         return postService.getPostByCategoryAndSort(category, sort);
     }
+
+    @GetMapping("/api/post/admin")
+    public List<PostResponseDto> getAdminPost(){
+        return postService.getAdminPost();
+    }
+
+
+    // 요청글 작성
+    @PostMapping("/api/post")
+    public Long createPost(@RequestBody @Validated PostRequestDto postRequestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return postService.createPost(postRequestDto, userDetails);
+    }
+
+
+    // 요청글 수정
+    @PutMapping("/api/post/{postId}")
+    public BasicResponseDto updatePost(@PathVariable Long postId, @RequestBody @Validated PutRequestDto putRequestDto,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails)
+    {
+        return postService.updatePost(postId, putRequestDto, userDetails);
+    }
+
+
     //요청글 마감
     @PostMapping("/api/post/{postId}")
     public BasicResponseDto finishPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -66,10 +74,6 @@ public class PostController {
     }
 
 
-    @GetMapping("/api/post/admin")
-    public List<PostResponseDto> getAdminPost(){
-        return postService.getAdminPost();
-    }
 
 
 

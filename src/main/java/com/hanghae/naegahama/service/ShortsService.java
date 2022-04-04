@@ -5,8 +5,8 @@ import com.hanghae.naegahama.domain.AnswerVideo;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.shorts.ShortsResponseDto;
 import com.hanghae.naegahama.ex.AnswerFileNotFoundException;
-import com.hanghae.naegahama.repository.AnswerVideoRepository;
-import com.hanghae.naegahama.repository.CommentRepository;
+import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoQuerydslRepository;
+import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +19,10 @@ import java.util.*;
 public class ShortsService {
 
     private final AnswerVideoRepository answerVideoRepository;
-    private final CommentRepository commentRepository;
+    private final AnswerVideoQuerydslRepository answerVideoQuerydslRepository;
     @Transactional(readOnly = true)
     public List<ShortsResponseDto> getOneShorts() {
-        List<AnswerVideo> mp4File = answerVideoRepository.findAllByUrlEndingWithOrUrlEndingWithOrderByCreatedAtDesc("mp4", "short");
+        List<AnswerVideo> mp4File = answerVideoQuerydslRepository.findVideosByExt("mp4", "short");
         int size = mp4File.size();
         if(size == 0){
             throw new AnswerFileNotFoundException("동영상이 존재하지 않습니다.");
@@ -34,7 +34,7 @@ public class ShortsService {
             User user = answer.getUser();
             String url = answerVideo.getUrl();
 
-            int commentCnt = commentRepository.countByAnswer(answer);
+            int commentCnt = answer.getCommentList().size();
             if(url.substring(url.lastIndexOf(".")+1).equals("mp4")){
                 url = url.replace("mp4", "short");
             }

@@ -117,6 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //error
         skipPathList.add("GET,/api/error");
         skipPathList.add("GET,/health");
+        skipPathList.add("GET,/test");
 
         // h2-console 허용
 

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +37,12 @@ public class Answer extends Timestamped {
 
     @JsonManagedReference
     @JoinColumn(name = "post_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch =FetchType.LAZY)
     private User user;
 
     public Answer(String title, int star, String content, Post post, User user) {
@@ -66,14 +65,6 @@ public class Answer extends Timestamped {
     @OneToMany(mappedBy = "answer",cascade = CascadeType.REMOVE)
     private List<AnswerFile> fileList = new ArrayList<>();
 
-    @JsonBackReference
-    @OneToOne(mappedBy = "answer",cascade = CascadeType.REMOVE)
-    private AnswerVideo answerVideo;
-
-
-    public void changeAnswerVideo(AnswerVideo answerVideo) {
-        this.answerVideo = answerVideo;
-    }
 
     public Answer(AnswerPostRequestDto answerPostRequestDto, Post post, User user)
     {

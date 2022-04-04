@@ -1,11 +1,13 @@
 package com.hanghae.naegahama.service;
 
-import com.hanghae.naegahama.comfortmethod.ComfortMethods;
+import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
+import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeRepository;
+import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
+import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
-import com.hanghae.naegahama.handler.event.AnswerLikeEvent;
-import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.event.AnswerLikeEvent;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -17,8 +19,9 @@ import javax.transaction.Transactional;
 @Service
 public class AnswerLikeService {
     private final AnswerLikeRepository answerLikeRepository;
-    private final AnswerRepository answerRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+
+    private final AnswerLikeQuerydslRepository answerLikeQuerydslRepository;
 
 
     @Transactional
@@ -43,6 +46,6 @@ public class AnswerLikeService {
             }
         }
 
-        return new AnswerLikeResponseDto(answerId, answerLikeRepository.countByAnswer(answer));
+        return new AnswerLikeResponseDto(answerId, answerLikeQuerydslRepository.countAnsLikes(answer.getId()));
     }
 }
