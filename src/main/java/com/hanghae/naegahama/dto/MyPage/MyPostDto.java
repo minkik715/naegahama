@@ -7,8 +7,6 @@ import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 public class MyPostDto

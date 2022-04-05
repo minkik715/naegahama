@@ -40,6 +40,11 @@ public class UserPageController {
         return userService.userBanner(userid);
     }
 
+    @GetMapping("/userpage/comment/{userId}")
+    public UserPageCommentListResponseDto getUserPageCommentList(@PathVariable Long userId){
+        return userPageService.getUserPageCommentList(userId);
+    }
+
     @GetMapping("/userpage/achievement/{userid}")
     public MyAchievementDto userAchievement(@PathVariable Long userid)
     {
@@ -57,11 +62,6 @@ public class UserPageController {
         return userPageService.writeUserPageComment(userId, userDetails, userCommentRequestDto);
     }
 
-    @GetMapping("/userpage/comment/{userId}")
-    public UserPageCommentListResponseDto getUserPageCommentList(@PathVariable Long userId){
-        return userPageService.getUserPageCommentList(userId);
-    }
-
     @PutMapping("/userpage/comment/{commentId}")
     public UserCommentResponseDto modifyUserPageCommentList(@RequestBody UserCommentRequestDto userCommentRequestDto, @PathVariable Long commentId){
         return userPageService.modifyUserPageCommentList(userCommentRequestDto, commentId);
@@ -71,5 +71,7 @@ public class UserPageController {
     public BasicResponseDto deleteUserPageCommentList(@PathVariable Long commentId){
         return userPageService.deleteUserPageCommentList(commentId);
     }
+
+
 
 }

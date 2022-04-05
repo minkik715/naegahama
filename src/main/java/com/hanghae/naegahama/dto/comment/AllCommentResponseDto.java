@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.dto.comment;
 
-import com.hanghae.naegahama.domain.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

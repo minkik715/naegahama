@@ -1,8 +1,6 @@
 package com.hanghae.naegahama.dto.answer;
 
 import lombok.Getter;
-
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter

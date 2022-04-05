@@ -2,7 +2,6 @@ package com.hanghae.naegahama.dto.rank;
 
 import com.hanghae.naegahama.domain.RankStatus;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.initial.HippoURL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

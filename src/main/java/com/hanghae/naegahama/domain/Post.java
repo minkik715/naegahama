@@ -46,7 +46,7 @@ public class Post extends Timestamped implements Comparable<Post> {
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public void setDeadLine(LocalDateTime deadLine)

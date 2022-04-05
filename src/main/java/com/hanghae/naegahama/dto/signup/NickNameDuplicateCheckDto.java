@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.dto.signup;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;

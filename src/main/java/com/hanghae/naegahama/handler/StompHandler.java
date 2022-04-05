@@ -1,9 +1,9 @@
 package com.hanghae.naegahama.handler;
 
+import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.RedisRepository;
-import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor

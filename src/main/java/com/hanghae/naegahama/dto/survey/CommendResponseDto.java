@@ -1,12 +1,9 @@
 package com.hanghae.naegahama.dto.survey;
 
 import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.PostLike;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

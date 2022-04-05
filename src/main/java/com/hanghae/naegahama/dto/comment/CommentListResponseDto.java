@@ -2,13 +2,14 @@ package com.hanghae.naegahama.dto.comment;
 
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.initial.HippoURL;
 import com.hanghae.naegahama.util.TimeHandler;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Getter @NoArgsConstructor
+@Getter @NoArgsConstructor @Data
 public class CommentListResponseDto {
     private Long answerId;
     private Long commentId;
@@ -26,6 +27,7 @@ public class CommentListResponseDto {
     private Long userId;
 
 
+    @QueryProjection
     public CommentListResponseDto(Comment comment, User user, Long childCnt) {
         this.answerId = comment.getAnswer().getId();
         this.commentId = comment.getId();

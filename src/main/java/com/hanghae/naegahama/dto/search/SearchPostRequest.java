@@ -9,9 +9,9 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchPostRequest {
     private List<SearchRequest> searchRequest;
-    private Integer answerCount;
+    private Long answerCount;
 
-    public SearchPostRequest(List<SearchRequest> searchRequest, Integer answerCount) {
+    public SearchPostRequest(List<SearchRequest> searchRequest, Long answerCount) {
         this.searchRequest = searchRequest;
         this.answerCount = answerCount;
     }

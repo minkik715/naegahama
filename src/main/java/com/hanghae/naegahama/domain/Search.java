@@ -21,7 +21,7 @@ public class Search extends Timestamped {
 
     @JsonManagedReference
     @JoinColumn(name = "user_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public Search(String searchWord, User user) {

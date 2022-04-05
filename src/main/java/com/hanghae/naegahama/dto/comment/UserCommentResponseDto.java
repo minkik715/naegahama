@@ -1,6 +1,5 @@
 package com.hanghae.naegahama.dto.comment;
 
-import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.UserComment;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;

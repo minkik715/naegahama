@@ -18,6 +18,17 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @GetMapping("/comment/answer/{answerId}")
+    public List<CommentListResponseDto> getCommentList(@PathVariable Long answerId){
+        return commentService.getCommentList(answerId);
+    }
+
+    @GetMapping("/comment/{commentId}")
+    public AllCommentResponseDto getKidsCommentList(@PathVariable Long commentId){
+        return commentService.getKidsCommentList(commentId);
+    }
+
+
     @PostMapping("/comment/{answerId}")
     public CommentResponseDto writeComment(@PathVariable Long answerId,
                                                            @RequestBody @Validated CommentRequestDto commentRequestDto,
@@ -35,15 +46,6 @@ public class CommentController {
         return commentService.deleteComment(commentId);
     }
 
-    @GetMapping("/comment/answer/{answerId}")
-    public List<CommentListResponseDto> getCommentList(@PathVariable Long answerId){
-        return commentService.getCommentList(answerId);
-    }
-
-    @GetMapping("/comment/{commentId}")
-    public AllCommentResponseDto getKidsCommentList(@PathVariable Long commentId){
-        return commentService.getKidsCommentList(commentId);
-    }
 
 
 }

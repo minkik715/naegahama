@@ -26,4 +26,6 @@ application.yml
 jwt.yml
 aws.yml
 *.exe
+build
+out
 

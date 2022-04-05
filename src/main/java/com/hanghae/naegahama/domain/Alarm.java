@@ -20,7 +20,7 @@ public class Alarm extends Timestamped {
     private Long alarmId;
 
     @JsonManagedReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private User receiver;
 

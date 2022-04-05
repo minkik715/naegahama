@@ -5,7 +5,6 @@ import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

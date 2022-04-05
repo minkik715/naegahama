@@ -2,13 +2,15 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.handler.event.SearchWordEvent;
+import com.hanghae.naegahama.event.SearchWordEvent;
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
 import com.hanghae.naegahama.dto.search.SearchWords;
-import com.hanghae.naegahama.ex.SearchNotFoundException;
-import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
+import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
+import com.hanghae.naegahama.repository.searcgrepository.SearchQuerydslRepository;
+import com.hanghae.naegahama.repository.searcgrepository.SearchRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 
 @RequiredArgsConstructor
 @Service
@@ -26,24 +30,22 @@ import java.util.List;
 @Transactional
 public class SearchService {
 
-    private final PostRepository postRepository;
-    private final AnswerRepository answerRepository;
+    private final AnswerQuerydslRepository answerQuerydslRepository;
+    private final PostQuerydslRepository postQuerydslRepository;
+    private final SearchQuerydslRepository searchQuerydslRepository;
     private final SearchRepository searchRepository;
-    private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
 
     //검색키워드 searchRepository에 저장.
     public SearchPostRequest postSearchList(String searchWord, UserDetailsImpl userDetails) {
-        log.info("searchWord = {}", searchWord);
-
-
 
         //요청글 검색.
-        List<Post> posts = postRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
+        List<Post> posts = postQuerydslRepository.findPostBySearchWord(searchWord);
         List<SearchRequest> searchRequests = new ArrayList<>();
 
-        Integer answerCount = answerRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
+        Long answerCount = answerQuerydslRepository.countBySearchWord(searchWord);
+
         if (posts.size() == 0) {
             searchWordEvent(searchWord, userDetails);
             return new SearchPostRequest(searchRequests, answerCount);
@@ -53,6 +55,7 @@ public class SearchService {
             if (post.getFileList().size() != 0) {
                 file = post.getFileList().get(0).getUrl();
             }
+
             SearchRequest searchRequest = new SearchRequest(
                     post.getId(),
                     post.getTitle(),
@@ -77,11 +80,11 @@ public class SearchService {
     //답변글 검색
     public SearchAnswerRequest answerSearchList(String searchWord, UserDetailsImpl userDetails) {
         log.info("searchWord = {}", searchWord);
-        List<Answer> Answers = answerRepository.findAllByTitleContainingOrContentContainingOrderByCreatedAtDesc(searchWord, searchWord);
+        List<Answer> answers = answerQuerydslRepository.findAnswerBySearchWord(searchWord);
         List<SearchRequest> searchRequests = new ArrayList<>();
 
-        Integer postCount = postRepository.countByContentContainingOrTitleContaining(searchWord, searchWord);
-        if (Answers.size() == 0) {
+        Long postCount = postQuerydslRepository.countBySearchWord(searchWord);
+        if (answers.size() == 0) {
             SearchAnswerRequest searchAnswerRequest = new SearchAnswerRequest(
                     searchRequests,
                     postCount
@@ -89,60 +92,59 @@ public class SearchService {
             searchWordEvent(searchWord, userDetails);
             return searchAnswerRequest;
         }
-        for (Answer Answer : Answers) {
+        /*for (Answer answer : answers) {
             String file = null;
-            if (Answer.getFileList().size() != 0) {
-                file = Answer.getFileList().get(0).getUrl();
+            *//*if (answer.getFileList().size() != 0) {
+                file = answer.getFileList().get(0).getUrl();
             }
             SearchRequest searchRequest = new SearchRequest(
-                    Answer.getId(),
-                    Answer.getTitle(),
-                    Answer.getContent(),
-                    Answer.getModifiedAt(),
+                    answer.getId(),
+                    answer.getTitle(),
+                    answer.getContent(),
+                    answer.getModifiedAt(),
                     file,
-                    Answer.getPost().getCategory()
-            );
-            searchRequests.add(searchRequest);
-        }
+                    answer.getPost().getCategory()
+            );*//*
 
-        SearchAnswerRequest searchAnswerRequest = new SearchAnswerRequest(
-                searchRequests,
-                postCount
-        );
-        searchWordEvent(searchWord, userDetails);
-        return searchAnswerRequest;
+            searchRequests.add(searchRequest);
+        }*/
+        try {
+            searchRequests = answers.stream()
+                    .map(SearchRequest::new)
+                    .collect(toList());
+        }catch (Exception e){
+            searchRequests = answers.stream()
+                    .map(a -> new SearchRequest(a,null))
+                    .collect(toList());
+        }
+            SearchAnswerRequest searchAnswerRequest = new SearchAnswerRequest(
+                    searchRequests,
+                    postCount
+            );
+            searchWordEvent(searchWord, userDetails);
+            return searchAnswerRequest;
+
+
+
     }
 
     private void searchWordEvent(String searchWord, UserDetailsImpl userDetails) {
         if (!(userDetails == null)) {
             User user = userDetails.getUser();
-            if (!searchRepository.existsBySearchWordAndUser(searchWord, user)) {
+            if (!searchQuerydslRepository.existSearchByUserWord(user.getId(),searchWord)) {
                 Search search = new Search(searchWord, user);
                 searchRepository.save(search);
             }
-            User achievementUser = userRepository.findById(user.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("업적 달성 유저가 존재하지 않습니다."));
-            applicationEventPublisher.publishEvent(new SearchWordEvent(achievementUser));
+            applicationEventPublisher.publishEvent(new SearchWordEvent(user));
         }
     }
 
     //최근검색어 조회.
     @Transactional(readOnly = true)
     public List<SearchWords> SearchList(UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
-        List<Search> searches = searchRepository.findAllByUserOrderByCreatedAtDesc(user);
-        List<SearchWords> response = new ArrayList<>();
-
-        if (searches == null) {
-            throw new SearchNotFoundException("검색어가 존재하지 않습니다");
-        }
-
-        for (Search search : searches) {
-            SearchWords searchWords = new SearchWords(search);
-
-            response.add(searchWords);
-        }
-        return response;
+        return searchQuerydslRepository.findSearchByUser(userDetails.getUser().getId()).stream()
+                .map(SearchWords::new)
+                .collect(toList());
     }
 
     //검색어 삭제

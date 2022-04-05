@@ -1,7 +1,7 @@
 package com.hanghae.naegahama.security.provider;
 
 import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.security.jwt.JwtDecoder;
 import com.hanghae.naegahama.security.jwt.JwtPreProcessingToken;
@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Component
 @RequiredArgsConstructor

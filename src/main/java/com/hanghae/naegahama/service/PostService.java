@@ -1,11 +1,16 @@
 package com.hanghae.naegahama.service;
+
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.handler.event.PostClosedEvent;
-import com.hanghae.naegahama.handler.event.PostWriteEvent;
 import com.hanghae.naegahama.dto.post.*;
+import com.hanghae.naegahama.event.PostClosedEvent;
+import com.hanghae.naegahama.event.PostWriteEvent;
 import com.hanghae.naegahama.ex.*;
-import com.hanghae.naegahama.repository.*;
+import com.hanghae.naegahama.repository.postfilerepository.PostFileQuerydslRepository;
+import com.hanghae.naegahama.repository.postfilerepository.PostFileRepository;
+import com.hanghae.naegahama.repository.postlikerepository.PostLikeQuerydslRepository;
+import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
+import com.hanghae.naegahama.repository.postrepository.PostRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,9 +32,11 @@ import java.util.*;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final AnswerRepository answerRepository;
-    private final PostLikeRepository postLikeRepository;
+    private final PostLikeQuerydslRepository postLikeQuerydslRepository;
+    private final PostFileQuerydslRepository postFileQuerydslRepository;
     private final PostFileRepository postFileRepository;
+
+    private final PostQuerydslRepository postQuerydslRepository;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -66,13 +77,7 @@ public class PostService {
 
 
     public List<PostResponseDto> getPost() {
-
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> response = new ArrayList<>();
-        for (Post post : posts) {
-            createPostResponseDto(response, post);
-        }
-        return response;
+       return createPostResponseDto(postQuerydslRepository.findPosts());
     }
 
 
@@ -82,16 +87,14 @@ public class PostService {
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다.")
         );
 
-        List<PostLike> likeLIst = postLikeRepository.findAllByPost(post);
-
         List<Long> userIdList = new ArrayList<>();
-        for (PostLike postLike : likeLIst) {
+        for (PostLike postLike : post.getPostLikes()) {
             userIdList.add(postLike.getUser().getId());
         }
 
-        Integer answerCount = answerRepository.countByPost(post);
-        Long postLikeCount = postLikeRepository.countByPost(post);
-        List<PostFile> findPostFileList = postFileRepository.findAllByPostOrderByCreatedAt(post);
+        Integer answerCount = post.getAnswerList().size();
+        Long postLikeCount = postLikeQuerydslRepository.countPostLikes(post.getId());
+        List<PostFile> findPostFileList = postFileQuerydslRepository.findFileByPost(post.getId());
         List<String> fileList = new ArrayList<>();
         for (PostFile postFile : findPostFileList) {
             fileList.add(postFile.getUrl());
@@ -113,18 +116,10 @@ public class PostService {
     public List<PostResponseDto> getCategory(String category) {
         List<Post> posts;
         if (category.equals("all")) {
-            posts = postRepository.findAllByOrderByCreatedAtDesc();
+            return createPostResponseDto(postQuerydslRepository.findPosts());
         } else {
-            posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+            return createPostResponseDto(postQuerydslRepository.findPostsByCategory(category));
         }
-        List<PostResponseDto> response = new ArrayList<>();
-        if (posts == null) {
-            throw new PostNotFoundException("글이 존재하지 않습니다");
-        }
-        for (Post post : posts) {
-            createPostResponseDto(response, post);
-        }
-        return response;
     }
 
     public List<PostResponseDto>  getPostByCategoryAndSort(String category, String sort) {
@@ -133,14 +128,13 @@ public class PostService {
             @Override
             public int compare(Post o1, Post o2) {
 
-                if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
-                    return -1;
-                } else if (!o1.getDeadLine().isBefore(o2.getDeadLine())) {
-                    return 1;
-                } else {
+                if (o1.getDeadLine().isEqual(o2.getDeadLine())) {
                     return 0;
+                } else if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
+                    return -1;
+                } else  {
+                    return 1;
                 }
-
 
             }
         };
@@ -150,19 +144,16 @@ public class PostService {
         List<PostResponseDto> tempresponse = new ArrayList<>();
         List<PostResponseDto> tempresponse2 = new ArrayList<>();
         if (category.equals("all")) {
-            posts = postRepository.findAllByOrderByCreatedAtDesc();
+            posts =  postQuerydslRepository.findPosts();
         } else {
-            posts = postRepository.findAllByCategoryOrderByCreatedAtDesc(category);
+            posts = postQuerydslRepository.findPostsByCategory(category);
         }
         if (posts == null) {
             throw new PostNotFoundException("글이 존재하지 않습니다");
         }
         if (sort.equals("like")) {
             Collections.sort(posts);
-
-            for (Post post : posts) {
-                createPostResponseDto(response, post);
-            }
+            response = createPostResponseDto(posts);
         } else if (sort.equals("time")) {
             Collections.sort(posts, comparator);
             for (Post post : posts) {
@@ -177,7 +168,7 @@ public class PostService {
             }
 
         } else {
-            throw new PostNotFoundException("글이 존재하지 않습니다");
+            return createPostResponseDto(posts);
         }
 
 
@@ -187,16 +178,13 @@ public class PostService {
     }
 
     private void createPostResponseDto(List<PostResponseDto> response, Post post) {
-        Integer answerCount = answerRepository.countByPost(post);
-        Long postLikeCount = postLikeRepository.countByPost(post);
-        PostResponseDto categoryResponseDto = new PostResponseDto(
-                post,
-                answerCount,
-                postLikeCount,
-                getDeadLine(post),
-                post.getUser()
-        );
-        response.add(categoryResponseDto);
+        response.add(new PostResponseDto(post,getDeadLine(post)));
+    }
+
+    private List<PostResponseDto> createPostResponseDto(List<Post> posts) {
+        return posts.stream().
+                map(p -> new PostResponseDto(p,getDeadLine(p)))
+                .collect(Collectors.toList());
     }
 
 
@@ -232,7 +220,7 @@ public class PostService {
             throw new UserNotFoundException("권한이 존재하지 않습니다");
         }
         findPost.setStatus("closed");
-        if(!(answerRepository.countByPost(findPost) ==0)){
+        if(!(findPost.getAnswerList().size() ==0)){
             applicationEventPublisher.publishEvent(new PostClosedEvent(findPost.getUser(),findPost));
         }
         return new BasicResponseDto("success");
@@ -273,12 +261,14 @@ public class PostService {
     public List<PostResponseDto> getAdminPost() {
         List<PostResponseDto> response = new ArrayList<>();
 
-        for (Post post : postRepository.findAllByUser_RoleOrderByCreatedAtDesc(UserRoleEnum.ADMIN)) {
+        for (Post post : postQuerydslRepository.findAdminPost(UserRoleEnum.ADMIN)) {
             createPostResponseDto(response,post);
         }
 
         return response;
     }
+
+
 }
 
 

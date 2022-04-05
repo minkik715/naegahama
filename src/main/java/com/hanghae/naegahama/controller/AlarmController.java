@@ -20,6 +20,26 @@ public class AlarmController {
     private final AlarmService alarmService;
 
 
+    //알람 전체조회
+    @GetMapping("/api/alarm")
+    public List<AlarmResponseDto> getAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return alarmService.getAlarm(userDetails);
+    }
+
+
+    //알람 리딩 안된 알람갯수 조회.
+    @GetMapping("/api/alarmCount")
+    public CountAlarmDto countAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return alarmService.countAlarm(userDetails);
+    }
+
+    //알람 리딩 전체 확인
+    @PostMapping("/api/alarm")
+    public List<AlarmDto> readAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return alarmService.readAlarm(userDetails);
+    }
+
+
     //알람 삭제
     @DeleteMapping("/api/alarm/{alarmId}")
     public BasicResponseDto deleteAlarm(@PathVariable Long alarmId,
@@ -33,24 +53,8 @@ public class AlarmController {
         return alarmService.deleteAllAlarm(userDetails);
     }
 
-    //알람 전체조회
-    @GetMapping("/api/alarm")
-    public List<AlarmResponseDto> getAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return alarmService.getAlarm(userDetails);
-    }
-
-    //알람 리딩 안된 알람갯수 조회.
-    @GetMapping("/api/alarmCount")
-    public CountAlarmDto countAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return alarmService.countAlarm(userDetails);
-    }
 
 
-    //알람 리딩 전체 확인
-    @PostMapping("/api/alarm")
-    public List<AlarmDto> readAlarm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return alarmService.readAlarm(userDetails);
-    }
 }
 
 //    @DestinationVariable은 @PathVariable이랑 비슷하게 생각하시면 됩니다.

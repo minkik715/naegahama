@@ -1,25 +1,23 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.handler.event.SurveyEvent;
-import com.hanghae.naegahama.initial.HippoResult;
-import com.hanghae.naegahama.repository.PostLikeRepository;
-import com.hanghae.naegahama.security.UserDetailsImpl;
-
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
-import com.hanghae.naegahama.repository.PostRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.event.SurveyEvent;
+import com.hanghae.naegahama.initial.HippoResult;
+import com.hanghae.naegahama.repository.postlikerepository.PostLikeQuerydslRepository;
+import com.hanghae.naegahama.repository.postlikerepository.PostLikeRepository;
+import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
+import com.hanghae.naegahama.security.UserDetailsImpl;
+import com.hanghae.naegahama.repository.postrepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +27,10 @@ import java.util.List;
 @Slf4j
 public class SurveyService {
 
-    private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
+
+    private final PostQuerydslRepository postQuerydslRepository;
+
+    private final PostLikeQuerydslRepository postLikeQuerydslRepository;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -125,7 +125,8 @@ public class SurveyService {
 
     @Transactional(readOnly = true)
     public List<CommendResponseDto> recommend(String hippoName) {
-        List<Post> posts = postRepository.findAllByUser_HippoName(hippoName);
+        System.out.println(2);
+        List<Post> posts = postQuerydslRepository.findPostByHippoName(hippoName);
         List<CommendResponseDto> commendResponseDtos = new ArrayList<>();
         if(posts.size() <2){
             return commendResponseDtos;
@@ -143,8 +144,8 @@ public class SurveyService {
         }
         Post post1 = posts.get(random);
         Post post2 = posts.get(random2);
-        Long countByPost1 = postLikeRepository.countByPost(post1);
-        Long countByPost2 = postLikeRepository.countByPost(post2);
+        Long countByPost1 = postLikeQuerydslRepository.countPostLikes(post1.getId());
+        Long countByPost2 = postLikeQuerydslRepository.countPostLikes(post2.getId());
         commendResponseDtos.add(new CommendResponseDto(post1,countByPost1));
         commendResponseDtos.add(new CommendResponseDto(post2,countByPost2));
 

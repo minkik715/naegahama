@@ -8,8 +8,8 @@ import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.domain.UserRoleEnum;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
-import com.hanghae.naegahama.repository.AchievementRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.userrepository.UserQuerydslRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.security.jwt.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -36,32 +36,14 @@ import java.util.UUID;
 public class KakaoUserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final AchievementRepository achievementRepository;
-
+    private final UserQuerydslRepository userQuerydslRepository;
 
 
     @Transactional
     public LoginResponseDto kakaoLogin(String accessToken,HttpServletResponse response) throws JsonProcessingException {
         log.info("accessToken = {}",accessToken);
         // 2. 토큰으로 카카오 API 호출
-        KakaoUserInfoDto kakaoUserInfoDto;
-
-        if(accessToken.equals("12345")){
-            kakaoUserInfoDto = new KakaoUserInfoDto(123456L,"123");
-        }
-
-        else if (accessToken.equals("pjg"))
-        {
-            kakaoUserInfoDto = new KakaoUserInfoDto(123457L,"PJG");
-        }
-        else if (accessToken.equals("dean"))
-        {
-            kakaoUserInfoDto = new KakaoUserInfoDto(123L,"dean");
-        }
-        else {
-            kakaoUserInfoDto = getKakaoUserInfo(accessToken);
-        }
-
+        KakaoUserInfoDto kakaoUserInfoDto =getKakaoUserInfo(accessToken);
 
         // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfoDto);
@@ -109,7 +91,7 @@ public class KakaoUserService {
     {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfoDto.getId();
-        User kakaoUser = userRepository.findByKakaoId(kakaoId)
+        User kakaoUser = userQuerydslRepository.findUserByKakaoId(kakaoId)
                 .orElse(null);
         if (kakaoUser == null) {
             // 회원가입
@@ -126,12 +108,7 @@ public class KakaoUserService {
             UserRoleEnum role = UserRoleEnum.USER;
 
             kakaoUser = userRepository.save(new User(encodedPassword, email, role, kakaoId));
-            Achievement save1 = achievementRepository.save(new Achievement(kakaoUser));
-
-            kakaoUser.setAchievement(save1);
-
-
-
+            kakaoUser.setAchievement(new Achievement());
             userRepository.save(kakaoUser);
         }
         return kakaoUser;

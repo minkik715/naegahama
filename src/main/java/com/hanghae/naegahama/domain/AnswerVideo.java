@@ -1,5 +1,4 @@
 package com.hanghae.naegahama.domain;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +18,9 @@ public class AnswerVideo extends Timestamped{
     @Column(nullable = false, length = 1000)
     private String url;
 
-
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Answer answer;
 
     public void setAnswer(Answer answer) {
@@ -32,11 +30,9 @@ public class AnswerVideo extends Timestamped{
     public void setUrl(String url) {
         this.url = url;
     }
-
     public AnswerVideo(String url, Answer answer)
     {
         this.answer = answer;
         this.url = url;
-        answer.changeAnswerVideo(this);
     }
 }

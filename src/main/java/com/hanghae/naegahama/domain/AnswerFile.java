@@ -28,7 +28,7 @@ public class AnswerFile extends Timestamped{
 
     @JsonManagedReference
     @JoinColumn(name = "answer_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Answer answer;
 
 

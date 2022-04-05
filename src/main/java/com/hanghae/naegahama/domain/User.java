@@ -68,7 +68,7 @@ public class User extends Timestamped{
 
 
     @JsonManagedReference
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn ( name = "achievement_id")
     private Achievement achievement;
 

@@ -4,8 +4,10 @@ import com.hanghae.naegahama.domain.Rank;
 import com.hanghae.naegahama.domain.RankStatus;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.rank.RankResponseDto;
-import com.hanghae.naegahama.repository.RankRepository;
-import com.hanghae.naegahama.repository.UserRepository;
+import com.hanghae.naegahama.repository.rankrepository.RankQuerydslRepository;
+import com.hanghae.naegahama.repository.rankrepository.RankRepository;
+import com.hanghae.naegahama.repository.userrepository.UserQuerydslRepository;
+import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ public class RankService {
 
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
+    private final RankQuerydslRepository rankQuerydslRepository;
+    private final UserQuerydslRepository userQuerydslRepository;
 
     //이전 top 5에 존재하지 않을 경우 무조건 Status는 Up
     //이전 top 5에 존재하고 같은 자리일 경우 Status는 -
@@ -27,9 +31,9 @@ public class RankService {
     @Transactional
     public List<RankResponseDto> getTop5Rank() {
         //과거 5개 가져오기
-        List<Rank> previousTop5Rank = rankRepository.findAllByOrderByRankAsc();
+        List<Rank> previousTop5Rank =rankQuerydslRepository.findRanks();
         List<User> previousUserRankList = new ArrayList<>();
-        List<User> top5ByOrderByPointDesc = userRepository.findTop5ByOrderByPointDesc();
+        List<User> top5ByOrderByPointDesc = userQuerydslRepository.findTop5UserByPoint();
         List<RankResponseDto> rankResponseDtoList = new ArrayList<>();
         if (previousTop5Rank == null)
         {
