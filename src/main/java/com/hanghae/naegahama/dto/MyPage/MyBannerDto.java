@@ -1,10 +1,6 @@
 package com.hanghae.naegahama.dto.MyPage;
 
 import com.hanghae.naegahama.domain.User;
-<<<<<<< HEAD
-import com.hanghae.naegahama.initial.HippoURL;
-=======
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

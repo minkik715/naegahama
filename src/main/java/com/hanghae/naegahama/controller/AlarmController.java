@@ -4,13 +4,8 @@ import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.alarm.AlarmDto;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import com.hanghae.naegahama.dto.alarm.CountAlarmDto;
-<<<<<<< HEAD
 import com.hanghae.naegahama.service.AlarmService;
 import com.hanghae.naegahama.security.UserDetailsImpl;
-=======
-import com.hanghae.naegahama.security.UserDetailsImpl;
-import com.hanghae.naegahama.service.AlarmService;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

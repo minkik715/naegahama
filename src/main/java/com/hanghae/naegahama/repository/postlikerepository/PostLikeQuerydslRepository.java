@@ -1,28 +1,17 @@
 package com.hanghae.naegahama.repository.postlikerepository;
 
+import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.PostLike;
-<<<<<<< HEAD
-import com.hanghae.naegahama.domain.QPostLike;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-
-import java.util.Optional;
-
-import static com.hanghae.naegahama.domain.QAnswerLike.answerLike;
-import static com.hanghae.naegahama.domain.QPostLike.*;
-=======
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 import java.util.Optional;
 
-import static com.hanghae.naegahama.domain.QPostLike.*;
+
 import static com.hanghae.naegahama.domain.QPostLike.postLike;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Repository
 public class PostLikeQuerydslRepository {
@@ -53,5 +42,7 @@ public class PostLikeQuerydslRepository {
                         .fetchOne()
         );
     }
+
+
 
 }

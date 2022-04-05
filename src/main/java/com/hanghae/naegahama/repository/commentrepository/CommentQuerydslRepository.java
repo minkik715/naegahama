@@ -3,19 +3,11 @@ package com.hanghae.naegahama.repository.commentrepository;
 import com.hanghae.naegahama.domain.Comment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-<<<<<<< HEAD
 import org.springframework.transaction.annotation.Transactional;
-=======
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
-
 import javax.persistence.EntityManager;
 import java.util.List;
-
 import static com.hanghae.naegahama.domain.QComment.*;
-<<<<<<< HEAD
-=======
 import static com.hanghae.naegahama.domain.QComment.comment;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Repository
 public class CommentQuerydslRepository {
@@ -58,7 +50,7 @@ public class CommentQuerydslRepository {
                 .select(comment)
                 .distinct()
                 .where(comment.answer.id.eq(answerId)
-                        .and(comment.parentComment.isNotNull()))
+                        .and(comment.parentComment.isNull()))
                 .from(comment)
                 .orderBy(comment.modifiedAt.desc())
                 .fetch();

@@ -1,24 +1,10 @@
 package com.hanghae.naegahama.repository.answerrepository;
-
 import com.hanghae.naegahama.domain.*;
-<<<<<<< HEAD
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-=======
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.stereotype.Repository;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
-
 import javax.persistence.EntityManager;
 import java.util.List;
-
-import static com.hanghae.naegahama.domain.QAnswer.*;
-<<<<<<< HEAD
-=======
 import static com.hanghae.naegahama.domain.QAnswer.answer;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Repository
 public class AnswerQuerydslRepository {

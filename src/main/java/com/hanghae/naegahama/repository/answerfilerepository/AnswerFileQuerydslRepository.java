@@ -6,15 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-<<<<<<< HEAD
-import java.util.Optional;
-
-import static com.hanghae.naegahama.domain.QAnswerFile.*;
-=======
-
-import static com.hanghae.naegahama.domain.QAnswerFile.*;
 import static com.hanghae.naegahama.domain.QAnswerFile.answerFile;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Repository
 public class AnswerFileQuerydslRepository {

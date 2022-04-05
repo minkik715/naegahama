@@ -8,7 +8,6 @@ import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.domain.UserRoleEnum;
 import com.hanghae.naegahama.dto.login.LoginResponseDto;
 import com.hanghae.naegahama.dto.user.KakaoUserInfoDto;
-import com.hanghae.naegahama.repository.AchievementRepository;
 import com.hanghae.naegahama.repository.userrepository.UserQuerydslRepository;
 import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;

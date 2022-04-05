@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import static com.hanghae.naegahama.domain.QPost.*;
 
@@ -94,5 +95,15 @@ public class PostQuerydslRepository {
                 .orderBy(post.createdAt.desc())
                 .leftJoin(post.answerList).fetchJoin()
                 .leftJoin(post.user).fetchJoin();
+    }
+
+    public List<Post> findPostByOpenedStatus(){
+        return queryFactory
+                .select(post)
+                .where(post.status.eq("opened")
+                        .and(post.deadLine.before(LocalDateTime.now())))
+                .from(post)
+                .fetch();
+
     }
 }

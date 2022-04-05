@@ -128,14 +128,13 @@ public class PostService {
             @Override
             public int compare(Post o1, Post o2) {
 
-                if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
-                    return -1;
-                } else if (!o1.getDeadLine().isBefore(o2.getDeadLine())) {
-                    return 1;
-                } else {
+                if (o1.getDeadLine().isEqual(o2.getDeadLine())) {
                     return 0;
+                } else if (o1.getDeadLine().isBefore(o2.getDeadLine())) {
+                    return -1;
+                } else  {
+                    return 1;
                 }
-
 
             }
         };
@@ -169,7 +168,7 @@ public class PostService {
             }
 
         } else {
-            throw new PostNotFoundException("글이 존재하지 않습니다");
+            return createPostResponseDto(posts);
         }
 
 

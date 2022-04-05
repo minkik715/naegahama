@@ -2,17 +2,14 @@ package com.hanghae.naegahama.dto.post;
 
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
-<<<<<<< HEAD
 import com.hanghae.naegahama.initial.HippoURL;
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
-=======
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.Setter;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 
 @Getter
@@ -32,21 +29,6 @@ public class PostResponseDto {
     private String imgUrl;
     private Long userId;
 
-    public PostResponseDto(Post post,
-                           Integer answerCount, Integer postLikeCount, String timeSet, User user) {
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.answerCount = answerCount;
-        this.postLikeCount = postLikeCount;
-        this.modifiedAt = TimeHandler.setModifiedAtLIst(post.getModifiedAt());
-        this.timeSet = timeSet;
-        this.status = post.getStatus();
-        this.writer = user.getNickName();
-        this.imgUrl = user.getHippoImage();
-        this.userId = user.getId();
-
-    }
     public PostResponseDto(Post post, String timeSet) {
         this.id = post.getId();
         this.title = post.getTitle();

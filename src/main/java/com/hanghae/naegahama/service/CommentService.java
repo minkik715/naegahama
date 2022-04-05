@@ -79,7 +79,7 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> getCommentList(Long answerId) {
-        return commentQuerydslRepository.findCommentByAnswer(ComfortMethods.getAnswer(answerId).getId()).stream()
+        return commentQuerydslRepository.findCommentByAnswer(answerId).stream()
                 .map(c -> new CommentListResponseDto(c, c.getUser(), (long) c.getChildCommentList().size()))
                 .collect(Collectors.toList());
     }

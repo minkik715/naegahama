@@ -1,12 +1,8 @@
 package com.hanghae.naegahama.repository.postfilerepository;
 
-<<<<<<< HEAD
 import com.hanghae.naegahama.domain.Comment;
 import com.hanghae.naegahama.domain.PostFile;
 import com.hanghae.naegahama.domain.QPostFile;
-=======
-import com.hanghae.naegahama.domain.PostFile;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 

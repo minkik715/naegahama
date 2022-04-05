@@ -1,15 +1,10 @@
 package com.hanghae.naegahama.dto.post;
 
 
-<<<<<<< HEAD
-import com.sun.istack.NotNull;
-import lombok.*;
-=======
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;

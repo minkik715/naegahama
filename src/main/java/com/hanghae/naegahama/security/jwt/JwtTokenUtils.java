@@ -7,17 +7,10 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-<<<<<<< HEAD
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
-=======
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 @Component
 @Slf4j
 public class JwtTokenUtils {

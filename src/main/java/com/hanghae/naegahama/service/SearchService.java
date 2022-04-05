@@ -2,22 +2,12 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
-<<<<<<< HEAD
 import com.hanghae.naegahama.event.SearchWordEvent;
-=======
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.dto.search.SearchAnswerRequest;
 import com.hanghae.naegahama.dto.search.SearchPostRequest;
 import com.hanghae.naegahama.dto.search.SearchRequest;
 import com.hanghae.naegahama.dto.search.SearchWords;
-<<<<<<< HEAD
-import com.hanghae.naegahama.ex.SearchNotFoundException;
 import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
-import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
-=======
-import com.hanghae.naegahama.event.SearchWordEvent;
-import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
 import com.hanghae.naegahama.repository.searcgrepository.SearchQuerydslRepository;
 import com.hanghae.naegahama.repository.searcgrepository.SearchRepository;
@@ -30,15 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.*;
-=======
 
 import static java.util.stream.Collectors.toList;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 
 @RequiredArgsConstructor

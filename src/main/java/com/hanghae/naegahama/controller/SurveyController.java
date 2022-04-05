@@ -1,19 +1,15 @@
 package com.hanghae.naegahama.controller;
-<<<<<<< HEAD
 import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
-=======
-
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.CommendResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
 import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
 import com.hanghae.naegahama.security.UserDetailsImpl;
->>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
