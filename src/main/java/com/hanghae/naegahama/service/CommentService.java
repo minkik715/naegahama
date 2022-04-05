@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,13 +40,11 @@ public class CommentService {
                     user,
                     timestamp
             );
-            //답변글에 댓글을 단 사람에게 주는 알람.(대댓글 미포함 하고싶음.)
+
             applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), user,findAnswer, AlarmType.comment));
 
         } else {
-            Comment parentComment = commentRepository.findById(parentCommentId).orElseThrow(
-                    () -> new CommentNotFoundException("댓글 없습니다.")
-            );
+            Comment parentComment = ComfortMethods.getComment(parentCommentId);
             comment = new Comment(
                     commentRequestDto.getComment(),
                     parentComment,

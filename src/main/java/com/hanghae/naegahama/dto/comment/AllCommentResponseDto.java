@@ -1,6 +1,9 @@
 package com.hanghae.naegahama.dto.comment;
 
+<<<<<<< HEAD
 import com.hanghae.naegahama.domain.Comment;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

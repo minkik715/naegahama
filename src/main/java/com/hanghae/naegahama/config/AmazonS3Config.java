@@ -8,6 +8,10 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 //커밋내용이 사라졌다.
 @Configuration
 public class AmazonS3Config {

@@ -9,6 +9,12 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import static com.hanghae.naegahama.domain.QPost.*;
 
+import javax.persistence.EntityManager;
+import java.util.List;
+
+import static com.hanghae.naegahama.domain.QPost.*;
+import static com.hanghae.naegahama.domain.QPost.post;
+
 @Repository
 public class PostQuerydslRepository {
 
@@ -47,8 +53,10 @@ public class PostQuerydslRepository {
     }
 
     public List<Post> findPostByHippoName(String hippoName){
-        return getBasicposts(queryFactory)
+        return queryFactory
+                .select(post)
                 .where(post.user.hippoName.eq(hippoName))
+                .from(post)
                 .fetch();
     }
 

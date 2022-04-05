@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*package com.hanghae.naegahama.dto.post;
+=======
+package com.hanghae.naegahama.dto.post;/*package com.hanghae.naegahama.dto.post;
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 import com.hanghae.naegahama.domain.Post;
 import lombok.Getter;

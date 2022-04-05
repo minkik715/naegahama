@@ -1,26 +1,23 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.domain.Post;
+import com.hanghae.naegahama.domain.User;
+import com.hanghae.naegahama.dto.survey.CommendResponseDto;
+import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
+import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
 import com.hanghae.naegahama.event.SurveyEvent;
 import com.hanghae.naegahama.initial.HippoResult;
 import com.hanghae.naegahama.repository.postlikerepository.PostLikeQuerydslRepository;
 import com.hanghae.naegahama.repository.postlikerepository.PostLikeRepository;
 import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
 import com.hanghae.naegahama.security.UserDetailsImpl;
-
-import com.hanghae.naegahama.domain.Post;
-import com.hanghae.naegahama.domain.User;
-import com.hanghae.naegahama.dto.survey.CommendResponseDto;
-import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
-import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
 import com.hanghae.naegahama.repository.postrepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +27,6 @@ import java.util.List;
 @Slf4j
 public class SurveyService {
 
-    private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
 
     private final PostQuerydslRepository postQuerydslRepository;
 

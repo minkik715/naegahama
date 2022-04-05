@@ -1,8 +1,12 @@
 package com.hanghae.naegahama.repository.userrepository;
 
+<<<<<<< HEAD
 import com.hanghae.naegahama.domain.QUser;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.domain.UserComment;
+=======
+import com.hanghae.naegahama.domain.User;
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.hanghae.naegahama.domain.QUser.user;
+<<<<<<< HEAD
 import static com.hanghae.naegahama.domain.QUserComment.userComment;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Repository
 public class UserQuerydslRepository {

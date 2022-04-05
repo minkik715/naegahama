@@ -1,7 +1,10 @@
 package com.hanghae.naegahama.util;
 
+<<<<<<< HEAD
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.event.PostClosedEvent;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.repository.postrepository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +13,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.util.List;
 
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 @RequiredArgsConstructor
 @Component
 @Slf4j

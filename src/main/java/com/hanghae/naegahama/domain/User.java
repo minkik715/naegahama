@@ -1,6 +1,9 @@
 package com.hanghae.naegahama.domain;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonBackReference;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.initial.HippoURL;

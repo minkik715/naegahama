@@ -1,4 +1,5 @@
 package com.hanghae.naegahama.repository.answerrepository;
+<<<<<<< HEAD
 import com.hanghae.naegahama.domain.Answer;
 import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
@@ -6,6 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+=======
+
+import com.hanghae.naegahama.domain.Answer;
+import org.springframework.data.jpa.repository.JpaRepository;
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 

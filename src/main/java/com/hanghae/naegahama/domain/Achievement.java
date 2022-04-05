@@ -7,7 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+<<<<<<< HEAD
 import java.util.List;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 @Getter
 @Setter
@@ -41,8 +44,11 @@ public class Achievement extends Timestamped
     public ArrayList<Integer> getAchievementList(){
         return new ArrayList<Integer>(Arrays.asList(achievement1, achievement2, achievement3, achievement4, achievement5,
                 achievement6, achievement7, achievement8));
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
     }
 
 }

@@ -1,14 +1,27 @@
 package com.hanghae.naegahama.service;
 
+<<<<<<< HEAD
 import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileQuerydslRepository;
 import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileRepository;
 import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
 import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeRepository;
+=======
+import com.hanghae.naegahama.domain.*;
+import com.hanghae.naegahama.dto.BasicResponseDto;
+import com.hanghae.naegahama.dto.answer.*;
+import com.hanghae.naegahama.dto.file.FileResponseDto;
+import com.hanghae.naegahama.event.AnswerWriteEvent;
+import com.hanghae.naegahama.event.StarGiveEvent;
+import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileQuerydslRepository;
+import com.hanghae.naegahama.repository.answerfilerepository.AnswerFileRepository;
+import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
 import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
 import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoQuerydslRepository;
 import com.hanghae.naegahama.repository.answervideorepository.AnswerVideoRepository;
 import com.hanghae.naegahama.repository.commentrepository.CommentQuerydslRepository;
+<<<<<<< HEAD
 import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.BasicResponseDto;
@@ -19,23 +32,36 @@ import com.hanghae.naegahama.event.StarGiveEvent;
 import com.hanghae.naegahama.event.AnswerWriteEvent;
 
 import com.hanghae.naegahama.security.UserDetailsImpl;
+=======
+import com.hanghae.naegahama.security.UserDetailsImpl;
+import com.hanghae.naegahama.util.ComfortMethods;
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.util.S3Uploader;
 import com.hanghae.naegahama.util.VideoEncode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

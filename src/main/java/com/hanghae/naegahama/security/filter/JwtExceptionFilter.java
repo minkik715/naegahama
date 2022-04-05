@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*
+=======
+package com.hanghae.naegahama.security.filter;/*
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 package com.hanghae.naegahama.security.filter;
 
 import com.hanghae.naegahama.ex.TokenInvalidException;

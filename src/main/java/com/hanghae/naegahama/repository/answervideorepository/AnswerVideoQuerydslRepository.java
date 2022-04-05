@@ -3,7 +3,10 @@ package com.hanghae.naegahama.repository.answervideorepository;
 import com.hanghae.naegahama.domain.AnswerVideo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
+<<<<<<< HEAD
 import org.springframework.transaction.annotation.Transactional;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 
 import javax.persistence.EntityManager;
 import java.util.List;

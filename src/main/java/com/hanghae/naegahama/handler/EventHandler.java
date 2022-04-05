@@ -1,6 +1,9 @@
 package com.hanghae.naegahama.handler;
 
+<<<<<<< HEAD
 import com.hanghae.naegahama.util.ComfortMethods;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import com.hanghae.naegahama.event.*;
@@ -8,6 +11,7 @@ import com.hanghae.naegahama.repository.alarmrepository.AlarmRepository;
 import com.hanghae.naegahama.repository.commentrepository.CommentRepository;
 import com.hanghae.naegahama.repository.userrepository.UserRepository;
 import com.hanghae.naegahama.service.AlarmService;
+<<<<<<< HEAD
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,6 +23,17 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 
+=======
+import com.hanghae.naegahama.util.ComfortMethods;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
+
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

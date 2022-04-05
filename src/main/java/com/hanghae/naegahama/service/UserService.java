@@ -1,7 +1,6 @@
 package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.repository.answerrepository.AnswerQuerydslRepository;
-import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
 import com.hanghae.naegahama.repository.postrepository.PostQuerydslRepository;
 import com.hanghae.naegahama.repository.userrepository.UserQuerydslRepository;
 import com.hanghae.naegahama.repository.userrepository.UserRepository;
@@ -19,14 +18,15 @@ import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.initial.Category;
 import com.hanghae.naegahama.security.UserDetailsImpl;
+import com.hanghae.naegahama.repository.achievementrepository.AchieveQuerydslRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +37,8 @@ public class UserService {
     private final PostQuerydslRepository postQuerydslRepository;
     private final UserQuerydslRepository userQuerydslRepository;
     private final AnswerQuerydslRepository answerQuerydslRepository;
+    private final AchieveQuerydslRepository achieveQuerydslRepository;
+
     public BasicResponseDto nicknameCheck(String nickname) {
         Optional<User> findNickname = userQuerydslRepository.findUserByNickanme(nickname);
         if (nickname.startsWith("HM") || findNickname.isPresent()) {
@@ -61,7 +63,7 @@ public class UserService {
     @Transactional
     public MyAchievementDto myAchievement(UserDetailsImpl userDetails) {
         MyAchievementDto myAchievementDto = new MyAchievementDto();
-        Achievement achievement = userDetails.getUser().getAchievement();
+        Achievement achievement = achieveQuerydslRepository.findAchievementByUser(userDetails.getUser());
         ArrayList<Integer> achievementList = achievement.getAchievementList();
         for(int i =0; i<achievementList.size(); i++){
             myAchievementDto.getAchievement()[i] = achievementList.get(i);

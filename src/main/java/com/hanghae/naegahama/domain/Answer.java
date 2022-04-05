@@ -6,10 +6,15 @@ import com.hanghae.naegahama.dto.answer.AnswerPostRequestDto;
 import com.hanghae.naegahama.dto.answer.AnswerPutRequestDto;
 import com.hanghae.naegahama.dto.answer.StarPostRequestDto;
 import lombok.Getter;
+<<<<<<< HEAD
 
 import lombok.NoArgsConstructor;
 
 
+=======
+import lombok.NoArgsConstructor;
+
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

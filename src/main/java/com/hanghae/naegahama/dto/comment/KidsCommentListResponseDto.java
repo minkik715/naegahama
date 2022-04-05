@@ -1,8 +1,11 @@
 package com.hanghae.naegahama.dto.comment;
 
 import com.hanghae.naegahama.domain.Comment;
+<<<<<<< HEAD
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.initial.HippoURL;
+=======
+>>>>>>> 8b60231f14d958f54f51d5a9cdfd4c2ff9843004
 import com.hanghae.naegahama.util.TimeHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

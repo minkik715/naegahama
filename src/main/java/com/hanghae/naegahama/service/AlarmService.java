@@ -4,7 +4,6 @@ package com.hanghae.naegahama.service;
 import com.hanghae.naegahama.dto.alarm.AlarmDto;
 import com.hanghae.naegahama.dto.alarm.AlarmResponseDto;
 import com.hanghae.naegahama.dto.alarm.CountAlarmDto;
-import com.hanghae.naegahama.domain.Alarm;
 import com.hanghae.naegahama.domain.ReadingStatus;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.dto.BasicResponseDto;
@@ -16,8 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
