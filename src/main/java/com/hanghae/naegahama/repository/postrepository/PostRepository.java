@@ -2,6 +2,9 @@ package com.hanghae.naegahama.repository.postrepository;
 
 import com.hanghae.naegahama.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 //    List<Post> findAllByOrderByCreatedAtDesc();
@@ -16,8 +19,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     //질문
     //    @Query("select distinct p from Post p join fetch p.user join fetch p.answerList")
     // - > answerList를 가져올때 answervideo를 계속해서 가져오게됨
-   /* @Query("select distinct p from Post p join fetch p.user join fetch p.answerList as a join fetch a.answerVideo")
-    List<Post> findAllByOrderByCreatedAtDesc();*/
+  //  @Query("select distinct p from Post p join fetch p.user join fetch p.answerList as a join fetch a.answerVideo")
+  //  List<Post> findAllByOrderByCreatedAtDesc();
 
     // 작성 완료된 글 카테고리 분야로 보기.
     //List<Post> findAllByCategoryOrderByCreatedAtDesc(String category);    // 최신순

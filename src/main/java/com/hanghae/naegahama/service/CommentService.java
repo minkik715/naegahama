@@ -34,22 +34,12 @@ public class CommentService {
         Comment comment = null;
         if (parentCommentId == null) {
             String timestamp = commentRequestDto.getTimestamp();
-            comment = new Comment(
-                    commentRequestDto.getComment(),
-                    findAnswer,
-                    user,
-                    timestamp
-            );
-
+            comment = new Comment(commentRequestDto.getComment(), findAnswer, user, timestamp);
             applicationEventPublisher.publishEvent(new CommentWriteEvent(findAnswer.getUser(), user,findAnswer, AlarmType.comment));
 
         } else {
             Comment parentComment = ComfortMethods.getComment(parentCommentId);
-            comment = new Comment(
-                    commentRequestDto.getComment(),
-                    parentComment,
-                    findAnswer,
-                    user);
+            comment = new Comment(commentRequestDto.getComment(), parentComment, findAnswer, user);
             applicationEventPublisher.publishEvent(new CommentWriteEvent(parentComment.getUser(), user, comment, AlarmType.child));
 
         }

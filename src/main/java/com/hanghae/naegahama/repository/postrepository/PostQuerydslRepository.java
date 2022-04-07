@@ -26,11 +26,19 @@ public class PostQuerydslRepository {
         this.em = em;
         this.queryFactory = new JPAQueryFactory(em);
     }
+
+
+
+
     public List<Post> findPosts(){
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         return getBasicposts(queryFactory)
                 .fetch();
     }
+
+
+
+
 
     public List<Post> findPostsByCategory(String category){
 

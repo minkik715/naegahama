@@ -11,6 +11,7 @@ import com.hanghae.naegahama.dto.login.UserResponseDto;
 import com.hanghae.naegahama.dto.signup.NickNameDuplicateCheckDto;
 import com.hanghae.naegahama.dto.user.UserInfoRequestDto;
 import com.hanghae.naegahama.ex.ErrorResponse;
+import com.hanghae.naegahama.ex.LoginFailException;
 import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.KakaoUserService;
 import com.hanghae.naegahama.service.UserService;
@@ -66,8 +67,8 @@ public class UserController {
         return userService.myBanner(userDetails);
     }
     @GetMapping("/error")
-    public ResponseEntity<ErrorResponse> error(){
-        return new ResponseEntity<>(new ErrorResponse("400", "로그인 정보가 없습니다."), HttpStatus.BAD_REQUEST);
+    public void error(){
+        throw new LoginFailException("로그인 정보를 확인해주세요");
     }
 
 

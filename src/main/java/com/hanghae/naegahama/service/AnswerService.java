@@ -43,7 +43,7 @@ public class AnswerService
 {
     private final AnswerRepository answerRepository;
     private final AnswerQuerydslRepository answerQuerydslRepository;
-   private final AnswerFileQuerydslRepository answerFileQuerydslRepository;
+    private final AnswerFileQuerydslRepository answerFileQuerydslRepository;
     private final AnswerLikeQuerydslRepository answerLikeQuerydslRepository;
     private final CommentQuerydslRepository commentQuerydslRepository;
     private final AnswerFileRepository answerFileRepository;
@@ -94,6 +94,7 @@ public class AnswerService
         if (!answer.getUser().getId().equals(userDetails.getUser().getId())) {
             return (new BasicResponseDto("작성자만 삭제할 수 있습니다."));
         }
+        answerVideoRepository.deleteByAnswer(answer);
         answerRepository.deleteById(answerId);
         return new BasicResponseDto("success");
     }
