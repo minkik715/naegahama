@@ -2,7 +2,12 @@ package com.hanghae.naegahama.config;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
@@ -16,14 +21,18 @@ import javax.annotation.PreDestroy;
 
 @Profile("54.180.96.121")
 @Configuration
-
+@EnableCaching
 @Slf4j
 public class EmbeddedRedisConfig {
 
     @Value("${spring.redis.port}")
     private int redisPort;
 
+
+
+
     private RedisServer redisServer;
+
 
     @PostConstruct
     public void redisServer() {
@@ -37,4 +46,7 @@ public class EmbeddedRedisConfig {
             redisServer.stop();
         }
     }
+
+
+
 }

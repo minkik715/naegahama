@@ -40,22 +40,14 @@ public class S3Uploader {
                     fos.write(multipartFile.getBytes());
                 }
             }
-            log.info("인코딩 시작");
             videoEncode.videoEncode(convertFile.getAbsolutePath(),System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
             videoEncode.cutVideo(convertFile.getAbsolutePath(), System.getProperty("user.dir") + "/shorts" + multipartFile.getOriginalFilename());
             File file = new File(System.getProperty("user.dir") + "/test" + multipartFile.getOriginalFilename());
-            log.info("긴 동영상 로컬 성공");
-            log.info("파일 저장장소 = {}",file.getAbsolutePath());
             removeNewFile(uploadFile);
             if(videoEncode.getVideoLength(file.getAbsolutePath()) <15){
                 return upload(file, dirName,true,uuid);
             }
             File shortFile = new File(System.getProperty("user.dir") + "/shorts" + multipartFile.getOriginalFilename());
-            log.info("쇼츠 동영상 로컬 성공");
-            log.info("파일 저장장소 = {}",shortFile.getAbsolutePath());
-
-
-
             upload(shortFile,dirName,true,uuid);
 
 

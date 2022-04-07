@@ -2,6 +2,10 @@ package com.hanghae.naegahama.config;
 
 
 import lombok.RequiredArgsConstructor;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +22,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     private final RedisProperties redisProperties;
 
+    @Value("${spring.redis.port}")
+    private int redisPort;
 
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.password}")
+    private String password;
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -51,4 +62,17 @@ public class RedisConfig {
     public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
         return new MessageListenerAdapter(subscriber, "sendMessage");
     }
+    @Bean
+    public RedissonClient redissonClient()
+    {
+        Config redisConfig = new Config();
+        redisConfig.useSingleServer() .setAddress(host + ":" + redisPort)
+                .setPassword(password)
+                .setConnectionPoolSize(5)
+                .setConnectionMinimumIdleSize(5);
+        return Redisson.create(redisConfig);
+    }
+
+
+
 }

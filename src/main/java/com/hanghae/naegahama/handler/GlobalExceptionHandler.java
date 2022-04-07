@@ -1,6 +1,7 @@
 package com.hanghae.naegahama.handler;
 
 import com.hanghae.naegahama.ex.*;
+import io.sentry.Sentry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,121 +15,46 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenInvalidException.class)
     public ResponseEntity<ErrorResponse> TokenInvalidException(TokenInvalidException e){
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.OK);
+        Sentry.captureException(e);
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AnswerFileNotFoundException.class)
     public ResponseEntity<ErrorResponse> AnswerFileNotFoundException(AnswerFileNotFoundException e){
+        Sentry.captureException(e);
+        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(LoginFailException.class)
+    public ResponseEntity<ErrorResponse> LoginFailException(LoginFailException e){
+        Sentry.captureException(e);
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException e){
+        Sentry.captureException(e);
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PasswordCheckFailException.class)
-    public ResponseEntity<ErrorResponse> passwordCheckFailException(PasswordCheckFailException e){
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> EmailNotFoundException(EmailNotFoundException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordContainsEmailException.class)
-    public ResponseEntity<ErrorResponse> handlePasswordContainsEmailException(PasswordContainsEmailException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(DuplicationUserNameException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateUserNameException(DuplicationUserNameException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordNotCollectException.class)
-    public ResponseEntity<ErrorResponse> handlePasswordNotCollectException(PasswordNotCollectException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(LoginUserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleLoginUserNotFoundException(LoginUserNotFoundException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.UNAUTHORIZED);
-    }
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException e) {
+        Sentry.captureException(e);
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IllegalPostUpdateUserException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalPostUpdateUserException(IllegalPostUpdateUserException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IllegalPostDeleteUserException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalPostDeleteUserException(IllegalPostDeleteUserException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ImageNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleImageNotFoundException(ImageNotFoundException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IllegalCommentUpdateUserException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalCommentUpdateUserException(IllegalCommentUpdateUserException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IllegalCommentDeleteUserException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalCommentDeleteUserException(IllegalCommentDeleteUserException e) {
+        Sentry.captureException(e);
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AnswerNotFoundException.class)
     public ResponseEntity<ErrorResponse> AnswerNotFoundException(AnswerNotFoundException e) {
+        Sentry.captureException(e);
         return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(PostWriteTitleNullException.class)
-    public ResponseEntity<ErrorResponse> PostWriteTitleNullException(PostWriteTitleNullException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PostWriteContentNullException.class)
-    public ResponseEntity<ErrorResponse> PostWriteContentNullException(PostWriteContentNullException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PostWriteCategoryNullException.class)
-    public ResponseEntity<ErrorResponse> PostWriteCategoryNullException(PostWriteCategoryNullException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PostWriteLevelNullException.class)
-    public ResponseEntity<ErrorResponse> PostWriteLevelNullException(PostWriteLevelNullException e) {
-        return new ResponseEntity<>(new ErrorResponse("400", e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), Objects.requireNonNull(e.getFieldError()).getDefaultMessage())
-                , HttpStatus.BAD_REQUEST);
-    }
-
-
 
 }

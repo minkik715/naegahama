@@ -26,43 +26,55 @@ repositories {
 }
 
 dependencies {
+    // spring dev
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+
+  
     //db
-//    runtimeOnly 'com.h2database:h2'
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+  //runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
 
 
-    annotationProcessor 'org.projectlombok:lombok'
+    // querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    //test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //  testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+    // spring data jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-
+    // aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
-    implementation group: 'org.json', name: 'json', version: '20160810'
+
+
+    // ffmpeg
     implementation group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // jwt
+    implementation group: 'org.json', name: 'json', version: '20160810'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'commons-codec:commons-codec:1.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'com.auth0:java-jwt:3.13.0'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'it.ozimov:embedded-redis:0.7.2'
+    implementation 'org.redisson:redisson:3.2.0'
+
+
     // websocket, stomp
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:stomp-websocket:2.3.3'
@@ -70,6 +82,11 @@ dependencies {
     implementation 'org.webjars:sockjs-client:1.0.2'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+
+
+    // sentry
+    implementation "io.sentry:sentry-spring-boot-starter:4.3.0"
+    implementation 'io.sentry:sentry-logback:5.7.1'
 }
 //querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"

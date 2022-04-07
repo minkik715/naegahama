@@ -6,7 +6,7 @@ import com.hanghae.naegahama.domain.Post;
 import com.hanghae.naegahama.domain.User;
 import com.hanghae.naegahama.ex.AnswerNotFoundException;
 import com.hanghae.naegahama.ex.CommentNotFoundException;
-import com.hanghae.naegahama.ex.LoginUserNotFoundException;
+import com.hanghae.naegahama.ex.UserNotFoundException;
 import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
 import com.hanghae.naegahama.repository.commentrepository.CommentRepository;
 import com.hanghae.naegahama.repository.postrepository.PostRepository;
@@ -32,7 +32,7 @@ public class ComfortMethods {
 
     public static User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new LoginUserNotFoundException("유저를 찾을 수 없습니다."));
+                () -> new UserNotFoundException("유저를 찾을 수 없습니다."));
     }
     public static Answer getAnswer(Long answerId){
         return answerRepository.findById(answerId).orElseThrow(
