@@ -42,16 +42,17 @@ public class Scheduler {
             if (!isLocked) {
                 log.info("LOCK 획득 실패");
             }
+
+            for (Post post : postQuerydslRepository.findPostByOpenedStatus()) {
+                post.setStatus("closed");
+                applicationEventPublisher.publishEvent(new PostClosedEvent(post.getUser(), post));
+            }
         } catch (InterruptedException e) {
             log.error(e.toString());
         } finally {
             lock.unlock();
         }
 
-        for (Post post : postQuerydslRepository.findPostByOpenedStatus()) {
-            post.setStatus("closed");
-            applicationEventPublisher.publishEvent(new PostClosedEvent(post.getUser(), post));
-        }
     }
 }
 
