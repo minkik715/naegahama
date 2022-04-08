@@ -43,7 +43,6 @@ public class SurveyService {
                         surveyRequestDto.isAction()
         );
         applicationEventPublisher.publishEvent(new SurveyEvent(user,hippo));
-        log.info(hippo);
         return new BasicResponseDto("success");
     }
 
