@@ -1,14 +1,14 @@
 package com.hanghae.naegahama.initial;
 
 public class HippoResult {
-    public static String hippoType1 = "열심히 노력 하마";
-    public static String hippoType2 = "내가 리더 하마";
-    public static String hippoType3 = "하마 냄새가 나는 하마";
-    public static String hippoType4 = "세상 시원시원한 하마";
-    public static String hippoType5 = "나그네 하마";
-    public static String hippoType6 = "스마트 하마";
-    public static String hippoType7 = "스윗 하마";
-    public static String hippoType8 = "센치 하마";
+    public static String effortHippo = "열심히 노력 하마";
+    public static String leaderHippo = "내가 리더 하마";
+    public static String smellHippo = "하마 냄새가 나는 하마";
+    public static String coolHippo = "세상 시원시원한 하마";
+    public static String nagneHippo = "나그네 하마";
+    public static String smartHippo = "스마트 하마";
+    public static String sweetHippo = "스윗 하마";
+    public static String sentiHippo = "센치 하마";
 
     // 기본
     public static String basicHippoURL = "https://minki-bucket.s3.ap-northeast-2.amazonaws.com/static/normal1circle.svg";
@@ -68,35 +68,35 @@ public class HippoResult {
 
     public static String resultImage(String hippoName)
     {
-        if(hippoName.equals(hippoType1))
+        if(hippoName.equals(effortHippo))
         {
             return effortHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType2))
+        else if(hippoName.equals(leaderHippo))
         {
             return leaderHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType3))
+        else if(hippoName.equals(smellHippo))
         {
             return smellHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType4))
+        else if(hippoName.equals(coolHippo))
         {
             return coolHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType5))
+        else if(hippoName.equals(nagneHippo))
         {
             return travelerHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType6))
+        else if(hippoName.equals(smartHippo))
         {
             return smartHippoUrl1[0];
         }
-        else if(hippoName.equals(hippoType7))
+        else if(hippoName.equals(sweetHippo))
         {
             return sweetHippoUrl[0];
         }
-        else if(hippoName.equals(hippoType8))
+        else if(hippoName.equals(sentiHippo))
         {
             return sentiHippoUrl[0];
         }
@@ -105,35 +105,35 @@ public class HippoResult {
 
     public static String resultText(String hippoName)
     {
-        if(hippoName.equals(hippoType1))
+        if(hippoName.equals(effortHippo))
         {
             return effortHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType2))
+        else if(hippoName.equals(leaderHippo))
         {
             return leaderHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType3))
+        else if(hippoName.equals(smellHippo))
         {
             return smellHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType4))
+        else if(hippoName.equals(coolHippo))
         {
             return coolHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType5))
+        else if(hippoName.equals(nagneHippo))
         {
             return travelerHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType6))
+        else if(hippoName.equals(smartHippo))
         {
             return smartHippoUrl1[1];
         }
-        else if(hippoName.equals(hippoType7))
+        else if(hippoName.equals(sweetHippo))
         {
             return sweetHippoUrl[1];
         }
-        else if(hippoName.equals(hippoType8))
+        else if(hippoName.equals(sentiHippo))
         {
             return sentiHippoUrl[1];
         }

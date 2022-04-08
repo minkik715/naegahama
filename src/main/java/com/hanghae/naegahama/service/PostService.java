@@ -114,7 +114,6 @@ public class PostService {
     //카테고리
 
     public List<PostResponseDto> getCategory(String category) {
-        List<Post> posts;
         if (category.equals("all")) {
             return createPostResponseDto(postQuerydslRepository.findPosts());
         } else {

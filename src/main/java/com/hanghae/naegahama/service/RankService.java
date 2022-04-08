@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RankService {
 
-    private final UserRepository userRepository;
     private final RankRepository rankRepository;
     private final RankQuerydslRepository rankQuerydslRepository;
     private final UserQuerydslRepository userQuerydslRepository;

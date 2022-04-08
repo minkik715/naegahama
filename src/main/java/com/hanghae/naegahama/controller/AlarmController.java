@@ -57,6 +57,3 @@ public class AlarmController {
 
 }
 
-//    @DestinationVariable은 @PathVariable이랑 비슷하게 생각하시면 됩니다.
-//        /ws-stomp로 소켓을 연결하면, 클라이언트에서는 /sub/{userId}를 구독할 것입니다.
-//        클라이언트에서 /ws-stomp로 요청하면 소켓이 연결되는 것이라 생각하면 됩니다.
