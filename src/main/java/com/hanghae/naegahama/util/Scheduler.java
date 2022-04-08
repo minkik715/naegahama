@@ -45,6 +45,7 @@ public class Scheduler {
 
             for (Post post : postQuerydslRepository.findPostByOpenedStatus()) {
                 post.setStatus("closed");
+                log.info("여기서 날라간다~!!!!!!!!!!");
                 applicationEventPublisher.publishEvent(new PostClosedEvent(post.getUser(), post));
             }
         } catch (InterruptedException e) {
