@@ -5,11 +5,6 @@ import com.hanghae.naegahama.security.UserDetailsImpl;
 
 import com.hanghae.naegahama.dto.BasicResponseDto;
 import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
-import com.hanghae.naegahama.dto.BasicResponseDto;
-import com.hanghae.naegahama.dto.survey.CommendResponseDto;
-import com.hanghae.naegahama.dto.survey.SurveyRequestDto;
-import com.hanghae.naegahama.dto.survey.SurveyresponseDto;
-import com.hanghae.naegahama.security.UserDetailsImpl;
 import com.hanghae.naegahama.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -120,7 +120,6 @@ public class KakaoUserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = JwtTokenUtils.generateJwtToken(userDetails);
         response.addHeader("Authorization", "Bearer " +token);
-        LoginResponseDto loginResponseDto = new LoginResponseDto(kakaoUser.getId(),token,kakaoUser.getUserStatus() );
-        return loginResponseDto;
+        return new LoginResponseDto(kakaoUser.getId(),token,kakaoUser.getUserStatus() );
     }
 }

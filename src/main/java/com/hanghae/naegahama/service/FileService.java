@@ -21,8 +21,6 @@ import java.util.List;
 public class FileService
 {
     private final S3Uploader s3Uploader;
-    private final PostRepository postRepository;
-    private final AnswerRepository answerRepository;
 
 
     public FileResponseDto fileURL(List<MultipartFile> multipartFileList, MultipartFile videoFile) throws IOException

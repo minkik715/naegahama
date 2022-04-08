@@ -2,17 +2,12 @@ package com.hanghae.naegahama.service;
 
 import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
 import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeRepository;
-import com.hanghae.naegahama.repository.answerrepository.AnswerRepository;
 import com.hanghae.naegahama.util.ComfortMethods;
 import com.hanghae.naegahama.domain.*;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeRequestDto;
 import com.hanghae.naegahama.dto.answerlike.AnswerLikeResponseDto;
 import com.hanghae.naegahama.event.AnswerLikeEvent;
 import com.hanghae.naegahama.security.UserDetailsImpl;
-import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeQuerydslRepository;
-import com.hanghae.naegahama.repository.answerlikerepository.AnswerLikeRepository;
-import com.hanghae.naegahama.security.UserDetailsImpl;
-import com.hanghae.naegahama.util.ComfortMethods;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
