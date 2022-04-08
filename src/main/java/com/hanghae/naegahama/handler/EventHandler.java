@@ -39,7 +39,6 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void answerLikeEvent(AnswerLikeEvent answerLikeEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = answerLikeEvent.getReceiver();
         User sender = answerLikeEvent.getSender();
         Answer answer = answerLikeEvent.getAnswer();
@@ -54,7 +53,6 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void WriteUserPageComment(MyPageCommentEvent myPageCommentEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = myPageCommentEvent.getReceiver();
         User sender = myPageCommentEvent.getSender();
         UserComment userComment = myPageCommentEvent.getUserComment();
@@ -191,7 +189,6 @@ public class EventHandler {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT) //커밋완료 후 작업
 
     public void postLikeEvent(PostLikeEvent postLikeEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = postLikeEvent.getReceiver();
         User sender = postLikeEvent.getSender();
         Post post = postLikeEvent.getPost();
@@ -207,7 +204,6 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void postWriteEvent(PostWriteEvent postWriteEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         Post post = postWriteEvent.getPost();
         User findUser = ComfortMethods.getUser(post.getUser().getId());
         if(findUser.getAchievement().getAchievement3() == 0) {
@@ -233,7 +229,6 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void searchWordEvent(SearchWordEvent searchWordEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User findUser = ComfortMethods.getUser(searchWordEvent.getUser().getId());
         if(findUser.getAchievement().getAchievement7() == 0) {
             findUser.getAchievement().setAchievement7(1);
@@ -253,10 +248,10 @@ public class EventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void postClosedEvent( PostClosedEvent postClosedEvent) {
-        //answer에 라이크가 생기면 -> answer를 쓴 사람에게 5포인트룰 줘야하고, 알람이 날아가야 한다. 업적도 생기나?
         User receiver = postClosedEvent.getReceiver();
         Post post = postClosedEvent.getPost();
         AlarmType alarmType = AlarmType.rate;
+        log.info("2번?");
 
         postAlarm(receiver,receiver,post,alarmType);
     }
@@ -272,6 +267,7 @@ public class EventHandler {
 
     private void postAlarm(User receiver, User sender, Post object, AlarmType alarmType) {
         Alarm save1 = alarmRepository.save(new Alarm(receiver, sender.getNickName(), alarmType, object.getId(), object.getTitle()));
+        log.info("2번");
         alarmService.alarmByMessage(new AlarmResponseDto(save1));
     }
 
