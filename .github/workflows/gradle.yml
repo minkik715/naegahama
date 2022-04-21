@@ -3,9 +3,6 @@ name: Spring Boot with Gradle CI/CD
 on:
   pull_request:
     branches: [ main ]
-  push:
-    branches: [ main ]
-    
   workflow_dispatch:  
 
 jobs:
