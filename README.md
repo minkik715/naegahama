@@ -6,11 +6,6 @@
 <br>
 <br>
 
-# 팀원 정보
-<img src="https://user-images.githubusercontent.com/97504973/160319606-2546e616-a20a-43ed-8a24-4144a927301d.png" height="80%" width="80%">
-<br>
-<br>
-
 # 프로젝트 개요(Project).🎵
 
 ### 프로젝트 소개(Introduction).
